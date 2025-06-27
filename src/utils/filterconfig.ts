@@ -1,5 +1,3 @@
-'NEXT_PUBLIC_API_BASE_URL=http://localhost:7000;'
-
 export const filterConfig = [
   { name: "newCategoryId", label: "Category", api: `/api/newcategory/viewcategory` },
   { name: "structureId", label: "Structure", api: `/api/structure/view` },
