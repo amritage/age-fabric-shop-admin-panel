@@ -27,7 +27,6 @@ export default function AddSubFinish() {
       await addSF({ name: vals.name, structureId: vals.finishId }).unwrap();
       reset();
     } catch (err: any) {
-      console.error("Add Sub-Finish failed:", err);
       setApiError(err?.data?.message || "Server error – please try again");
     }
   };

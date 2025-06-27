@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { DownArrow } from "@/svg";
 import sidebar_menu from "@/data/sidebar-menus";
+import { ISubMenu } from "@/types/menu-types";
 
 interface IProps {
   sideMenu: boolean;
@@ -31,7 +32,7 @@ export default function Sidebar({ sideMenu, setSideMenu }: IProps) {
   };
 
   // Recursive function to render submenus
-  const renderSubMenu = (subMenus: any[], level = 0) => {
+  const renderSubMenu = (subMenus: ISubMenu[], level = 0) => {
     return (
       <ul className={`${level > 0 ? 'pl-6' : ''}`}>
         {subMenus.map((subMenu) => (

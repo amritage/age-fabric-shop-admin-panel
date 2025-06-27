@@ -15,7 +15,7 @@ export const structureApi = apiSlice.injectEndpoints({
 
     // Fetch one by ID
     getStructure: builder.query<{ data: IStrucutreItem }, string>({
-      query: (id) => `/api/structure/view/${id}`,     // ← include the id here
+      query: (id) => `/api/structure/view/${id}`,
       providesTags: (res, err, id) => [{ type: "Structure" as const, id }],
       keepUnusedDataFor: 300,
     }),

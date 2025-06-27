@@ -20,8 +20,8 @@ const Header = ({ setSideMenu }: IProps) => {
   const [searchOverlay, setSearchOverlay] = useState<boolean>(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [notificationOpen, setNotificationOpen] = useState(false);
-  const pRef = useRef<HTMLDivElement>(null);
-  const nRef = useRef<HTMLDivElement>(null);
+  const pRef: React.RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
+  const nRef: React.RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
 
   const dispatch = useDispatch();
   const router = useRouter();
@@ -33,11 +33,13 @@ const Header = ({ setSideMenu }: IProps) => {
   };
 
   useEffect(() => {
-    const handleClickOutside = (e: any) => {
-      if (!pRef?.current?.contains(e.target)) {
+    const handleClickOutside = (e: MouseEvent) => {
+      // Ensure e.target is a Node before using .contains
+      const target = e.target as Node;
+      if (pRef.current && !pRef.current.contains(target)) {
         setProfileOpen(false);
       }
-      if (!nRef?.current?.contains(e.target)) {
+      if (nRef.current && !nRef.current.contains(target)) {
         setNotificationOpen(false);
       }
     };

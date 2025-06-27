@@ -30,7 +30,6 @@ const ThumbItems = ({ uploadItems }: IPropType) => {
       }
     } catch (error) {
       // Handle the error
-      console.error(error);
     }
   };
 

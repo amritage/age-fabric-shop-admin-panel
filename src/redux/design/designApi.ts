@@ -16,7 +16,6 @@ export const designApi = apiSlice.injectEndpoints({
           : [{ type: "Design", id: "LIST" }],
     }),
     getDesign: builder.query<{ data: IDesign }, string>({
-      // Include the ID in the URL:
       query: (id) => `/api/design/view/${id}`,
       providesTags: (res, err, id) => [{ type: "Design", id }],
       keepUnusedDataFor: 300,

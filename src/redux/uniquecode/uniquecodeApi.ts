@@ -13,7 +13,7 @@ export const uniquecodeApi = apiSlice.injectEndpoints({
           : [],
     }),
     getUniqueCode: builder.query<{ data: IUniqueCode }, string>({
-      query: (id) => `/api/uniquecode/view/${id}`,   // ← include the ID here
+      query: (id) => `/api/uniquecode/view/${id}`,
       providesTags: (res, err, id) => [{ type: "UniqueCode" as const, id }],
       keepUnusedDataFor: 300,
     }),

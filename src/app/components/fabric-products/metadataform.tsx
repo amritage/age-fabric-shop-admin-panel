@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { useRouter } from 'next/navigation';
 import { useSelector, useDispatch } from 'react-redux';
 import { clearProductMedia } from '@/redux/features/productImageSlice';
+import { notifyError } from '@/utils/toast';
 
 // Grab your base API URL from NEXT_PUBLIC_ env
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL!;
@@ -96,7 +97,7 @@ export default function MetadataForm({ initial = {}, onSubmit, onBack }: Metadat
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!meta.name || meta.name.trim() === "") {
-      alert("Product name is required.");
+      notifyError("Product name is required.");
       return;
     }
 
@@ -111,7 +112,7 @@ export default function MetadataForm({ initial = {}, onSubmit, onBack }: Metadat
     
     const missingFields = requiredFields.filter(field => !meta[field]);
     if (missingFields.length > 0) {
-      alert(`Missing required fields: ${missingFields.join(', ')}`);
+      notifyError(`Missing required fields: ${missingFields.join(', ')}`);
       return;
     }
 

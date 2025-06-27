@@ -76,7 +76,6 @@ export default function MetadataPage() {
       router.push("/fabric-products/view");
 
     } catch (err: any) {
-      console.error("Product mutation failed:", err);
       let message = "Failed to save product";
       // Check for a specific duplicate key error message from the backend
       if (typeof err.data?.message === 'string' && err.data.message.includes('Duplicate key error')) {

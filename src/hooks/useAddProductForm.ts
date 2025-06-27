@@ -62,7 +62,6 @@ export const useAddProductForm = () => {
       // redirect to your view page
       router.push("/fabric-products/view");
     } catch (err: any) {
-      console.error(err);
       alert(err.message);
     } finally {
       setIsSubmitting(false);

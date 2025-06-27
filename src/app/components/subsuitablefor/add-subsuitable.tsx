@@ -28,7 +28,6 @@ export default function AddSubSuitableFor() {
       await addSSF(vals).unwrap();
       reset();
     } catch (err: any) {
-      console.error(err);
       setApiError(err?.data?.message || "Server error");
     }
   };
