@@ -1,9 +1,10 @@
 import { apiSlice } from "../api/apiSlice";
 import { IDesign } from "@/types/design-type";
+import { EndpointBuilder } from '@reduxjs/toolkit/dist/query/endpointDefinitions';
 
 export const designApi = apiSlice.injectEndpoints({
   overrideExisting: true,
-  endpoints: (builder) => ({
+  endpoints: (builder: EndpointBuilder<any, any, any>) => ({
     getAllDesign: builder.query<{ data: IDesign[] }, void>({
       query: () => "/api/design/view",
       providesTags: (res) =>

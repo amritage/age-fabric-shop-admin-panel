@@ -98,7 +98,6 @@ const useStaffSubmit = () => {
     control,
     staffImg,
     setStaffImg,
-    parent,
     handleSubmitStuff,
     isSubmitted,
     handleSubmitEditStuff,
