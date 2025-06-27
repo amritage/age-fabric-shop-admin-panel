@@ -38,7 +38,6 @@ const RegisterForm = () => {
       router.push('/dashboard')
       reset();
     }
-    reset();
   };
 
   return (
