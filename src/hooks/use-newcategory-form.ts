@@ -61,19 +61,11 @@ export function useCategoryForm(id?: string) {
     try {
       const fd = buildFormData(vals);
       
-      // Debug: Log the form values and FormData
-      console.log("Form values:", vals);
-      console.log("FormData entries:");
-      for (let [key, value] of fd.entries()) {
-        console.log(key, value);
-      }
-      
       await addCategory(fd).unwrap();
       notifySuccess("Category added");
       reset();
       setImageFile(null);
     } catch (err: any) {
-      console.error("Add category error:", err);
       notifyError(err?.data?.error || "Add failed");
     }
   };

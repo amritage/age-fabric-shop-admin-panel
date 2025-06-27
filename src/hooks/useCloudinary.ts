@@ -27,7 +27,6 @@ const useCloudinary = (
         const index = updatedFormData.findIndex(
           (item) => item.img === file.url
         );
-        console.log('index',index)
         if (index !== -1) {
           updatedFormData[index] = { ...updatedFormData[index], img: "" };
         } 
@@ -54,7 +53,6 @@ const useCloudinary = (
       setItem({ url: "", id: "" });
     } catch (error) {
       // Handle the error
-      console.log(error)
       notifyError("Something went wrong");
     }
   };

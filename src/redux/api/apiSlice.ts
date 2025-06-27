@@ -37,7 +37,7 @@ export const apiSlice = createApi({
     "Stuff",
     "AllFilters",
     "getFilter",
-    "Product",   // ← ensure Product is declared her
+    "Product",   // ← ensure Product is declared here
     "GroupCode",
     "SuitableFor",
     "Color",

@@ -41,8 +41,6 @@ export default function MetadataPage() {
     if (fullData._id) {
       delete fullData._id;
     }
-    // Debug: log the data being sent to the backend
-    console.log('Submitting product data:', fullData);
     const fd = new FormData();
 
     // Append all text-based data
