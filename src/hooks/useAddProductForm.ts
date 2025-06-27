@@ -5,9 +5,6 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { filterConfig } from "@/utils/filterconfig";
 
-const BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:7000";
-
 export const useAddProductForm = () => {
   const router = useRouter();                   // ← now valid
   const [formData, setFormData] = useState<Record<string, any>>({});

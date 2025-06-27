@@ -1,7 +1,7 @@
 import { apiSlice } from "../api/apiSlice";
 import { BrandDelResponse, BrandResponse, IBrandAddResponse, IAddBrand } from "@/types/brand-type";
 
-export const authApi = apiSlice.injectEndpoints({
+export const brandApi = apiSlice.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({
     // get all brands
@@ -56,4 +56,6 @@ export const {
   useAddBrandMutation,
   useEditBrandMutation,
   useGetBrandQuery,
-} = authApi;
+} = brandApi;
+
+export default brandApi;

@@ -42,6 +42,9 @@ const Header = ({ setSideMenu }: IProps) => {
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, [pRef, nRef]);
 
   const handleNotificationOpen = () => {

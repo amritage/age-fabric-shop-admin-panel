@@ -1,7 +1,7 @@
 import { apiSlice } from "../api/apiSlice";
 import { IDelReviewsRes } from "@/types/product-type";
 
-export const authApi = apiSlice.injectEndpoints({
+export const reviewApi = apiSlice.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({
     // delete review product
@@ -19,4 +19,6 @@ export const authApi = apiSlice.injectEndpoints({
 
 export const {
   useDeleteReviewsMutation
-} = authApi;
+} = reviewApi;
+
+export default reviewApi;

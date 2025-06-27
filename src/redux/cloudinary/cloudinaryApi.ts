@@ -2,7 +2,7 @@ import { apiSlice } from "../api/apiSlice";
 import { ICloudinaryDeleteResponse, ICloudinaryMultiplePostRes, ICloudinaryPostResponse } from "./type";
 
 
-export const authApi = apiSlice.injectEndpoints({
+export const cloudinaryApi = apiSlice.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({
     uploadImage: builder.mutation<ICloudinaryPostResponse, FormData>({
@@ -37,4 +37,6 @@ export const {
   useDeleteCloudinaryImgMutation,
   useUploadImageMutation,
   useUploadImageMultipleMutation,
-} = authApi;
+} = cloudinaryApi;
+
+export default cloudinaryApi;

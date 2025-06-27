@@ -9,7 +9,7 @@ import {
   Order,
 } from "@/types/order-amount-type";
 
-export const authApi = apiSlice.injectEndpoints({
+export const orderApi = apiSlice.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({
     // getUserOrders
@@ -69,4 +69,4 @@ export const {
   useGetAllOrdersQuery,
   useUpdateStatusMutation,
   useGetSingleOrderQuery,
-} = authApi;
+} = orderApi;

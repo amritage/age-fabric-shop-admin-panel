@@ -6,7 +6,7 @@ import {
   ICategoryDeleteRes,
 } from "@/types/category-type";
 
-export const authApi = apiSlice.injectEndpoints({
+export const categoryApi = apiSlice.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({
     // get all categories
@@ -61,4 +61,6 @@ export const {
   useDeleteCategoryMutation,
   useEditCategoryMutation,
   useGetCategoryQuery, 
-} = authApi;
+} = categoryApi;
+
+export default categoryApi;

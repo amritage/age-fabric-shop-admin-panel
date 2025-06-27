@@ -2,7 +2,7 @@ import { IAddCoupon } from "./../../types/coupon";
 import { ICoupon } from "@/types/coupon";
 import { apiSlice } from "../api/apiSlice";
 
-export const authApi = apiSlice.injectEndpoints({
+export const couponApi = apiSlice.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({
     // add coupon
@@ -60,4 +60,6 @@ export const {
   useAddCouponMutation,
   useGetCouponQuery,
   useEditCouponMutation,
-} = authApi;
+} = couponApi;
+
+export default couponApi;
