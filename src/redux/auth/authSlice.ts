@@ -45,12 +45,14 @@ const authSlice = createSlice({
     userLoggedIn: (state, { payload }: { payload: IAuth }) => {
       state.accessToken = payload.accessToken;
       state.user = payload.user;
-      Cookies.set("admin",JSON.stringify({
-          accessToken: payload.accessToken,
-          user: payload.user
-        }),
-        { expires: 0.5 }
-      );
+      Cookies.set("admin", JSON.stringify({
+        accessToken: payload.accessToken,
+        user: payload.user
+      }), {
+        expires: 0.5,
+        secure: true,
+        sameSite: "strict"
+      });
     },
     userLoggedOut: (state) => {
       state.accessToken = undefined;

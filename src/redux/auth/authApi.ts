@@ -24,7 +24,7 @@ export const authApi = apiSlice.injectEndpoints({
               accessToken: token,
               user: others
             }),
-            { expires: 0.5 }
+            { expires: 0.5, secure: true, sameSite: "strict" }
           );
 
           dispatch(
@@ -56,7 +56,7 @@ export const authApi = apiSlice.injectEndpoints({
               accessToken: token,
               user: others
             }),
-            { expires: 0.5 }
+            { expires: 0.5, secure: true, sameSite: "strict" }
           );
 
           dispatch(
@@ -112,7 +112,7 @@ export const authApi = apiSlice.injectEndpoints({
               accessToken: token,
               user: others
             }),
-            { expires: 0.5 }
+            { expires: 0.5, secure: true, sameSite: "strict" }
           );
 
           dispatch(

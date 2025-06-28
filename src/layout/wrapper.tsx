@@ -4,16 +4,17 @@ import Sidebar from "./sidebar";
 import Header from "./header";
 import { ToastContainer } from "react-toastify";
 import Cookies from "js-cookie";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const Wrapper = ({ children }: { children: React.ReactNode }) => {
   const [sideMenu, setSideMenu] = useState<boolean>(false);
+  const router = useRouter();
   useEffect(() => {
     const localAuth = Cookies.get("admin");
     if (!localAuth) {
-      redirect("/login");
+      router.push("/login");
     }
-  }, []);
+  }, [router]);
   return (
     <div className="tp-main-wrapper bg-slate-100 h-screen">
       <Sidebar sideMenu={sideMenu} setSideMenu={setSideMenu} />
@@ -28,7 +29,6 @@ const Wrapper = ({ children }: { children: React.ReactNode }) => {
           {children}
         </div>
       </div>
-      <ToastContainer />
     </div>
   );
 };

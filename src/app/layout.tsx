@@ -1,6 +1,5 @@
 import "./globals.css";
 import { Metadata } from "next";
-import "../public/assets/css/custom.css";
 import 'react-toastify/dist/ReactToastify.css';
 import { Poppins } from "next/font/google";
 import { Providers } from "@/redux/provider";
@@ -27,6 +26,7 @@ export default function RootLayout({children}:{children: React.ReactNode}) {
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
         <link rel="icon" href="/favicon.png" />
+        <link rel="stylesheet" href="/assets/css/custom.css" />
       </head>
       <body className={poppins.className + " bg-blue-50 min-h-screen"}>
         <Providers>

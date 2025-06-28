@@ -4,6 +4,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { filterConfig } from "@/utils/filterconfig";
+import { notifySuccess, notifyError } from "@/utils/toast";
 
 export const useAddProductForm = () => {
   const router = useRouter();                   // ← now valid
@@ -55,14 +56,14 @@ export const useAddProductForm = () => {
       }
 
       // success!
-      alert("Product added 🎉");
+      notifySuccess("Product added 🎉");
       setFormData({});
       setPreviewMedia({});
 
       // redirect to your view page
       router.push("/fabric-products/view");
     } catch (err: any) {
-      alert(err.message);
+      notifyError(err.message);
     } finally {
       setIsSubmitting(false);
     }

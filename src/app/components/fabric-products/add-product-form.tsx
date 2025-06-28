@@ -9,10 +9,13 @@ import { useDispatch } from 'react-redux';
 import { setProductMedia } from '@/redux/features/productImageSlice';
 import { IProduct } from "@/types/fabricproduct-type";
 import { notifyError } from "@/utils/toast";
- import Image from "next/image";
+import Image from "next/image";
 
 // Grab your base API URL from NEXT_PUBLIC_ env
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL!;
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+if (!BASE_URL) {
+  notifyError("API base URL is not set. Please configure NEXT_PUBLIC_API_BASE_URL in your environment.");
+}
 
 // Related Products Component
 const RelatedProducts = ({ groupcodeId }: { groupcodeId: string }) => {

@@ -1,4 +1,3 @@
-
 export interface ICoupon {
   _id: string;
   title: string;

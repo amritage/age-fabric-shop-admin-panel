@@ -14,7 +14,12 @@ export default function useAuthCheck() {
     const localAuth = Cookies.get('admin')
 
     if (localAuth) {
-      const auth = JSON.parse(localAuth);
+      let auth = null;
+      try {
+        auth = JSON.parse(localAuth);
+      } catch (e) {
+        auth = null;
+      }
       if (auth?.accessToken && auth?.user) {
         dispatch(
           userLoggedIn({

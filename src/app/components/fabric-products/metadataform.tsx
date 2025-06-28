@@ -8,7 +8,10 @@ import { clearProductMedia } from '@/redux/features/productImageSlice';
 import { notifyError } from '@/utils/toast';
 
 // Grab your base API URL from NEXT_PUBLIC_ env
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL!;
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+if (!BASE_URL) {
+  notifyError("API base URL is not set. Please configure NEXT_PUBLIC_API_BASE_URL in your environment.");
+}
 
 interface MetadataFormProps {
   /** Prefill values when editing; otherwise leave empty for "Add" */
