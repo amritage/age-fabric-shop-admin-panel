@@ -19,7 +19,10 @@ export default function CategoryTable() {
     return <div className="text-red-500">Error loading categories</div>;
 
   // Base URL of your API server, must match what you use in express
-  const BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "";
+  const BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
+  if (!BASE) {
+    throw new Error("API base URL is not set. Please configure NEXT_PUBLIC_API_BASE_URL in your environment.");
+  }
 
   return (
     <div className="bg-white p-6 rounded shadow">

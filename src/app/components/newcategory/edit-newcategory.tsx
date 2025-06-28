@@ -30,7 +30,10 @@ export default function EditCategory() {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string>("");
 
-  const BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "";
+  const BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
+  if (!BASE) {
+    throw new Error("API base URL is not set. Please configure NEXT_PUBLIC_API_BASE_URL in your environment.");
+  }
 
   // Prefill form fields and initial preview from fetched data
   useEffect(() => {
