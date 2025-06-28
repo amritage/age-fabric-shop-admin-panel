@@ -29,7 +29,7 @@ export default function MotifTable() {
           </tr>
         </thead>
         <tbody>
-          {(!data || !data.data || data.data.length === 0) ? (
+          {!data || !data.data || data.data.length === 0 ? (
             <tr>
               <td colSpan={3} className="text-center text-gray-500 py-4">
                 No motifs found.

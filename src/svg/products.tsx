@@ -3,7 +3,7 @@ import React from "react";
 const Products = () => {
   return (
     <svg
-      style={{ transform: 'translateY(-4px)' }}
+      style={{ transform: "translateY(-4px)" }}
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       width="16"

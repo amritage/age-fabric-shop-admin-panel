@@ -13,11 +13,11 @@ const PaginationTwo = ({ handlePageClick, pageCount }: IProps) => {
       className="list-wrap"
       breakLabel="..."
       activeClassName="current"
-      nextLabel={<Next/>}
+      nextLabel={<Next />}
       onPageChange={handlePageClick}
       pageRangeDisplayed={5}
       pageCount={pageCount}
-      previousLabel={<Prev/>}
+      previousLabel={<Prev />}
       renderOnZeroPageCount={null}
     />
   );

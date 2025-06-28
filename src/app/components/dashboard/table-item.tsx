@@ -12,8 +12,8 @@ const TableItem = (props: { order: IOrder }) => {
     order.paymentMethod === "COD"
       ? "Cash"
       : order.paymentMethod === "Card"
-      ? "Card"
-      : order.paymentMethod;
+        ? "Card"
+        : order.paymentMethod;
   return (
     <tr className="bg-white border-b border-gray6 last:border-0 text-start">
       <td className="px-3 py-3">#{order.invoice}</td>
@@ -29,12 +29,12 @@ const TableItem = (props: { order: IOrder }) => {
             order.status === "pending"
               ? "text-warning bg-warning/10"
               : order.status === "delivered"
-              ? "text-success bg-success/10"
-              : order.status === "processing"
-              ? "text-indigo-500 bg-indigo-100"
-              : order.status === "cancel"
-              ? "text-danger bg-danger/10"
-              : ""
+                ? "text-success bg-success/10"
+                : order.status === "processing"
+                  ? "text-indigo-500 bg-indigo-100"
+                  : order.status === "cancel"
+                    ? "text-danger bg-danger/10"
+                    : ""
           }  font-medium`}
         >
           {order.status}

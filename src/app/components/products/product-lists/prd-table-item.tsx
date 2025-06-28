@@ -4,15 +4,8 @@ import { IProduct } from "@/types/fabricproduct-type";
 import EditDeleteBtn from "../../button/edit-delete-btn";
 
 const ProductTableItem = ({ product }: { product: IProduct }) => {
-  const {
-    _id,
-    image,
-    name,
-    sku,
-    salesPrice,
-    quantity,
-    currency,
-  } = product || {};
+  const { _id, image, name, sku, salesPrice, quantity, currency } =
+    product || {};
 
   return (
     <tr className="bg-white border-b border-gray6 last:border-0 text-start mx-9">
@@ -52,7 +45,7 @@ const ProductTableItem = ({ product }: { product: IProduct }) => {
       </td>
       <td className="px-9 py-3 text-end">
         <div className="flex items-center justify-end space-x-2">
-          <EditDeleteBtn id={_id}/>
+          <EditDeleteBtn id={_id} />
         </div>
       </td>
     </tr>

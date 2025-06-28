@@ -24,12 +24,11 @@ const DeleteReviews = ({ id }: { id: string }) => {
         if (result.isConfirmed) {
           try {
             const res = await deleteReviews(id);
-            if('data' in res){
-              if('message' in res.data){
+            if ("data" in res) {
+              if ("message" in res.data) {
                 Swal.fire("Deleted!", `${res.data.message}`, "success");
               }
-            }
-            else {
+            } else {
               Swal.fire("Deleted!", `Product reviews not found`, "error");
             }
           } catch (error) {

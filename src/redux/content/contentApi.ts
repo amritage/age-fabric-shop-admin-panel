@@ -21,7 +21,11 @@ export const contentApi = apiSlice.injectEndpoints({
       providesTags: (res, err, id) => [{ type: "Content", id }],
     }),
     addContent: builder.mutation<{ data: IContent }, Partial<IContent>>({
-      query: (body) => ({ url: "/api/content/addcontent", method: "POST", body }),
+      query: (body) => ({
+        url: "/api/content/addcontent",
+        method: "POST",
+        body,
+      }),
       invalidatesTags: [{ type: "Content", id: "LIST" }],
     }),
     updateContent: builder.mutation<
@@ -39,7 +43,10 @@ export const contentApi = apiSlice.injectEndpoints({
       ],
     }),
     deleteContent: builder.mutation<{ status: number }, string>({
-      query: (id) => ({ url: `/api/content/deletecontent/${id}`, method: "DELETE" }),
+      query: (id) => ({
+        url: `/api/content/deletecontent/${id}`,
+        method: "DELETE",
+      }),
       invalidatesTags: (res, err, id) => [
         { type: "Content", id },
         { type: "Content", id: "LIST" },

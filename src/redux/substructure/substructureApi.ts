@@ -10,7 +10,10 @@ export const substructureApi = apiSlice.injectEndpoints({
       query: () => "/api/substructure/view",
       providesTags: (res) =>
         res?.data
-          ? res.data.map(({ _id }) => ({ type: "Substructure" as const, id: _id }))
+          ? res.data.map(({ _id }) => ({
+              type: "Substructure" as const,
+              id: _id,
+            }))
           : [],
       keepUnusedDataFor: 600,
     }),
@@ -23,7 +26,10 @@ export const substructureApi = apiSlice.injectEndpoints({
     }),
 
     // Create
-    addSubstructure: builder.mutation<{ data: ISubstructure }, Partial<ISubstructure>>({
+    addSubstructure: builder.mutation<
+      { data: ISubstructure },
+      Partial<ISubstructure>
+    >({
       query: (body) => ({ url: "/api/substructure/add", method: "POST", body }),
       invalidatesTags: [{ type: "Substructure" as const, id: "LIST" }],
     }),
@@ -46,7 +52,10 @@ export const substructureApi = apiSlice.injectEndpoints({
 
     // Delete
     deleteSubstructure: builder.mutation<{ status: number }, string>({
-      query: (id) => ({ url: `/api/substructure/delete/${id}`, method: "DELETE" }),
+      query: (id) => ({
+        url: `/api/substructure/delete/${id}`,
+        method: "DELETE",
+      }),
       invalidatesTags: (res, err, id) => [
         { type: "Substructure" as const, id },
         { type: "Substructure" as const, id: "LIST" },
@@ -57,7 +66,7 @@ export const substructureApi = apiSlice.injectEndpoints({
 
 export const {
   useGetAllSubstructuresQuery,
-  useGetSubstructureQuery,       // now correctly calls /view/:id
+  useGetSubstructureQuery, // now correctly calls /view/:id
   useAddSubstructureMutation,
   useUpdateSubstructureMutation,
   useDeleteSubstructureMutation,

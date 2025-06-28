@@ -11,7 +11,10 @@ export const subFinishApi = apiSlice.injectEndpoints({
         res
           ? [
               { type: "SubFinish" as const, id: "LIST" },
-              ...res.data.map((sf) => ({ type: "SubFinish" as const, id: sf._id })),
+              ...res.data.map((sf) => ({
+                type: "SubFinish" as const,
+                id: sf._id,
+              })),
             ]
           : [{ type: "SubFinish", id: "LIST" }],
     }),
@@ -54,7 +57,7 @@ export const subFinishApi = apiSlice.injectEndpoints({
 
 export const {
   useGetAllSubFinishQuery,
-  useGetSubFinishQuery,       // now correctly calls /view/:id
+  useGetSubFinishQuery, // now correctly calls /view/:id
   useAddSubFinishMutation,
   useUpdateSubFinishMutation,
   useDeleteSubFinishMutation,

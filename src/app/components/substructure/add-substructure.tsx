@@ -32,29 +32,40 @@ export default function AddSubstructure() {
   if (isError) return <ErrorMsg msg="Failed to load structures" />;
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="bg-white px-8 py-8 rounded-md">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="bg-white px-8 py-8 rounded-md"
+    >
       {/* Structure selector */}
       <div className="mb-6">
-        <label className="block mb-1 text-base text-black">Parent Structure</label>
+        <label className="block mb-1 text-base text-black">
+          Parent Structure
+        </label>
         <select
-          {...register("structureId", { required: "You must select a structure" })}
+          {...register("structureId", {
+            required: "You must select a structure",
+          })}
           className="input w-full h-[44px] rounded-md border border-gray6 px-6 text-base"
         >
           <option value="">Select a structure</option>
           {structures?.data?.map((s: IStrucutreItem) => (
             <option key={s._id} value={s._id}>
-              {s.name || ''}
+              {s.name || ""}
             </option>
           ))}
         </select>
         {errors.structureId && (
-          <p className="text-red-500 text-sm mt-1">{errors.structureId.message}</p>
+          <p className="text-red-500 text-sm mt-1">
+            {errors.structureId.message}
+          </p>
         )}
       </div>
 
       {/* Substructure Name */}
       <div className="mb-6">
-        <label className="block mb-1 text-base text-black">Substructure Name</label>
+        <label className="block mb-1 text-base text-black">
+          Substructure Name
+        </label>
         <input
           {...register("name", { required: "Name is required" })}
           className="input w-full h-[44px] rounded-md border border-gray6 px-6 text-base"
@@ -65,7 +76,11 @@ export default function AddSubstructure() {
         )}
       </div>
 
-      <button type="submit" disabled={isSubmitting} className="tp-btn px-7 py-2">
+      <button
+        type="submit"
+        disabled={isSubmitting}
+        className="tp-btn px-7 py-2"
+      >
         {isSubmitting ? "Adding…" : "Add Substructure"}
       </button>
     </form>

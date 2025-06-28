@@ -14,13 +14,13 @@ export default function useGroupCodeSubmit() {
 
   const handleEdit = async (data: { name: string }, id: string) => {
     try {
-        await updateGroupCode({ id, changes: data }).unwrap();
-        toast.success("Group Code updated successfully");
-        reset();
+      await updateGroupCode({ id, changes: data }).unwrap();
+      toast.success("Group Code updated successfully");
+      reset();
     } catch (err) {
-        toast.error("Failed to update Group Code");
+      toast.error("Failed to update Group Code");
     }
   };
 
   return { register, handleSubmit, errors, handleEdit };
-} 
+}

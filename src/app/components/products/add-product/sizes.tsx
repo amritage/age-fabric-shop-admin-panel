@@ -7,8 +7,8 @@ const Sizes = ({
   index,
 }: {
   handleSizeChange: (sizes: string[], index: number) => void;
-  index:number;
-  field:ImageURL
+  index: number;
+  field: ImageURL;
 }) => {
   return (
     <div className="mb-5">
@@ -20,9 +20,7 @@ const Sizes = ({
         placeHolder="enter sizes"
       />
       {/* <em>press enter or comma to add new size</em> */}
-      <span className="text-tiny leading-4">
-        press enter to add new size
-      </span>
+      <span className="text-tiny leading-4">press enter to add new size</span>
     </div>
   );
 };

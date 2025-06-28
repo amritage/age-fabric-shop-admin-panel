@@ -20,7 +20,10 @@ export const structureApi = apiSlice.injectEndpoints({
       keepUnusedDataFor: 300,
     }),
 
-    addStructure: builder.mutation<{ data: IStrucutreItem }, Partial<IStrucutreItem>>({
+    addStructure: builder.mutation<
+      { data: IStrucutreItem },
+      Partial<IStrucutreItem>
+    >({
       query: (data) => ({
         url: "/api/structure/add",
         method: "POST",
@@ -59,7 +62,7 @@ export const structureApi = apiSlice.injectEndpoints({
 
 export const {
   useGetAllStructuresQuery,
-  useGetStructureQuery,      // now correctly calls /api/structure/view/:id
+  useGetStructureQuery, // now correctly calls /api/structure/view/:id
   useAddStructureMutation,
   useUpdateStructureMutation,
   useDeleteStructureMutation,

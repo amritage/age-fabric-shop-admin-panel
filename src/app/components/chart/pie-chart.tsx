@@ -24,7 +24,6 @@ const PieChart = () => {
   }
 
   if (!isLoading && !isError && sellingCategory?.categoryData) {
-
     const data = {
       labels: sellingCategory?.categoryData.map((c) => c._id),
       datasets: [

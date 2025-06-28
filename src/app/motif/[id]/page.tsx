@@ -8,7 +8,12 @@ import EditMotif from "@/app/components/motif/edit-motif";
 export default function EditMotifPage() {
   const { id } = useParams();
   const router = useRouter();
-  if (!id) return <Wrapper><p className="p-8 text-red-500">No motif selected.</p></Wrapper>;
+  if (!id)
+    return (
+      <Wrapper>
+        <p className="p-8 text-red-500">No motif selected.</p>
+      </Wrapper>
+    );
 
   return (
     <Wrapper>

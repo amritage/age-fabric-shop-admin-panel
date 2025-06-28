@@ -10,7 +10,7 @@ import {
 } from "@/redux/newproduct/NewProductApi";
 import Wrapper from "@/layout/wrapper";
 import { useSelector, useDispatch } from "react-redux";
-import { clearProductMedia } from '@/redux/features/productImageSlice';
+import { clearProductMedia } from "@/redux/features/productImageSlice";
 import { notifySuccess, notifyError } from "@/utils/toast";
 
 export default function MetadataPage() {
@@ -21,7 +21,9 @@ export default function MetadataPage() {
   const [baseData, setBaseData] = useState<Record<string, any> | null>(null);
   const [addProduct] = useAddProductMutation();
   const [updateProduct] = useUpdateProductMutation();
-  const { image, image1, image2, video } = useSelector((state: any) => state.productMedia);
+  const { image, image1, image2, video } = useSelector(
+    (state: any) => state.productMedia,
+  );
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -47,21 +49,22 @@ export default function MetadataPage() {
     for (const key in fullData) {
       if (fullData[key] != null && fullData[key] !== "") {
         // Skip frontend-only keys that need remapping
-        if (["description", "isProductOffer", "isTopRated"].includes(key)) continue;
+        if (["description", "isProductOffer", "isTopRated"].includes(key))
+          continue;
         fd.append(key, fullData[key]);
       }
     }
     // Map frontend fields to backend-required keys
-    fd.append('productdescription', fullData.description || '');
-    fd.append('description', fullData.description || '');
-    fd.append('productoffer', fullData.isProductOffer ? 'yes' : 'no');
-    fd.append('topratedproduct', fullData.isTopRated ? 'yes' : 'no');
+    fd.append("productdescription", fullData.description || "");
+    fd.append("description", fullData.description || "");
+    fd.append("productoffer", fullData.isProductOffer ? "yes" : "no");
+    fd.append("topratedproduct", fullData.isTopRated ? "yes" : "no");
 
     // Explicitly append file data from Redux store
-    if (image) fd.append('image', image);
-    if (image1) fd.append('image1', image1);
-    if (image2) fd.append('image2', image2);
-    if (video) fd.append('video', video);
+    if (image) fd.append("image", image);
+    if (image1) fd.append("image1", image1);
+    if (image2) fd.append("image2", image2);
+    if (video) fd.append("video", video);
 
     try {
       if (editId) {
@@ -74,12 +77,14 @@ export default function MetadataPage() {
       dispatch(clearProductMedia()); // Clear Redux state after submission
       notifySuccess("Product saved successfully!");
       router.push("/fabric-products/view");
-
     } catch (err: any) {
       let message = "Failed to save product";
       // Check for a specific duplicate key error message from the backend
-      if (typeof err.data?.message === 'string' && err.data.message.includes('Duplicate key error')) {
-        const field = err.data.errorMessages?.[0]?.path || 'field';
+      if (
+        typeof err.data?.message === "string" &&
+        err.data.message.includes("Duplicate key error")
+      ) {
+        const field = err.data.errorMessages?.[0]?.path || "field";
         message = `This ${field} is already in use by another product. Please choose a different one.`;
       } else if (err.data?.errorMessages) {
         message = err.data.errorMessages
@@ -105,7 +110,9 @@ export default function MetadataPage() {
   return (
     <Wrapper>
       <div className="py-12">
-        <h1 className="text-2xl font-bold text-center mb-6">Product Metadata</h1>
+        <h1 className="text-2xl font-bold text-center mb-6">
+          Product Metadata
+        </h1>
         <MetadataForm
           initial={baseData}
           onSubmit={handleMetadataSubmit}

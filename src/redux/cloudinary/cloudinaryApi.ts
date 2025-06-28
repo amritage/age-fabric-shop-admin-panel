@@ -1,6 +1,9 @@
 import { apiSlice } from "../api/apiSlice";
-import { ICloudinaryDeleteResponse, ICloudinaryMultiplePostRes, ICloudinaryPostResponse } from "./type";
-
+import {
+  ICloudinaryDeleteResponse,
+  ICloudinaryMultiplePostRes,
+  ICloudinaryPostResponse,
+} from "./type";
 
 export const cloudinaryApi = apiSlice.injectEndpoints({
   overrideExisting: true,
@@ -12,13 +15,15 @@ export const cloudinaryApi = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
-    uploadImageMultiple: builder.mutation<ICloudinaryMultiplePostRes, FormData>({
-      query: (data) => ({
-        url: "/api/cloudinary/add-multiple-img",
-        method: "POST",
-        body: data,
-      }),
-    }),
+    uploadImageMultiple: builder.mutation<ICloudinaryMultiplePostRes, FormData>(
+      {
+        query: (data) => ({
+          url: "/api/cloudinary/add-multiple-img",
+          method: "POST",
+          body: data,
+        }),
+      },
+    ),
     deleteCloudinaryImg: builder.mutation<
       ICloudinaryDeleteResponse,
       { folder_name: string; id: string }

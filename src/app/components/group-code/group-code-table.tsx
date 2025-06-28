@@ -1,4 +1,3 @@
-// File: app/components/group-code/GroupCodeTable.tsx
 "use client";
 
 import React from "react";
@@ -15,7 +14,8 @@ export default function GroupCodeTable() {
   const [deleteGroupCode] = useDeleteGroupCodeMutation();
 
   if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div className="text-red-500">Error loading group codes</div>;
+  if (isError)
+    return <div className="text-red-500">Error loading group codes</div>;
 
   return (
     <div className="bg-white p-6 rounded shadow">

@@ -1,6 +1,6 @@
 import { apiSlice } from "../api/apiSlice";
 import { IDesign } from "@/types/design-type";
-import { EndpointBuilder } from '@reduxjs/toolkit/dist/query/endpointDefinitions';
+import { EndpointBuilder } from "@reduxjs/toolkit/dist/query/endpointDefinitions";
 
 export const designApi = apiSlice.injectEndpoints({
   overrideExisting: true,
@@ -50,7 +50,7 @@ export const designApi = apiSlice.injectEndpoints({
 
 export const {
   useGetAllDesignQuery,
-  useGetDesignQuery,      // now correctly calls /api/design/view/:id
+  useGetDesignQuery, // now correctly calls /api/design/view/:id
   useAddDesignMutation,
   useUpdateDesignMutation,
   useDeleteDesignMutation,

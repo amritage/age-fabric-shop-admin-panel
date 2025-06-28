@@ -12,10 +12,14 @@ type IPropType = {
   handleNotificationOpen: () => void;
 };
 
-const NotificationArea = ({nRef,notificationOpen,handleNotificationOpen}: IPropType) => {
+const NotificationArea = ({
+  nRef,
+  notificationOpen,
+  handleNotificationOpen,
+}: IPropType) => {
   const [show, setShow] = useState(false);
   const { data: products } = useGetProductsQuery({ page: 1, limit: 100 });
-  const stockOutProducts = products?.data.filter(p => p.quantity === 0);
+  const stockOutProducts = products?.data.filter((p) => p.quantity === 0);
 
   return (
     <div ref={nRef}>
@@ -45,13 +49,24 @@ const NotificationArea = ({nRef,notificationOpen,handleNotificationOpen}: IPropT
                 key={item._id}
                 className="tp-notify-item flex items-center space-x-4 p-4 border-b border-gray-100 hover:bg-gray-50 transition"
               >
-                {item.image && <Image src={item.image} alt={item.name} width={40} height={40} className="rounded-full"/>}
+                {item.image && (
+                  <Image
+                    src={item.image}
+                    alt={item.name}
+                    width={40}
+                    height={40}
+                    className="rounded-full"
+                  />
+                )}
                 <div className="flex-1">
                   <p className="text-sm font-medium text-gray-700">
-                    <span className="font-bold">{item.name}</span> is out of stock!
+                    <span className="font-bold">{item.name}</span> is out of
+                    stock!
                   </p>
                   <p className="text-xs text-gray-500">
-                    {item.updated_at ? new Date(item.updated_at).toLocaleDateString() : ''}
+                    {item.updated_at
+                      ? new Date(item.updated_at).toLocaleDateString()
+                      : ""}
                   </p>
                 </div>
               </div>

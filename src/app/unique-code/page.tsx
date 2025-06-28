@@ -11,8 +11,12 @@ export default function UniqueCodePage() {
       <div className="body-content px-8 py-8 bg-slate-100">
         <Breadcrumb title="UniqueCode" subtitle="List" />
         <div className="grid grid-cols-12 gap-6 mt-4">
-          <div className="col-span-12 lg:col-span-4"><AddUniqueCode /></div>
-          <div className="col-span-12 lg:col-span-8"><UniqueCodeTable /></div>
+          <div className="col-span-12 lg:col-span-4">
+            <AddUniqueCode />
+          </div>
+          <div className="col-span-12 lg:col-span-8">
+            <UniqueCodeTable />
+          </div>
         </div>
       </div>
     </Wrapper>

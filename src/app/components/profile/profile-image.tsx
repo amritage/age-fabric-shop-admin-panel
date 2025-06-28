@@ -15,7 +15,9 @@ type IPropType = {
 };
 
 const ProfileImage = ({ setProfileImg, updateData }: IPropType) => {
-  const { user } = useSelector((state: RootState) => state.auth) as { user: any };
+  const { user } = useSelector((state: RootState) => state.auth) as {
+    user: any;
+  };
   const { handleImageUpload, uploadData, isError, isLoading } =
     useUploadImage();
 
@@ -25,10 +27,9 @@ const ProfileImage = ({ setProfileImg, updateData }: IPropType) => {
         ? uploadData.data.url
         : user?.image
           ? user.image
-          : ''
+          : "",
     );
   }, [setProfileImg, uploadData, user]);
-  
 
   return (
     <div className="px-8 pb-8 relative">
@@ -42,13 +43,13 @@ const ProfileImage = ({ setProfileImg, updateData }: IPropType) => {
               uploadData?.data.url
                 ? uploadData?.data.url
                 : user?.image
-                ? user.image
-                : profile_img
+                  ? user.image
+                  : profile_img
             }
             width={142}
             height={142}
             alt="profile-img"
-            style={{objectFit:'cover'}}
+            style={{ objectFit: "cover" }}
           />
         )}
         <input

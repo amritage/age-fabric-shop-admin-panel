@@ -12,9 +12,9 @@ import {
 import { ICategory } from "@/types/newcategory-type";
 
 interface FormValues {
-  name:        string;
+  name: string;
   productType: string;
-  parent:      string;
+  parent: string;
 }
 
 export function useCategoryForm(id?: string) {
@@ -60,7 +60,7 @@ export function useCategoryForm(id?: string) {
   const onAdd = async (vals: FormValues) => {
     try {
       const fd = buildFormData(vals);
-      
+
       await addCategory(fd).unwrap();
       notifySuccess("Category added");
       reset();

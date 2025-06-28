@@ -37,7 +37,7 @@ const ForgotForm = () => {
       }
     } else {
       if ("data" in res) {
-        if("message" in res.data){
+        if ("message" in res.data) {
           notifySuccess(res.data.message);
         }
       }

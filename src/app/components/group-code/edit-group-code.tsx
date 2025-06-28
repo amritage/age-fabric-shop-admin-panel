@@ -48,7 +48,10 @@ export default function EditGroupCode({ id }: EditGroupCodeProps) {
   // 5) Submit handler
   const onSubmit = async (vals: IGroupCode) => {
     try {
-      await updateGroupCode({ id: id!, changes: { name: vals.name, img } }).unwrap();
+      await updateGroupCode({
+        id: id!,
+        changes: { name: vals.name, img },
+      }).unwrap();
       router.push("/group-code");
     } catch {
       // handle error if you want
@@ -59,18 +62,25 @@ export default function EditGroupCode({ id }: EditGroupCodeProps) {
   if (fetchError || !data) return <ErrorMsg msg="Failed to load group-code." />;
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="bg-white px-8 py-8 rounded-md space-y-6">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="bg-white px-8 py-8 rounded-md space-y-6"
+    >
       <GlobalImgUpload image={img} setImage={setImg} isSubmitted={isUpdating} />
 
       <div>
-        <label className="block mb-1 text-sm font-medium text-gray-700">Name</label>
+        <label className="block mb-1 text-sm font-medium text-gray-700">
+          Name
+        </label>
         <input
           type="text"
           {...register("name", { required: "Name is required" })}
           className="w-full px-3 py-2 border rounded-md focus:outline-none"
           placeholder="Enter group code name"
         />
-        {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>}
+        {errors.name && (
+          <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
+        )}
       </div>
 
       <button
@@ -82,4 +92,4 @@ export default function EditGroupCode({ id }: EditGroupCodeProps) {
       </button>
     </form>
   );
-} 
+}

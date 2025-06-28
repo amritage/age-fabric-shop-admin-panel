@@ -12,10 +12,16 @@ import { ISuitableFor } from "@/types/suitable-for-type";
 
 export default function EditSuitableFor({ id }: { id: string }) {
   const { data, isLoading, isError } = useGetSuitableForQuery(id);
-  const [updateSuitableFor, { isLoading: isUpdating }] = useUpdateSuitableForMutation();
+  const [updateSuitableFor, { isLoading: isUpdating }] =
+    useUpdateSuitableForMutation();
   const router = useRouter();
 
-  const { register, handleSubmit, setValue, formState: { errors } } = useForm<ISuitableFor>({ mode: "onSubmit" });
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<ISuitableFor>({ mode: "onSubmit" });
   const [img, setImg] = useState<string>("");
 
   useEffect(() => {
@@ -34,7 +40,10 @@ export default function EditSuitableFor({ id }: { id: string }) {
   if (isError || !data) return <ErrorMsg msg="Failed to load suitable-for." />;
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="bg-white px-8 py-8 rounded-md">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="bg-white px-8 py-8 rounded-md"
+    >
       <GlobalImgUpload image={img} setImage={setImg} isSubmitted={isUpdating} />
 
       <div className="mb-6">
@@ -44,7 +53,9 @@ export default function EditSuitableFor({ id }: { id: string }) {
           className="input w-full h-[44px] rounded-md border border-gray6 px-6 text-base"
           placeholder="Enter suitable-for name"
         />
-        {errors.name && <span className="text-red-500 text-sm">{errors.name.message}</span>}
+        {errors.name && (
+          <span className="text-red-500 text-sm">{errors.name.message}</span>
+        )}
       </div>
 
       <button type="submit" disabled={isUpdating} className="tp-btn px-7 py-2">

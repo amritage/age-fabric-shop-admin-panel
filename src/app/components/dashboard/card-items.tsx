@@ -74,9 +74,9 @@ const CardItems = () => {
       <>
         <CardItem
           title="Today Orders"
-          amount={dashboardOrderAmount?.todayOrderAmount} 
-          card={dashboardOrderAmount?.todayCardPaymentAmount} 
-          cash={dashboardOrderAmount?.todayCashPaymentAmount} 
+          amount={dashboardOrderAmount?.todayOrderAmount}
+          card={dashboardOrderAmount?.todayCardPaymentAmount}
+          cash={dashboardOrderAmount?.todayCashPaymentAmount}
           icon={<Received />}
           clr=""
           clr2="bg-success"

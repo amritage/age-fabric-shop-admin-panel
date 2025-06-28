@@ -48,7 +48,10 @@ export const orderApi = apiSlice.injectEndpoints({
       keepUnusedDataFor: 600,
     }),
     // get recent orders
-    updateStatus: builder.mutation<IUpdateStatusOrderRes, { id: string, status: { status: string } }>({
+    updateStatus: builder.mutation<
+      IUpdateStatusOrderRes,
+      { id: string; status: { status: string } }
+    >({
       query({ id, status }) {
         return {
           url: `/api/order/update-status/${id}`,
@@ -56,7 +59,7 @@ export const orderApi = apiSlice.injectEndpoints({
           body: status,
         };
       },
-      invalidatesTags: ["AllOrders","DashboardRecentOrders"],
+      invalidatesTags: ["AllOrders", "DashboardRecentOrders"],
     }),
   }),
 });

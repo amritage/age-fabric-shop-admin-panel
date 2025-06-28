@@ -1,7 +1,7 @@
 "use client";
 import dayjs from "dayjs";
 import { useForm } from "react-hook-form";
-import React,{useState} from "react";
+import React, { useState } from "react";
 import { RootState } from "@/redux/store";
 import { useSelector } from "react-redux";
 import ProfileChangePass from "./profile-change-pass";
@@ -11,11 +11,13 @@ import AdminRole from "./admin-role";
 // prop type
 type IPropType = {
   profileImg: string;
-  updateProfile:any;
+  updateProfile: any;
 };
 
-const ProfileContent = ({ profileImg,updateProfile}: IPropType) => {
-  const { user } = useSelector((state: RootState) => state.auth) as { user: any };
+const ProfileContent = ({ profileImg, updateProfile }: IPropType) => {
+  const { user } = useSelector((state: RootState) => state.auth) as {
+    user: any;
+  };
   const [adminRole, setAdminRole] = useState<string>("");
   // react hook form
   const {
@@ -40,7 +42,7 @@ const ProfileContent = ({ profileImg,updateProfile}: IPropType) => {
           name: formData.name,
           phone: formData.phone,
           role: adminRole,
-          joiningData:dayjs(new Date()).format("YYYY-MM-DD"),
+          joiningData: dayjs(new Date()).format("YYYY-MM-DD"),
         },
       });
       if ("error" in res) {
@@ -57,7 +59,7 @@ const ProfileContent = ({ profileImg,updateProfile}: IPropType) => {
     }
   };
   const handleChange = (value: string | number | undefined) => {
-    setAdminRole(value as string)
+    setAdminRole(value as string);
   };
   return (
     <>
@@ -104,7 +106,11 @@ const ProfileContent = ({ profileImg,updateProfile}: IPropType) => {
                 </div>
                 <div className="mb-5 profile-gender-select select-bordered">
                   <p className="mb-0 text-base text-black">Role </p>
-                  <AdminRole handleChange={handleChange} setRole={setAdminRole} default_value={user?.role as string}/>
+                  <AdminRole
+                    handleChange={handleChange}
+                    setRole={setAdminRole}
+                    default_value={user?.role as string}
+                  />
                 </div>
               </div>
               <div className="text-end mt-5">
@@ -117,7 +123,7 @@ const ProfileContent = ({ profileImg,updateProfile}: IPropType) => {
           <div className="py-10 px-10 bg-white rounded-md">
             <h5 className="text-xl mb-6">Security</h5>
             {/* change password start */}
-            <ProfileChangePass/>
+            <ProfileChangePass />
             {/* change password end */}
           </div>
         </div>

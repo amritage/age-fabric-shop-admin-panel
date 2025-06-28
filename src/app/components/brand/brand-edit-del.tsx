@@ -16,8 +16,9 @@ type IPropType = {
 const BrandEditDelete = ({ id }: IPropType) => {
   const [showEdit, setShowEdit] = useState<boolean>(false);
   const [showDelete, setShowDelete] = useState<boolean>(false);
-  const router = useRouter()
-  const [deleteBrand, { data: delData, error: delErr }] = useDeleteBrandMutation();
+  const router = useRouter();
+  const [deleteBrand, { data: delData, error: delErr }] =
+    useDeleteBrandMutation();
 
   // handle Delete
   const handleDelete = async (id: string) => {
@@ -42,7 +43,7 @@ const BrandEditDelete = ({ id }: IPropType) => {
             }
           } else {
             Swal.fire("Deleted!", `Your category has been deleted.`, "success");
-            router.push('/brands')
+            router.push("/brands");
           }
         } catch (error) {
           // Handle error or show error message

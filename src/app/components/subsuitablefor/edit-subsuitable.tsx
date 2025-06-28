@@ -15,12 +15,21 @@ type FormVals = { name: string; suitableForId: string };
 
 export default function EditSubSuitableFor({ id }: { id: string }) {
   const { data, isLoading, isError } = useGetSubSuitableForQuery(id);
-  const [updateSSF, { isLoading: isUpdating }] = useUpdateSubSuitableForMutation();
-  const { data: parents, isLoading: lp, isError: pe } = useGetAllSuitableForQuery();
+  const [updateSSF, { isLoading: isUpdating }] =
+    useUpdateSubSuitableForMutation();
+  const {
+    data: parents,
+    isLoading: lp,
+    isError: pe,
+  } = useGetAllSuitableForQuery();
   const router = useRouter();
 
-  const { register, handleSubmit, setValue, formState: { errors } } =
-    useForm<FormVals>({ mode: "onSubmit" });
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<FormVals>({ mode: "onSubmit" });
 
   useEffect(() => {
     if (data) {
@@ -39,7 +48,10 @@ export default function EditSubSuitableFor({ id }: { id: string }) {
   if (pe) return <ErrorMsg msg="Failed to load parent options" />;
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="bg-white px-8 py-8 rounded-md">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="bg-white px-8 py-8 rounded-md"
+    >
       <div className="mb-6">
         <label className="block mb-1">Parent SuitableFor</label>
         <select
@@ -48,11 +60,15 @@ export default function EditSubSuitableFor({ id }: { id: string }) {
         >
           <option value="">Select…</option>
           {parents!.data.map((p) => (
-            <option key={p._id} value={p._id}>{p.name}</option>
+            <option key={p._id} value={p._id}>
+              {p.name}
+            </option>
           ))}
         </select>
         {errors.suitableForId && (
-          <p className="text-red-500 text-sm mt-1">{errors.suitableForId.message}</p>
+          <p className="text-red-500 text-sm mt-1">
+            {errors.suitableForId.message}
+          </p>
         )}
       </div>
 
@@ -63,7 +79,9 @@ export default function EditSubSuitableFor({ id }: { id: string }) {
           className="input w-full h-[44px] rounded-md border border-gray6 px-6 text-base"
           placeholder="Sub-SuitableFor name"
         />
-        {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
+        {errors.name && (
+          <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
+        )}
       </div>
 
       <button disabled={isUpdating} className="tp-btn px-7 py-2">

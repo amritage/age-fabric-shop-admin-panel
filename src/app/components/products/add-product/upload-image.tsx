@@ -9,14 +9,21 @@ type IPropType = {
   file: { url: string; id: string };
   setFormData?: React.Dispatch<React.SetStateAction<ImageURL[]>>;
   setImgUrl?: React.Dispatch<React.SetStateAction<string>>;
-  isCenter?:boolean;
+  isCenter?: boolean;
 };
-const UploadImage = ({ file,setFormData,setImgUrl,isCenter=false }: IPropType) => {
-  const {handleDeleteImg,item} = useCloudinary(file,setFormData,setImgUrl);
+const UploadImage = ({
+  file,
+  setFormData,
+  setImgUrl,
+  isCenter = false,
+}: IPropType) => {
+  const { handleDeleteImg, item } = useCloudinary(file, setFormData, setImgUrl);
   return (
     <>
       {item.url && (
-        <div className={`flex flex-row flex-wrap ${isCenter?'items-center justify-center':''}`}>
+        <div
+          className={`flex flex-row flex-wrap ${isCenter ? "items-center justify-center" : ""}`}
+        >
           <div className="relative">
             <Image
               className="inline-flex border rounded-md border-gray6 w-24 max-h-24 p-2"
@@ -36,7 +43,9 @@ const UploadImage = ({ file,setFormData,setImgUrl,isCenter=false }: IPropType) =
         </div>
       )}
       {!item.url && (
-        <div className={`flex flex-row flex-wrap ${isCenter?'items-center justify-center':''}`}>
+        <div
+          className={`flex flex-row flex-wrap ${isCenter ? "items-center justify-center" : ""}`}
+        >
           <div className="relative">
             <Image
               className="inline-flex border rounded-md border-gray6 w-24 max-h-24 p-2"

@@ -1,7 +1,17 @@
 import Cookies from "js-cookie";
 import { apiSlice } from "@/redux/api/apiSlice";
 import { userLoggedIn } from "./authSlice";
-import { IAddStuff, IAdminGetRes, IAdminLoginAdd, IAdminLoginRes, IAdminRegisterAdd, IAdminRegisterRes, IAdminUpdate, IAdminUpdateRes, IStuff } from "@/types/admin-type";
+import {
+  IAddStuff,
+  IAdminGetRes,
+  IAdminLoginAdd,
+  IAdminLoginRes,
+  IAdminRegisterAdd,
+  IAdminRegisterRes,
+  IAdminUpdate,
+  IAdminUpdateRes,
+  IStuff,
+} from "@/types/admin-type";
 
 export const authApi = apiSlice.injectEndpoints({
   overrideExisting: true,
@@ -22,16 +32,16 @@ export const authApi = apiSlice.injectEndpoints({
             "admin",
             JSON.stringify({
               accessToken: token,
-              user: others
+              user: others,
             }),
-            { expires: 0.5, secure: true, sameSite: "strict" }
+            { expires: 0.5, secure: true, sameSite: "strict" },
           );
 
           dispatch(
             userLoggedIn({
               accessToken: token,
-              user: others
-            })
+              user: others,
+            }),
           );
         } catch (err) {
           // do nothing
@@ -54,16 +64,16 @@ export const authApi = apiSlice.injectEndpoints({
             "admin",
             JSON.stringify({
               accessToken: token,
-              user: others
+              user: others,
             }),
-            { expires: 0.5, secure: true, sameSite: "strict" }
+            { expires: 0.5, secure: true, sameSite: "strict" },
           );
 
           dispatch(
             userLoggedIn({
               accessToken: token,
-              user: others
-            })
+              user: others,
+            }),
           );
         } catch (err) {
           // do nothing
@@ -71,7 +81,7 @@ export const authApi = apiSlice.injectEndpoints({
       },
     }),
     // reset password
-    forgetPassword: builder.mutation<{message:string},{email:string}>({
+    forgetPassword: builder.mutation<{ message: string }, { email: string }>({
       query: (data) => ({
         url: "api/admin/forget-password",
         method: "PATCH",
@@ -79,7 +89,10 @@ export const authApi = apiSlice.injectEndpoints({
       }),
     }),
     // confirmForgotPassword
-    adminConfirmForgotPassword: builder.mutation<{message:string},{token:string,password:string}>({
+    adminConfirmForgotPassword: builder.mutation<
+      { message: string },
+      { token: string; password: string }
+    >({
       query: (data) => ({
         url: "api/admin/confirm-forget-password",
         method: "PATCH",
@@ -87,7 +100,10 @@ export const authApi = apiSlice.injectEndpoints({
       }),
     }),
     // change password
-    adminChangePassword: builder.mutation<{ message: string }, { email: string; oldPass: string; newPass: string }>({
+    adminChangePassword: builder.mutation<
+      { message: string },
+      { email: string; oldPass: string; newPass: string }
+    >({
       query: (data) => ({
         url: "api/admin/change-password",
         method: "PATCH",
@@ -95,7 +111,10 @@ export const authApi = apiSlice.injectEndpoints({
       }),
     }),
     // updateProfile password
-    updateProfile: builder.mutation<IAdminUpdateRes, { id: string, data: IAdminUpdate }>({
+    updateProfile: builder.mutation<
+      IAdminUpdateRes,
+      { id: string; data: IAdminUpdate }
+    >({
       query: ({ id, ...data }) => ({
         url: `/api/admin/update-stuff/${id}`,
         method: "PATCH",
@@ -110,22 +129,22 @@ export const authApi = apiSlice.injectEndpoints({
             "admin",
             JSON.stringify({
               accessToken: token,
-              user: others
+              user: others,
             }),
-            { expires: 0.5, secure: true, sameSite: "strict" }
+            { expires: 0.5, secure: true, sameSite: "strict" },
           );
 
           dispatch(
             userLoggedIn({
               accessToken: token,
-              user: others
-            })
+              user: others,
+            }),
           );
         } catch (err) {
           // do nothing
         }
       },
-      invalidatesTags:["AllStaff"]
+      invalidatesTags: ["AllStaff"],
     }),
     addStaff: builder.mutation<{ message: string }, IAddStuff>({
       query: (data) => ({
@@ -133,7 +152,7 @@ export const authApi = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["AllStaff"]
+      invalidatesTags: ["AllStaff"],
     }),
     // get all categories
     getAllStaff: builder.query<IAdminGetRes, void>({
@@ -154,7 +173,7 @@ export const authApi = apiSlice.injectEndpoints({
     // get single product
     getStuff: builder.query<IStuff, string>({
       query: (id) => `/api/admin/get/${id}`,
-      providesTags: ['Stuff']
+      providesTags: ["Stuff"],
     }),
   }),
 });

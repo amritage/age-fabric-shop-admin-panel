@@ -11,7 +11,10 @@ export const categoryApi = apiSlice.injectEndpoints({
         res
           ? [
               { type: "Category" as const, id: "LIST" },
-              ...res.data.map((c) => ({ type: "Category" as const, id: c._id! })),
+              ...res.data.map((c) => ({
+                type: "Category" as const,
+                id: c._id!,
+              })),
             ]
           : [{ type: "Category", id: "LIST" }],
     }),

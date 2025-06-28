@@ -1,3 +1,5 @@
+"use client";
+
 // src/app/components/structure/structure-table.tsx
 "use client";
 
@@ -17,7 +19,8 @@ const StructureTable: React.FC<StructureTableProps> = ({ onEditClick }) => {
   const [deleteStructure] = useDeleteStructureMutation();
 
   if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div className="text-red-500">Error loading structures</div>;
+  if (isError)
+    return <div className="text-red-500">Error loading structures</div>;
 
   return (
     <div className="bg-white p-6 rounded shadow">
@@ -31,7 +34,7 @@ const StructureTable: React.FC<StructureTableProps> = ({ onEditClick }) => {
           </tr>
         </thead>
         <tbody>
-          {(!data || !data.data || data.data.length === 0) ? (
+          {!data || !data.data || data.data.length === 0 ? (
             <tr>
               <td colSpan={3} className="text-center text-gray-500 py-4">
                 No structures found.

@@ -6,7 +6,7 @@ import { ImageURL } from "@/types/product-type";
 const useCloudinary = (
   file: { url: string; id: string },
   setFormData?: React.Dispatch<React.SetStateAction<ImageURL[]>>,
-  setImgUrl?: React.Dispatch<React.SetStateAction<string>>
+  setImgUrl?: React.Dispatch<React.SetStateAction<string>>,
 ) => {
   const [
     deleteCloudinaryImg,
@@ -16,8 +16,8 @@ const useCloudinary = (
 
   // set image url
   useEffect(() => {
-    setItem({url:file.url,id:file.id})
-  },[file.id, file.url])
+    setItem({ url: file.url, id: file.id });
+  }, [file.id, file.url]);
 
   // update state when delData was changes
   useEffect(() => {
@@ -25,11 +25,11 @@ const useCloudinary = (
       setFormData((prevFormData) => {
         const updatedFormData = [...prevFormData];
         const index = updatedFormData.findIndex(
-          (item) => item.img === file.url
+          (item) => item.img === file.url,
         );
         if (index !== -1) {
           updatedFormData[index] = { ...updatedFormData[index], img: "" };
-        } 
+        }
         return updatedFormData;
       });
     }
@@ -39,7 +39,7 @@ const useCloudinary = (
     }
   }, [delData, delError, file, item.id, file.url, setFormData, setImgUrl]);
 
-  // handle delete image 
+  // handle delete image
   const handleDeleteImg = (file: { url: string; id: string }) => {
     try {
       const { id } = file;

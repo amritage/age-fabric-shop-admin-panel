@@ -20,7 +20,6 @@ const AddBrand = () => {
     setIsSubmitted,
   } = useBrandSubmit();
 
-
   // handle Change status
   const handleChange = (value: string | undefined) => {
     setStatus(value as string);
@@ -41,14 +40,34 @@ const AddBrand = () => {
             {/* brand image upload */}
 
             {/* Form Field */}
-            <BrandFormField register={register} errors={errors} name="Name" isReq={true} />
-            <BrandFormField register={register} errors={errors} name="Email" isReq={true} />
-            <BrandFormField register={register} errors={errors} name="Website" isReq={false} />
-            <BrandFormField register={register} errors={errors} name="Location" isReq={false} />
+            <BrandFormField
+              register={register}
+              errors={errors}
+              name="Name"
+              isReq={true}
+            />
+            <BrandFormField
+              register={register}
+              errors={errors}
+              name="Email"
+              isReq={true}
+            />
+            <BrandFormField
+              register={register}
+              errors={errors}
+              name="Website"
+              isReq={false}
+            />
+            <BrandFormField
+              register={register}
+              errors={errors}
+              name="Location"
+              isReq={false}
+            />
             {/* Form Field */}
 
             {/* description start */}
-            <BrandDesc register={register}/>
+            <BrandDesc register={register} />
             {/* description end */}
 
             {/* brand status start */}
@@ -61,7 +80,7 @@ const AddBrand = () => {
       </div>
       <div className="col-span-12 lg:col-span-8">
         {/* brand table start */}
-        <BrandTables/>
+        <BrandTables />
         {/* brand table end */}
       </div>
     </div>

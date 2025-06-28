@@ -1,5 +1,5 @@
 "use client";
-import { useAdminChangePasswordMutation} from "@/redux/auth/authApi";
+import { useAdminChangePasswordMutation } from "@/redux/auth/authApi";
 import React from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
@@ -15,12 +15,14 @@ const schema = Yup.object().shape({
   newPassword: Yup.string().required().min(6).label("New Password"),
   confirmPassword: Yup.string().oneOf(
     [Yup.ref("newPassword"), undefined],
-    "Passwords must match"
+    "Passwords must match",
   ),
 });
 
 const ProfileChangePass = () => {
-  const { user } = useSelector((state: RootState) => state.auth) as { user: any };
+  const { user } = useSelector((state: RootState) => state.auth) as {
+    user: any;
+  };
   const [changePassword, {}] = useAdminChangePasswordMutation();
   // react hook form
   const {
@@ -35,7 +37,7 @@ const ProfileChangePass = () => {
   // on submit
   const onSubmit = async (data: { password: string; newPassword: string }) => {
     if (user) {
-     const res =  await changePassword({
+      const res = await changePassword({
         email: user.email,
         oldPass: data.password,
         newPass: data.newPassword,

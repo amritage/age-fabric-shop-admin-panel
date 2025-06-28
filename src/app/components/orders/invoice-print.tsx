@@ -112,7 +112,7 @@ const InvoicePrint = ({ orderData }: IPropType) => {
         </div>
       </div>
       {/* details table */}
-      
+
       {/* details table */}
       <div className="grid grid-cols-12 gap-6 px-6 py-6">
         <div className="col-span-12">
@@ -149,7 +149,7 @@ const InvoicePrint = ({ orderData }: IPropType) => {
                       Date:
                     </td>
                     <td className="px-3 py-3 text-[#55585B] text-end text-lg font-semibold">
-                      {dayjs(orderData.createdAt).format('DD/MM/YYYY')}
+                      {dayjs(orderData.createdAt).format("DD/MM/YYYY")}
                     </td>
                   </tr>
                 </tbody>
@@ -161,7 +161,9 @@ const InvoicePrint = ({ orderData }: IPropType) => {
       {/* details table */}
 
       <div className="flex items-center justify-center flex-wrap px-8 mb-6 bg-white rounded-t-md rounded-b-md  py-6 text-center">
-          <h3 className="font-normal mb-0">Thank you for your order. Come again!</h3>
+        <h3 className="font-normal mb-0">
+          Thank you for your order. Come again!
+        </h3>
       </div>
     </>
   );

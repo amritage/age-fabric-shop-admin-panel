@@ -42,7 +42,9 @@ export default function AddCategory() {
           className="input w-full"
           placeholder="e.g. Electronics"
         />
-        {errors.productType && <p className="text-red-500">{errors.productType.message}</p>}
+        {errors.productType && (
+          <p className="text-red-500">{errors.productType.message}</p>
+        )}
       </div>
 
       {/* Parent */}
@@ -53,7 +55,9 @@ export default function AddCategory() {
           className="input w-full"
           placeholder="e.g. Gadgets"
         />
-        {errors.parent && <p className="text-red-500">{errors.parent.message}</p>}
+        {errors.parent && (
+          <p className="text-red-500">{errors.parent.message}</p>
+        )}
       </div>
 
       {/* Image */}

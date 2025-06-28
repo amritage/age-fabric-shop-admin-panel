@@ -10,7 +10,8 @@ export const apiSlice = createApi({
         const userInfo = Cookies.get("admin");
         if (userInfo) {
           const { accessToken } = JSON.parse(userInfo);
-          if (accessToken) headers.set("Authorization", `Bearer ${accessToken}`);
+          if (accessToken)
+            headers.set("Authorization", `Bearer ${accessToken}`);
         }
       } catch {
         // ignore

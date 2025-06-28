@@ -2,14 +2,14 @@ import React from "react";
 import { IProduct } from "@/types/product-type";
 import Image from "next/image";
 
-// prop type 
+// prop type
 type IPropType = {
-  productData:IProduct[];
-  ship_cost:number;
-}
+  productData: IProduct[];
+  ship_cost: number;
+};
 
-const OrderDetailsBottom = ({productData,ship_cost}:IPropType) => {
-  const total = productData.reduce((acc,curr) => acc + curr.price,0);
+const OrderDetailsBottom = ({ productData, ship_cost }: IPropType) => {
+  const total = productData.reduce((acc, curr) => acc + curr.price, 0);
   const grand_total = total + ship_cost;
   return (
     <div className="grid grid-cols-12 gap-6">
@@ -46,32 +46,35 @@ const OrderDetailsBottom = ({productData,ship_cost}:IPropType) => {
                 </tr>
               </thead>
               <tbody>
-                {productData.map(p => (
-                <tr key={p._id} className="bg-white border-b border-gray6 last:border-0 text-start mx-9">
-                  <td className="pr-8 py-5 whitespace-nowrap">
-                    <a href="#" className="flex items-center space-x-5">
-                      <Image
-                        className="w-[40px] h-[40px] rounded-md"
-                        src={p.img}
-                        alt="product-img"
-                        width={282}
-                        height={300}
-                      />
-                      <span className="font-medium text-heading text-hover-primary transition">
-                        {p.title}
-                      </span>
-                    </a>
-                  </td>
-                  <td className="px-3 py-3 font-normal text-[#55585B] text-end">
-                    ${p.price.toFixed(2)}
-                  </td>
-                  <td className="px-3 py-3 font-normal text-[#55585B] text-end">
-                    {p.orderQuantity}
-                  </td>
-                  <td className="px-3 py-3 font-normal text-[#55585B] text-end">
-                    ${(p.orderQuantity * p.price).toFixed(2)}
-                  </td>
-                </tr>
+                {productData.map((p) => (
+                  <tr
+                    key={p._id}
+                    className="bg-white border-b border-gray6 last:border-0 text-start mx-9"
+                  >
+                    <td className="pr-8 py-5 whitespace-nowrap">
+                      <a href="#" className="flex items-center space-x-5">
+                        <Image
+                          className="w-[40px] h-[40px] rounded-md"
+                          src={p.img}
+                          alt="product-img"
+                          width={282}
+                          height={300}
+                        />
+                        <span className="font-medium text-heading text-hover-primary transition">
+                          {p.title}
+                        </span>
+                      </a>
+                    </td>
+                    <td className="px-3 py-3 font-normal text-[#55585B] text-end">
+                      ${p.price.toFixed(2)}
+                    </td>
+                    <td className="px-3 py-3 font-normal text-[#55585B] text-end">
+                      {p.orderQuantity}
+                    </td>
+                    <td className="px-3 py-3 font-normal text-[#55585B] text-end">
+                      ${(p.orderQuantity * p.price).toFixed(2)}
+                    </td>
+                  </tr>
                 ))}
               </tbody>
             </table>

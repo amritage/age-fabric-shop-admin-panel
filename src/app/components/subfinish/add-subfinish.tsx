@@ -35,15 +35,18 @@ export default function AddSubFinish() {
   if (isError) return <ErrorMsg msg="Couldn't load finish options" />;
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="bg-white px-8 py-8 rounded-md">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="bg-white px-8 py-8 rounded-md"
+    >
       {/* API error banner */}
-      {apiError && (
-        <p className="mb-4 text-red-600 font-medium">{apiError}</p>
-      )}
+      {apiError && <p className="mb-4 text-red-600 font-medium">{apiError}</p>}
 
       {/* Finish dropdown */}
       <div className="mb-6">
-        <label className="block mb-1 text-base font-medium">Parent Finish</label>
+        <label className="block mb-1 text-base font-medium">
+          Parent Finish
+        </label>
         <select
           {...register("finishId", { required: "Select a parent finish" })}
           className="input w-full h-[44px] rounded-md border border-gray6 px-6 text-base"

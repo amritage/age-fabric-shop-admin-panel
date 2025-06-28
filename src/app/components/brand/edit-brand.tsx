@@ -10,7 +10,7 @@ import BrandFormField from "./form-field-two";
 import BrandDesc from "./brand-desc";
 import BrandStatus from "./brand-status";
 
-const EditBrand = ({id}:{id:string}) => {
+const EditBrand = ({ id }: { id: string }) => {
   const {
     errors,
     handleSubmit,
@@ -21,8 +21,8 @@ const EditBrand = ({id}:{id:string}) => {
     isSubmitted,
     setIsSubmitted,
   } = useBrandSubmit();
-  // get brand 
-  const {data:brand,isLoading,isError,error} = useGetBrandQuery(id)
+  // get brand
+  const { data: brand, isLoading, isError, error } = useGetBrandQuery(id);
 
   // handle Change status
   const handleChange = (value: string | undefined) => {
@@ -31,36 +31,62 @@ const EditBrand = ({id}:{id:string}) => {
 
   // decide to render
   let content = null;
-  if(isLoading){
-    content = <Loading loading={isLoading} spinner="bar" />
+  if (isLoading) {
+    content = <Loading loading={isLoading} spinner="bar" />;
   }
-  if(!brand && isError){
-    content = <ErrorMsg msg="There was an error" />
+  if (!brand && isError) {
+    content = <ErrorMsg msg="There was an error" />;
   }
-  if(brand && !isError){
+  if (brand && !isError) {
     content = (
       <div className="col-span-12 lg:col-span-4">
-        <form onSubmit={handleSubmit((data) => handleSubmitEditBrand(data, id))}>
+        <form
+          onSubmit={handleSubmit((data) => handleSubmitEditBrand(data, id))}
+        >
           <div className="mb-6 bg-white px-8 py-8 rounded-md">
             {/* brand image upload */}
             <CategoryImgUpload
               isSubmitted={isSubmitted}
               setImage={setLogo}
-              image={brand.logo ? brand.logo : ''}
+              image={brand.logo ? brand.logo : ""}
               setIsSubmitted={setIsSubmitted}
               default_img={brand.logo}
             />
             {/* brand image upload */}
 
             {/* Form Field */}
-            <BrandFormField default_val={brand.name} register={register} errors={errors} name="Name" isReq={true} />
-            <BrandFormField default_val={brand.email} register={register} errors={errors} name="Email" isReq={true} />
-            <BrandFormField default_val={brand.website} register={register} errors={errors} name="Website" isReq={false} />
-            <BrandFormField default_val={brand.location} register={register} errors={errors} name="Location" isReq={false} />
+            <BrandFormField
+              default_val={brand.name}
+              register={register}
+              errors={errors}
+              name="Name"
+              isReq={true}
+            />
+            <BrandFormField
+              default_val={brand.email}
+              register={register}
+              errors={errors}
+              name="Email"
+              isReq={true}
+            />
+            <BrandFormField
+              default_val={brand.website}
+              register={register}
+              errors={errors}
+              name="Website"
+              isReq={false}
+            />
+            <BrandFormField
+              default_val={brand.location}
+              register={register}
+              errors={errors}
+              name="Location"
+              isReq={false}
+            />
             {/* Form Field */}
 
             {/* description start */}
-            <BrandDesc register={register}/>
+            <BrandDesc register={register} />
             {/* description end */}
 
             {/* brand status start */}
@@ -71,7 +97,7 @@ const EditBrand = ({id}:{id:string}) => {
           </div>
         </form>
       </div>
-    )
+    );
   }
 
   return (
@@ -79,7 +105,7 @@ const EditBrand = ({id}:{id:string}) => {
       {content}
       <div className="col-span-12 lg:col-span-8">
         {/* brand table start */}
-        <BrandTables/>
+        <BrandTables />
         {/* brand table end */}
       </div>
     </div>

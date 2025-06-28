@@ -8,7 +8,12 @@ import EditSubstructure from "@/app/components/substructure/edit-substructure";
 export default function EditSubstructurePage() {
   const { id } = useParams();
   const router = useRouter();
-  if (!id) return <Wrapper><p className="p-8 text-red-500">No substructure selected.</p></Wrapper>;
+  if (!id)
+    return (
+      <Wrapper>
+        <p className="p-8 text-red-500">No substructure selected.</p>
+      </Wrapper>
+    );
 
   return (
     <Wrapper>

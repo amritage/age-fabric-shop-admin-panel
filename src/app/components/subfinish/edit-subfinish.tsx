@@ -42,7 +42,10 @@ export default function EditSubFinish({ id }: { id: string }) {
   }, [data, setValue]);
 
   const onSubmit = async (vals: FormVals) => {
-    await updateSF({ id, changes: { name: vals.name, structureId: vals.structureId } }).unwrap();
+    await updateSF({
+      id,
+      changes: { name: vals.name, structureId: vals.structureId },
+    }).unwrap();
     router.back();
   };
 
@@ -51,12 +54,19 @@ export default function EditSubFinish({ id }: { id: string }) {
   if (errFin) return <ErrorMsg msg="Failed to load parent finishes" />;
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="bg-white px-8 py-8 rounded-md">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="bg-white px-8 py-8 rounded-md"
+    >
       {/* Parent Finish selector */}
       <div className="mb-6">
-        <label className="block mb-1 font-medium text-base">Parent Finish</label>
+        <label className="block mb-1 font-medium text-base">
+          Parent Finish
+        </label>
         <select
-          {...register("structureId", { required: "Please select a parent structure" })}
+          {...register("structureId", {
+            required: "Please select a parent structure",
+          })}
           className="input w-full h-[44px] rounded-md border border-gray6 px-6 text-base"
         >
           <option value="">Select a finish…</option>
@@ -67,7 +77,9 @@ export default function EditSubFinish({ id }: { id: string }) {
           ))}
         </select>
         {errors.structureId && (
-          <p className="text-red-500 text-sm mt-1">{errors.structureId.message}</p>
+          <p className="text-red-500 text-sm mt-1">
+            {errors.structureId.message}
+          </p>
         )}
       </div>
 
@@ -84,11 +96,7 @@ export default function EditSubFinish({ id }: { id: string }) {
         )}
       </div>
 
-      <button
-        type="submit"
-        disabled={isUpdating}
-        className="tp-btn px-7 py-2"
-      >
+      <button type="submit" disabled={isUpdating} className="tp-btn px-7 py-2">
         {isUpdating ? "Updating…" : "Save Changes"}
       </button>
     </form>

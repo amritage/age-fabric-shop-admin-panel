@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect,useState } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "./sidebar";
 import Header from "./header";
 import { ToastContainer } from "react-toastify";
@@ -25,7 +25,8 @@ const Wrapper = ({ children }: { children: React.ReactNode }) => {
         </div>
         {/* header end */}
 
-        <div className="pt-[80px] px-4">{/* Adjust pt to match header height */}
+        <div className="pt-[80px] px-4">
+          {/* Adjust pt to match header height */}
           {children}
         </div>
       </div>

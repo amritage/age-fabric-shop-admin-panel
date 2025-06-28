@@ -3,7 +3,7 @@ import { UseFormRegister } from "react-hook-form";
 
 const CategoryDescription = ({
   register,
-  default_value
+  default_value,
 }: {
   register: UseFormRegister<any>;
   default_value?: string;

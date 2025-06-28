@@ -9,7 +9,12 @@ import EditDesign from "@/app/components/design/edit-design";
 export default function EditDesignPage() {
   const { id } = useParams();
   const router = useRouter();
-  if (!id) return <Wrapper><p className="p-8 text-red-500">No design selected.</p></Wrapper>;
+  if (!id)
+    return (
+      <Wrapper>
+        <p className="p-8 text-red-500">No design selected.</p>
+      </Wrapper>
+    );
 
   return (
     <Wrapper>

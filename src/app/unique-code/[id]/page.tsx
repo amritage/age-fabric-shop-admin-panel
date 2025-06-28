@@ -8,7 +8,12 @@ import EditUniqueCode from "@/app/components/uniquecode/edit-uniquecode";
 export default function EditUniqueCodePage() {
   const { id } = useParams();
   const router = useRouter();
-  if (!id) return <Wrapper><p className="p-8 text-red-500">No item selected.</p></Wrapper>;
+  if (!id)
+    return (
+      <Wrapper>
+        <p className="p-8 text-red-500">No item selected.</p>
+      </Wrapper>
+    );
 
   return (
     <Wrapper>

@@ -13,7 +13,7 @@ export const vendorApi = apiSlice.injectEndpoints({
           : [],
     }),
     getVendor: builder.query<{ data: IVendor }, string>({
-      query: (id) => `/api/vendor/view/${id}`,   // ← include the ID here
+      query: (id) => `/api/vendor/view/${id}`, // ← include the ID here
       providesTags: (res, err, id) => [{ type: "Vendor" as const, id }],
       keepUnusedDataFor: 300,
     }),

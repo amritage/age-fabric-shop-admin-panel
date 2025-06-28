@@ -49,7 +49,10 @@ export default function EditUniqueCode({ id }: EditUniqueCodeProps) {
   // 5) Submit handler
   const onSubmit = async (vals: IUniqueCode) => {
     try {
-      await updateUniqueCode({ id: id!, changes: { name: vals.name, img } }).unwrap();
+      await updateUniqueCode({
+        id: id!,
+        changes: { name: vals.name, img },
+      }).unwrap();
       router.push("/unique-code");
     } catch {
       // handle error if you want
@@ -57,21 +60,29 @@ export default function EditUniqueCode({ id }: EditUniqueCodeProps) {
   };
 
   if (isFetching) return <p>Loading…</p>;
-  if (fetchError || !data) return <ErrorMsg msg="Failed to load unique-code." />;
+  if (fetchError || !data)
+    return <ErrorMsg msg="Failed to load unique-code." />;
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="bg-white px-8 py-8 rounded-md space-y-6">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="bg-white px-8 py-8 rounded-md space-y-6"
+    >
       <GlobalImgUpload image={img} setImage={setImg} isSubmitted={isUpdating} />
 
       <div>
-        <label className="block mb-1 text-sm font-medium text-gray-700">Name</label>
+        <label className="block mb-1 text-sm font-medium text-gray-700">
+          Name
+        </label>
         <input
           type="text"
           {...register("name", { required: "Name is required" })}
           className="w-full px-3 py-2 border rounded-md focus:outline-none"
           placeholder="Enter unique code name"
         />
-        {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>}
+        {errors.name && (
+          <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
+        )}
       </div>
 
       <button

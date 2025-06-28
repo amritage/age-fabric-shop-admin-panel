@@ -2,7 +2,10 @@ import { notifySuccess, notifyError } from "@/utils/toast";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { useAddStaffMutation, useUpdateProfileMutation } from "@/redux/auth/authApi";
+import {
+  useAddStaffMutation,
+  useUpdateProfileMutation,
+} from "@/redux/auth/authApi";
 import dayjs from "dayjs";
 
 const useStaffSubmit = () => {
@@ -81,7 +84,7 @@ const useStaffSubmit = () => {
         }
       } else {
         notifySuccess("Stuff update successfully");
-        router.push('/our-staff')
+        router.push("/our-staff");
         setIsSubmitted(true);
         reset();
       }

@@ -18,9 +18,13 @@ type FormValues = {
 
 export default function EditSubstructure({ id }: { id: string }) {
   const { data, isLoading, isError } = useGetSubstructureQuery(id);
-  const [updateSub, { isLoading: isUpdating }] = useUpdateSubstructureMutation();
-  const { data: structures, isLoading: loadStr, isError: errStr } =
-    useGetAllStructuresQuery();
+  const [updateSub, { isLoading: isUpdating }] =
+    useUpdateSubstructureMutation();
+  const {
+    data: structures,
+    isLoading: loadStr,
+    isError: errStr,
+  } = useGetAllStructuresQuery();
   const router = useRouter();
 
   const {
@@ -39,9 +43,11 @@ export default function EditSubstructure({ id }: { id: string }) {
   }, [data, setValue]);
 
   const onSubmit = async (vals: FormValues) => {
-    await updateSub({ id, changes: { name: vals.name, structureId: vals.structureId } })
-      .unwrap();
-   router.back();
+    await updateSub({
+      id,
+      changes: { name: vals.name, structureId: vals.structureId },
+    }).unwrap();
+    router.back();
   };
 
   if (isLoading || loadStr) return <p>Loading…</p>;
@@ -49,29 +55,40 @@ export default function EditSubstructure({ id }: { id: string }) {
   if (errStr) return <ErrorMsg msg="Failed to load structures." />;
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="bg-white px-8 py-8 rounded-md">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="bg-white px-8 py-8 rounded-md"
+    >
       {/* Structure selector */}
       <div className="mb-6">
-        <label className="block mb-1 text-base text-black">Parent Structure</label>
+        <label className="block mb-1 text-base text-black">
+          Parent Structure
+        </label>
         <select
-          {...register("structureId", { required: "Please select a structure" })}
+          {...register("structureId", {
+            required: "Please select a structure",
+          })}
           className="input w-full h-[44px] rounded-md border border-gray6 px-6 text-base"
         >
           <option value="">Select a structure</option>
           {structures?.data.map((s: IStrucutreItem) => (
             <option key={s._id} value={s._id}>
-              {s.name || ''}
+              {s.name || ""}
             </option>
           ))}
         </select>
         {errors.structureId && (
-          <p className="text-red-500 text-sm mt-1">{errors.structureId.message}</p>
+          <p className="text-red-500 text-sm mt-1">
+            {errors.structureId.message}
+          </p>
         )}
       </div>
 
       {/* Substructure Name */}
       <div className="mb-6">
-        <label className="block mb-1 text-base text-black">Substructure Name</label>
+        <label className="block mb-1 text-base text-black">
+          Substructure Name
+        </label>
         <input
           {...register("name", { required: "Name is required" })}
           className="input w-full h-[44px] rounded-md border border-gray6 px-6 text-base"

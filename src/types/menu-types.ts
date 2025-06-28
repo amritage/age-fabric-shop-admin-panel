@@ -10,7 +10,7 @@ export interface ISubMenu {
 // Interface for main menu items
 export interface ISidebarMenus {
   id: number;
-  icon: ComponentType;  // For SVG icons
+  icon: ComponentType; // For SVG icons
   link?: string;
   title: string;
   subMenus?: ISubMenu[];

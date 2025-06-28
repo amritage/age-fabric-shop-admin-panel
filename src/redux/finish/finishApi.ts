@@ -51,7 +51,7 @@ export const finishApi = apiSlice.injectEndpoints({
 
 export const {
   useGetAllFinishQuery,
-  useGetFinishQuery,      // now calls /api/finish/view/:id
+  useGetFinishQuery, // now calls /api/finish/view/:id
   useAddFinishMutation,
   useUpdateFinishMutation,
   useDeleteFinishMutation,

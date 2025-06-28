@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -20,12 +20,25 @@ const RegisterForm = () => {
   const [registerAdmin, {}] = useRegisterAdminMutation();
   const router = useRouter();
   // react hook form
-  const {register,handleSubmit,formState: { errors },reset} = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
     resolver: yupResolver(schema),
   });
   // on submit
-  const onSubmit = async (data:{name:string;email:string;password:string}) => {
-    const res = await registerAdmin({name:data.name,email:data.email,password:data.password});
+  const onSubmit = async (data: {
+    name: string;
+    email: string;
+    password: string;
+  }) => {
+    const res = await registerAdmin({
+      name: data.name,
+      email: data.email,
+      password: data.password,
+    });
     if ("error" in res) {
       if ("data" in res.error) {
         const errorData = res.error.data as { message?: string };
@@ -35,7 +48,7 @@ const RegisterForm = () => {
       }
     } else {
       notifySuccess("Register successfully");
-      router.push('/dashboard')
+      router.push("/dashboard");
       reset();
     }
   };

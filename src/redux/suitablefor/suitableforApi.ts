@@ -11,7 +11,10 @@ export const suitableForApi = apiSlice.injectEndpoints({
         res
           ? [
               { type: "SuitableFor" as const, id: "LIST" },
-              ...res.data.map((s) => ({ type: "SuitableFor" as const, id: s._id })),
+              ...res.data.map((s) => ({
+                type: "SuitableFor" as const,
+                id: s._id,
+              })),
             ]
           : [{ type: "SuitableFor", id: "LIST" }],
     }),
@@ -21,7 +24,10 @@ export const suitableForApi = apiSlice.injectEndpoints({
       providesTags: (res, err, id) => [{ type: "SuitableFor", id }],
       keepUnusedDataFor: 300,
     }),
-    addSuitableFor: builder.mutation<{ data: ISuitableFor }, Partial<ISuitableFor>>({
+    addSuitableFor: builder.mutation<
+      { data: ISuitableFor },
+      Partial<ISuitableFor>
+    >({
       query: (body) => ({ url: "/api/suitablefor/add/", method: "POST", body }),
       invalidatesTags: [{ type: "SuitableFor", id: "LIST" }],
     }),
@@ -40,7 +46,10 @@ export const suitableForApi = apiSlice.injectEndpoints({
       ],
     }),
     deleteSuitableFor: builder.mutation<{ status: number }, string>({
-      query: (id) => ({ url: `/api/suitablefor/delete/${id}`, method: "DELETE" }),
+      query: (id) => ({
+        url: `/api/suitablefor/delete/${id}`,
+        method: "DELETE",
+      }),
       invalidatesTags: (res, err, id) => [
         { type: "SuitableFor", id },
         { type: "SuitableFor", id: "LIST" },
@@ -51,7 +60,7 @@ export const suitableForApi = apiSlice.injectEndpoints({
 
 export const {
   useGetAllSuitableForQuery,
-  useGetSuitableForQuery,   // now correctly calls /api/suitablefor/view/:id
+  useGetSuitableForQuery, // now correctly calls /api/suitablefor/view/:id
   useAddSuitableForMutation,
   useUpdateSuitableForMutation,
   useDeleteSuitableForMutation,

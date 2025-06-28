@@ -25,10 +25,13 @@ export const couponApi = apiSlice.injectEndpoints({
     // get single coupon
     getCoupon: builder.query<ICoupon, string>({
       query: (id) => `/api/coupon/${id}`,
-      providesTags: ['Coupon']
+      providesTags: ["Coupon"],
     }),
     // editCategory
-    editCoupon: builder.mutation<{message:string}, { id: string; data: Partial<IAddCoupon> }>({
+    editCoupon: builder.mutation<
+      { message: string },
+      { id: string; data: Partial<IAddCoupon> }
+    >({
       query({ id, data }) {
         return {
           url: `/api/coupon/${id}`,

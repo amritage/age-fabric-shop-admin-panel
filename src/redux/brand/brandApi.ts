@@ -1,5 +1,10 @@
 import { apiSlice } from "../api/apiSlice";
-import { BrandDelResponse, BrandResponse, IBrandAddResponse, IAddBrand } from "@/types/brand-type";
+import {
+  BrandDelResponse,
+  BrandResponse,
+  IBrandAddResponse,
+  IAddBrand,
+} from "@/types/brand-type";
 
 export const brandApi = apiSlice.injectEndpoints({
   overrideExisting: true,
@@ -22,7 +27,10 @@ export const brandApi = apiSlice.injectEndpoints({
       invalidatesTags: ["AllBrands"],
     }),
     // editCategory
-    editBrand: builder.mutation<IBrandAddResponse, { id: string; data: Partial<IAddBrand> }>({
+    editBrand: builder.mutation<
+      IBrandAddResponse,
+      { id: string; data: Partial<IAddBrand> }
+    >({
       query({ id, data }) {
         return {
           url: `/api/brand/edit/${id}`,
@@ -35,7 +43,7 @@ export const brandApi = apiSlice.injectEndpoints({
     // get single product
     getBrand: builder.query<IAddBrand, string>({
       query: (id) => `/api/brand/get/${id}`,
-      providesTags: ['getBrand']
+      providesTags: ["getBrand"],
     }),
     // delete brand
     deleteBrand: builder.mutation<BrandDelResponse, string>({

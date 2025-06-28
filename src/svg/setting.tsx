@@ -3,7 +3,7 @@ import React from "react";
 const Setting = () => {
   return (
     <svg
-      style={{ transform: 'translateY(-3px)' }}
+      style={{ transform: "translateY(-3px)" }}
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       width="16"

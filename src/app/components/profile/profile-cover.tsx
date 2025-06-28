@@ -4,7 +4,8 @@ import default_cover from "@assets/img/bg/profile-header.jpg";
 import useUploadImage from "@/hooks/useUploadImg";
 
 const ProfileCover = () => {
-  const { handleImageUpload, uploadData, isError, isLoading } = useUploadImage();
+  const { handleImageUpload, uploadData, isError, isLoading } =
+    useUploadImage();
   return (
     <div className="relative h-[200px] w-full">
       <div

@@ -25,8 +25,7 @@ export default function EditVendor({ id }: EditVendorProps) {
   } = useGetVendorQuery(id || "");
 
   // 2) Prepare update
-  const [updateVendor, { isLoading: isUpdating }] =
-    useUpdateVendorMutation();
+  const [updateVendor, { isLoading: isUpdating }] = useUpdateVendorMutation();
 
   // 3) Hook up form
   const {
@@ -47,7 +46,10 @@ export default function EditVendor({ id }: EditVendorProps) {
 
   const onSubmit = async (vals: IVendor) => {
     try {
-      await updateVendor({ id: id!, changes: { name: vals.name, img } }).unwrap();
+      await updateVendor({
+        id: id!,
+        changes: { name: vals.name, img },
+      }).unwrap();
       router.push("/vendor");
     } catch (e: any) {
       // you could set an error state here
@@ -58,18 +60,25 @@ export default function EditVendor({ id }: EditVendorProps) {
   if (fetchError || !data) return <ErrorMsg msg="Failed to load vendor." />;
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="bg-white px-8 py-8 rounded-md space-y-6">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="bg-white px-8 py-8 rounded-md space-y-6"
+    >
       <GlobalImgUpload image={img} setImage={setImg} isSubmitted={isUpdating} />
 
       <div>
-        <label className="block mb-1 text-sm font-medium text-gray-700">Name</label>
+        <label className="block mb-1 text-sm font-medium text-gray-700">
+          Name
+        </label>
         <input
           type="text"
           {...register("name", { required: "Name is required" })}
           className="w-full px-3 py-2 border rounded-md focus:outline-none"
           placeholder="Enter vendor name"
         />
-        {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>}
+        {errors.name && (
+          <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
+        )}
       </div>
 
       <button

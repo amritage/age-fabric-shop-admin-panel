@@ -17,8 +17,6 @@ export const reviewApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const {
-  useDeleteReviewsMutation
-} = reviewApi;
+export const { useDeleteReviewsMutation } = reviewApi;
 
 export default reviewApi;

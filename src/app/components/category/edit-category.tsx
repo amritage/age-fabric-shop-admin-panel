@@ -10,7 +10,7 @@ import { useGetCategoryQuery } from "@/redux/category/categoryApi";
 import CategoryParent from "./category-parent";
 import CategoryDescription from "./category-description";
 
-const  EditCategory = ({ id }: { id: string }) => {
+const EditCategory = ({ id }: { id: string }) => {
   const { data: categoryData, isError, isLoading } = useGetCategoryQuery(id);
   const {
     selectProductType,
@@ -33,7 +33,7 @@ const  EditCategory = ({ id }: { id: string }) => {
         {categoryData && (
           <form
             onSubmit={handleSubmit((data) =>
-              handleSubmitEditCategory(data, id)
+              handleSubmitEditCategory(data, id),
             )}
           >
             <div className="mb-6 bg-white px-8 py-8 rounded-md">

@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 /* import useProductSubmit from "@/hooks/useProductSubmit";
- */import DescriptionTextarea from "./description-textarea";
+ */ import DescriptionTextarea from "./description-textarea";
 import OfferDatePicker from "./offer-date-picker";
 import ProductTypeBrand from "./product-type-brand";
 import AdditionalInformation from "./additional-information";

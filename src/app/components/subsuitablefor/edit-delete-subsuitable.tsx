@@ -61,5 +61,5 @@ export default function SubSuitableForEditDelete({ id, onDelete }: Props) {
         <DeleteTooltip showDelete={showDelete} />
       </div>
     </div>
-);
+  );
 }

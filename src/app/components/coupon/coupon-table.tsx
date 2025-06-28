@@ -29,7 +29,12 @@ type IPropType = {
   searchValue?: string;
 };
 
-const CouponTable = ({cls,setOpenSidebar,selectValue,searchValue}: IPropType) => {
+const CouponTable = ({
+  cls,
+  setOpenSidebar,
+  selectValue,
+  searchValue,
+}: IPropType) => {
   const { data: coupons, isError, isLoading, error } = useGetAllCouponsQuery();
   const paginationData = usePagination(coupons || [], 5);
   const { currentItems, handlePageClick, pageCount } = paginationData;
@@ -46,13 +51,13 @@ const CouponTable = ({cls,setOpenSidebar,selectValue,searchValue}: IPropType) =>
     // search value filtering if search value true
     if (searchValue) {
       coupon_items = coupon_items.filter((c) =>
-        c.title.toLowerCase().includes(searchValue.toLowerCase())
+        c.title.toLowerCase().includes(searchValue.toLowerCase()),
       );
     }
     // selectValue filtering if selectValue true
     if (selectValue) {
       coupon_items = coupon_items.filter(
-        (c) => c.status.toLowerCase() === selectValue.toLowerCase()
+        (c) => c.status.toLowerCase() === selectValue.toLowerCase(),
       );
     }
     content = (
@@ -81,80 +86,77 @@ const CouponTable = ({cls,setOpenSidebar,selectValue,searchValue}: IPropType) =>
           </thead>
           <tbody>
             {coupon_items.map((coupon) => (
-                <tr
-                  key={coupon._id}
-                  className="bg-white border-b border-gray6 last:border-0 text-start mx-9"
-                >
-                  <td className="pr-8 py-5 whitespace-nowrap">
-                    <div className="flex items-center space-x-5">
-                      {coupon?.logo && (
-                        <Image
-                          className="w-[60px] h-[60px] rounded-md"
-                          src={coupon.logo}
-                          alt="logo"
-                          width={60}
-                          height={60}
-                        />
-                      )}
-                      <span className="font-medium text-heading">
-                        {coupon.title}
-                      </span>
-                    </div>
-                  </td>
-                  <td className="px-3 py-3 text-black font-normal text-end">
-                    <span className="uppercase rounded-md px-3 py-1 bg-gray">
-                      {coupon.couponCode}
+              <tr
+                key={coupon._id}
+                className="bg-white border-b border-gray6 last:border-0 text-start mx-9"
+              >
+                <td className="pr-8 py-5 whitespace-nowrap">
+                  <div className="flex items-center space-x-5">
+                    {coupon?.logo && (
+                      <Image
+                        className="w-[60px] h-[60px] rounded-md"
+                        src={coupon.logo}
+                        alt="logo"
+                        width={60}
+                        height={60}
+                      />
+                    )}
+                    <span className="font-medium text-heading">
+                      {coupon.title}
                     </span>
-                  </td>
-                  <td className="px-3 py-3 font-normal text-[#55585B] text-end">
-                    {coupon.discountPercentage}%
-                  </td>
-                  <td className="px-3 py-3 font-normal text-[#55585B] text-end">
-                    <span
-                      className={`text-[11px] px-3 py-1 rounded-md leading-none font-medium text-end ${
-                        dayjs().isAfter(dayjs(coupon.endTime))
-                          ? "text-danger bg-danger/10"
-                          : "text-success bg-success/10"
-                      }`}
-                    >
-                      {dayjs().isAfter(dayjs(coupon.endTime))
-                        ? "Expired"
-                        : "Active"}
-                    </span>
-                  </td>
+                  </div>
+                </td>
+                <td className="px-3 py-3 text-black font-normal text-end">
+                  <span className="uppercase rounded-md px-3 py-1 bg-gray">
+                    {coupon.couponCode}
+                  </span>
+                </td>
+                <td className="px-3 py-3 font-normal text-[#55585B] text-end">
+                  {coupon.discountPercentage}%
+                </td>
+                <td className="px-3 py-3 font-normal text-[#55585B] text-end">
+                  <span
+                    className={`text-[11px] px-3 py-1 rounded-md leading-none font-medium text-end ${
+                      dayjs().isAfter(dayjs(coupon.endTime))
+                        ? "text-danger bg-danger/10"
+                        : "text-success bg-success/10"
+                    }`}
+                  >
+                    {dayjs().isAfter(dayjs(coupon.endTime))
+                      ? "Expired"
+                      : "Active"}
+                  </span>
+                </td>
 
-                  <td className="px-3 py-3 text-end">
-                    {dayjs(coupon.createdAt).format("MMM D, YYYY")}
-                  </td>
-                  <td className="px-3 py-3 text-end">
-                    {dayjs(coupon.endTime).format("MMM D, YYYY")}
-                  </td>
-                  <td className="px-9 py-3 text-end">
-                    <CouponAction
-                      id={coupon._id}
-                      setOpenSidebar={setOpenSidebar}
-                    />
-                  </td>
-                </tr>
-              ))}
+                <td className="px-3 py-3 text-end">
+                  {dayjs(coupon.createdAt).format("MMM D, YYYY")}
+                </td>
+                <td className="px-3 py-3 text-end">
+                  {dayjs(coupon.endTime).format("MMM D, YYYY")}
+                </td>
+                <td className="px-9 py-3 text-end">
+                  <CouponAction
+                    id={coupon._id}
+                    setOpenSidebar={setOpenSidebar}
+                  />
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
 
-          <div className="flex justify-between items-center flex-wrap mx-8">
-            <p className="mb-0 text-tiny">
-              Showing 1-
-              {
-                currentItems.length
-              }{" "}
-              of {coupons?.length}
-            </p>
-            <div className="pagination py-3 flex justify-end items-center mx-8 pagination">
-              <Pagination
-                handlePageClick={handlePageClick}
-                pageCount={pageCount}
-              />
-            </div>
+        <div className="flex justify-between items-center flex-wrap mx-8">
+          <p className="mb-0 text-tiny">
+            Showing 1-
+            {currentItems.length} of {coupons?.length}
+          </p>
+          <div className="pagination py-3 flex justify-end items-center mx-8 pagination">
+            <Pagination
+              handlePageClick={handlePageClick}
+              pageCount={pageCount}
+            />
           </div>
+        </div>
       </>
     );
   }

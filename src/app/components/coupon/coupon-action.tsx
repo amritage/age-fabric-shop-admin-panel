@@ -6,13 +6,13 @@ import EditTooltip from "../tooltip/edit-tooltip";
 import { useDeleteCouponMutation } from "@/redux/coupon/couponApi";
 import Link from "next/link";
 
-// prop type 
+// prop type
 type IPropType = {
-  id:string;
+  id: string;
   setOpenSidebar?: React.Dispatch<React.SetStateAction<boolean>>;
-}
+};
 
-const CouponAction = ({ id,setOpenSidebar }: IPropType) => {
+const CouponAction = ({ id, setOpenSidebar }: IPropType) => {
   const [showEdit, setShowEdit] = useState<boolean>(false);
   const [showDelete, setShowDelete] = useState<boolean>(false);
 
@@ -49,13 +49,13 @@ const CouponAction = ({ id,setOpenSidebar }: IPropType) => {
     <div className="flex items-center justify-end space-x-2">
       <div className="relative">
         <Link href={`/coupon/${id}`}>
-        <button
-          onMouseEnter={() => setShowEdit(true)}
-          onMouseLeave={() => setShowEdit(false)}
-          className="w-10 h-10 leading-10 text-tiny bg-success text-white rounded-md hover:bg-green-600"
-        >
-          <Edit />
-        </button>
+          <button
+            onMouseEnter={() => setShowEdit(true)}
+            onMouseLeave={() => setShowEdit(false)}
+            className="w-10 h-10 leading-10 text-tiny bg-success text-white rounded-md hover:bg-green-600"
+          >
+            <Edit />
+          </button>
         </Link>
         <EditTooltip showEdit={showEdit} />
       </div>

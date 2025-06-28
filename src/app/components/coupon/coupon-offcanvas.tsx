@@ -127,7 +127,10 @@ const CouponOffcanvas = ({ propsItems }: IPropType) => {
               >
                 Add Coupon
               </button>
-              <button  onClick={() => setOpenSidebar(false)} className="tp-btn w-full sm:w-1/2 items-center justify-around border border-gray6 bg-white text-black hover:text-white hover:border-danger hover:bg-danger">
+              <button
+                onClick={() => setOpenSidebar(false)}
+                className="tp-btn w-full sm:w-1/2 items-center justify-around border border-gray6 bg-white text-black hover:text-white hover:border-danger hover:bg-danger"
+              >
                 Cancel
               </button>
             </div>

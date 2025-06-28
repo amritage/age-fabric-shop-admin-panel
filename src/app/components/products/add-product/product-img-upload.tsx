@@ -20,7 +20,8 @@ const ProductImgUpload = ({
   default_img,
 }: IPropType) => {
   const [initialLoad, setInitialLoad] = useState(true);
-  const {handleImageUpload,uploadData,isError,error,isLoading} = useUploadImage();
+  const { handleImageUpload, uploadData, isError, error, isLoading } =
+    useUploadImage();
 
   useEffect(() => {
     if (uploadData && !isError) {

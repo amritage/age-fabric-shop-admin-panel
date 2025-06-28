@@ -25,7 +25,6 @@ const BrandTables = () => {
   }
 
   if (!isLoading && !isError && currentItems) {
-
     content = (
       <>
         <div className="overflow-scroll 2xl:overflow-visible">
@@ -73,45 +72,45 @@ const BrandTables = () => {
               </thead>
               <tbody>
                 {[...currentItems.reverse()].map((item) => (
-                    <tr
-                      key={item._id}
-                      className="bg-white border-b border-gray6 last:border-0 text-start mx-9"
-                    >
-                      <td className="px-3 py-3 pl-0 font-normal text-[#55585B]">
-                        #{item._id.slice(2, 10)}
-                      </td>
-                      <td className="pr-8 py-5 whitespace-nowrap">
-                        <a href="#" className="flex items-center space-x-5">
-                          {item.logo && (
-                            <Image
-                              className="w-10 h-10 rounded-full object-contain"
-                              src={item.logo}
-                              alt="image"
-                              width={40}
-                              height={40}
-                            />
-                          )}
-                          <span className="font-medium text-heading text-hover-primary transition">
-                            {item.name}
-                          </span>
-                        </a>
-                      </td>
-                      <td className="px-3 py-3 font-normal text-[#55585B] text-end">
-                        {item.email}
-                      </td>
-                      <td className="px-3 py-3 font-normal text-[#55585B] text-end">
-                        {item.website}
-                      </td>
-                      <td className="px-3 py-3 font-normal text-[#55585B] text-end">
-                        {item.location}
-                      </td>
-                      <td className="px-9 py-3 text-end">
-                        <div className="flex items-center justify-end space-x-2">
-                          <BrandEditDelete id={item._id}/>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                  <tr
+                    key={item._id}
+                    className="bg-white border-b border-gray6 last:border-0 text-start mx-9"
+                  >
+                    <td className="px-3 py-3 pl-0 font-normal text-[#55585B]">
+                      #{item._id.slice(2, 10)}
+                    </td>
+                    <td className="pr-8 py-5 whitespace-nowrap">
+                      <a href="#" className="flex items-center space-x-5">
+                        {item.logo && (
+                          <Image
+                            className="w-10 h-10 rounded-full object-contain"
+                            src={item.logo}
+                            alt="image"
+                            width={40}
+                            height={40}
+                          />
+                        )}
+                        <span className="font-medium text-heading text-hover-primary transition">
+                          {item.name}
+                        </span>
+                      </a>
+                    </td>
+                    <td className="px-3 py-3 font-normal text-[#55585B] text-end">
+                      {item.email}
+                    </td>
+                    <td className="px-3 py-3 font-normal text-[#55585B] text-end">
+                      {item.website}
+                    </td>
+                    <td className="px-3 py-3 font-normal text-[#55585B] text-end">
+                      {item.location}
+                    </td>
+                    <td className="px-9 py-3 text-end">
+                      <div className="flex items-center justify-end space-x-2">
+                        <BrandEditDelete id={item._id} />
+                      </div>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
@@ -119,8 +118,7 @@ const BrandTables = () => {
         <div className="flex justify-between items-center flex-wrap">
           <p className="mb-0 text-tiny">
             Showing 1-
-            {currentItems.length} of{" "}
-            {brands?.result.length}
+            {currentItems.length} of {brands?.result.length}
           </p>
           <div className="pagination py-3 flex justify-end items-center pagination">
             <Pagination

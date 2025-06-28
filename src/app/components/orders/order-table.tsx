@@ -7,14 +7,13 @@ import { Search } from "@/svg";
 import ErrorMsg from "../common/error-msg";
 import Pagination from "../ui/Pagination";
 import OrderStatusChange from "./status-change";
-import {useGetAllOrdersQuery} from "@/redux/order/orderApi";
+import { useGetAllOrdersQuery } from "@/redux/order/orderApi";
 import usePagination from "@/hooks/use-pagination";
-
 
 const OrderTable = () => {
   const { data: orders, isError, isLoading, error } = useGetAllOrdersQuery();
-  const [searchVal,setSearchVal] = useState<string>("");
-  const [selectVal,setSelectVal] = useState<string>("");
+  const [searchVal, setSearchVal] = useState<string>("");
+  const [selectVal, setSelectVal] = useState<string>("");
   const paginationData = usePagination(orders?.data || [], 5);
   const { currentItems, handlePageClick, pageCount } = paginationData;
 
@@ -33,11 +32,15 @@ const OrderTable = () => {
 
   if (!isLoading && !isError && orders?.success) {
     let orderItems = [...currentItems];
-    if(searchVal){
-      orderItems = orderItems.filter(v => v.invoice.toString().includes(searchVal))
+    if (searchVal) {
+      orderItems = orderItems.filter((v) =>
+        v.invoice.toString().includes(searchVal),
+      );
     }
-    if(selectVal){
-      orderItems = orderItems.filter(v => v.status.toLowerCase() === selectVal.toLowerCase())
+    if (selectVal) {
+      orderItems = orderItems.filter(
+        (v) => v.status.toLowerCase() === selectVal.toLowerCase(),
+      );
     }
 
     content = (
@@ -97,74 +100,71 @@ const OrderTable = () => {
           </thead>
           <tbody>
             {orderItems.map((item) => (
-                <tr
-                  key={item._id}
-                  className="bg-white border-b border-gray6 last:border-0 text-start mx-9"
-                >
-                  <td className="px-3 py-3 font-normal text-[#55585B]">
-                    #{item.invoice}
-                  </td>
-                  <td className="pr-8 py-5 whitespace-nowrap">
-                    <a
-                      href="#"
-                      className="flex items-center space-x-5 text-hover-primary text-heading"
-                    >
-                      {item.user?.imageURL && (
-                        <Image
-                          className="w-[50px] h-[50px] rounded-full"
-                          src={item.user.imageURL}
-                          alt="user-img"
-                          width={50}
-                          height={50}
-                        />
-                      )}
-                      <span className="font-medium">{item?.user?.name}</span>
-                    </a>
-                  </td>
-
-                  <td className="px-3 py-3 font-normal text-[#55585B] text-end">
-                    {item.cart.reduce(
-                      (acc, curr) => acc + curr.orderQuantity,
-                      0
+              <tr
+                key={item._id}
+                className="bg-white border-b border-gray6 last:border-0 text-start mx-9"
+              >
+                <td className="px-3 py-3 font-normal text-[#55585B]">
+                  #{item.invoice}
+                </td>
+                <td className="pr-8 py-5 whitespace-nowrap">
+                  <a
+                    href="#"
+                    className="flex items-center space-x-5 text-hover-primary text-heading"
+                  >
+                    {item.user?.imageURL && (
+                      <Image
+                        className="w-[50px] h-[50px] rounded-full"
+                        src={item.user.imageURL}
+                        alt="user-img"
+                        width={50}
+                        height={50}
+                      />
                     )}
-                  </td>
-                  <td className="px-3 py-3 font-normal text-[#55585B] text-end">
-                    $
-                    {item.cart
-                      .reduce((acc, curr) => acc + curr.price, 0)
-                      .toFixed(2)}
-                  </td>
-                  <td className="px-3 py-3 text-end">
-                    <span
-                      className={`text-[11px] ${
-                        item.status === "pending"
-                          ? "text-warning bg-warning/10"
-                          : item.status === "delivered"
+                    <span className="font-medium">{item?.user?.name}</span>
+                  </a>
+                </td>
+
+                <td className="px-3 py-3 font-normal text-[#55585B] text-end">
+                  {item.cart.reduce((acc, curr) => acc + curr.orderQuantity, 0)}
+                </td>
+                <td className="px-3 py-3 font-normal text-[#55585B] text-end">
+                  $
+                  {item.cart
+                    .reduce((acc, curr) => acc + curr.price, 0)
+                    .toFixed(2)}
+                </td>
+                <td className="px-3 py-3 text-end">
+                  <span
+                    className={`text-[11px] ${
+                      item.status === "pending"
+                        ? "text-warning bg-warning/10"
+                        : item.status === "delivered"
                           ? "text-success bg-success/10"
                           : item.status === "processing"
-                          ? "text-indigo-500 bg-indigo-100"
-                          : item.status === "cancel"
-                          ? "text-danger bg-danger/10"
-                          : ""
-                      } px-3 py-1 rounded-md leading-none font-medium text-end`}
-                    >
-                      {item.status}
-                    </span>
-                  </td>
-                  <td className="px-3 py-3 font-normal text-[#55585B] text-end">
-                    {dayjs(item.createdAt).format("MMM D, YYYY")}
-                  </td>
+                            ? "text-indigo-500 bg-indigo-100"
+                            : item.status === "cancel"
+                              ? "text-danger bg-danger/10"
+                              : ""
+                    } px-3 py-1 rounded-md leading-none font-medium text-end`}
+                  >
+                    {item.status}
+                  </span>
+                </td>
+                <td className="px-3 py-3 font-normal text-[#55585B] text-end">
+                  {dayjs(item.createdAt).format("MMM D, YYYY")}
+                </td>
 
-                  <td className="px-9 py-3 text-end">
-                    <div className="flex items-center justify-end space-x-2">
-                      <OrderStatusChange id={item._id}/>
-                    </div>
-                  </td>
-                  {/* order actions */}
-                  <OrderActions id={item._id} />
-                  {/* order actions */}
-                </tr>
-              ))}
+                <td className="px-9 py-3 text-end">
+                  <div className="flex items-center justify-end space-x-2">
+                    <OrderStatusChange id={item._id} />
+                  </div>
+                </td>
+                {/* order actions */}
+                <OrderActions id={item._id} />
+                {/* order actions */}
+              </tr>
+            ))}
           </tbody>
         </table>
 
@@ -186,11 +186,11 @@ const OrderTable = () => {
     );
   }
 
-  // handle change input 
+  // handle change input
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchVal(e.target.value);
   };
-  // handle change input 
+  // handle change input
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectVal(e.target.value);
   };

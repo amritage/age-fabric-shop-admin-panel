@@ -44,7 +44,7 @@ const LineChart = () => {
         labels: salesReport
           ?.slice()
           ?.sort(
-            (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+            (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
           )
           ?.map((or) => or.date),
         datasets: [
@@ -55,7 +55,7 @@ const LineChart = () => {
                   ?.slice()
                   ?.sort(
                     (a, b) =>
-                      new Date(a.date).getTime() - new Date(b.date).getTime()
+                      new Date(a.date).getTime() - new Date(b.date).getTime(),
                   )
                   ?.map((or) => or.total),
                 borderColor: "#10B981",
@@ -69,7 +69,7 @@ const LineChart = () => {
                   ?.slice()
                   ?.sort(
                     (a, b) =>
-                      new Date(a.date).getTime() - new Date(b.date).getTime()
+                      new Date(a.date).getTime() - new Date(b.date).getTime(),
                   )
                   ?.map((or) => or.order),
                 borderColor: "#F97316",

@@ -36,7 +36,10 @@ export default function AddSubSuitableFor() {
   if (isError) return <ErrorMsg msg="Failed to load parent options" />;
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="bg-white px-8 py-8 rounded-md">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="bg-white px-8 py-8 rounded-md"
+    >
       {apiError && <p className="mb-4 text-red-600">{apiError}</p>}
 
       <div className="mb-6">
@@ -53,7 +56,9 @@ export default function AddSubSuitableFor() {
           ))}
         </select>
         {errors.suitableforId && (
-          <p className="text-red-500 text-sm mt-1">{errors.suitableforId.message}</p>
+          <p className="text-red-500 text-sm mt-1">
+            {errors.suitableforId.message}
+          </p>
         )}
       </div>
 
@@ -64,7 +69,9 @@ export default function AddSubSuitableFor() {
           className="input w-full h-[44px] rounded-md border border-gray6 px-6 text-base"
           placeholder="Sub-SuitableFor name"
         />
-        {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
+        {errors.name && (
+          <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
+        )}
       </div>
 
       <button disabled={isSubmitting} className="tp-btn px-7 py-2">

@@ -3,7 +3,10 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "next/navigation";
-import { useGetCategoryQuery, useUpdateCategoryMutation } from "@/redux/newcategory/newcategoryApi";
+import {
+  useGetCategoryQuery,
+  useUpdateCategoryMutation,
+} from "@/redux/newcategory/newcategoryApi";
 import { useForm } from "react-hook-form";
 import { ICategory } from "@/types/newcategory-type";
 import Image from "next/image";
@@ -11,7 +14,8 @@ import Image from "next/image";
 export default function EditCategory() {
   const { id } = useParams();
   const { data, isLoading: isFetching } = useGetCategoryQuery(id || "");
-  const [updateCategory, { isLoading: isSubmitting }] = useUpdateCategoryMutation();
+  const [updateCategory, { isLoading: isSubmitting }] =
+    useUpdateCategoryMutation();
 
   const {
     register,
@@ -89,7 +93,9 @@ export default function EditCategory() {
           {...register("productType", { required: "Required" })}
           className="input w-full"
         />
-        {errors.productType && <p className="text-red-500">{errors.productType.message}</p>}
+        {errors.productType && (
+          <p className="text-red-500">{errors.productType.message}</p>
+        )}
       </div>
 
       {/* Parent Category */}
@@ -99,11 +105,13 @@ export default function EditCategory() {
           {...register("parent", { required: "Required" })}
           className="input w-full"
         />
-        {errors.parent && <p className="text-red-500">{errors.parent.message}</p>}
+        {errors.parent && (
+          <p className="text-red-500">{errors.parent.message}</p>
+        )}
       </div>
 
       {/* Image Preview + Upload */}
-     <div>
+      <div>
         <label className="block mb-1">Image</label>
         {preview ? (
           <Image

@@ -10,7 +10,10 @@ export const groupCodeApi = apiSlice.injectEndpoints({
         res
           ? [
               { type: "GroupCode" as const, id: "LIST" },
-              ...res.data.map((u) => ({ type: "GroupCode" as const, id: u._id })),
+              ...res.data.map((u) => ({
+                type: "GroupCode" as const,
+                id: u._id,
+              })),
             ]
           : [{ type: "GroupCode", id: "LIST" }],
     }),
@@ -53,4 +56,4 @@ export const {
   useAddGroupCodeMutation,
   useUpdateGroupCodeMutation,
   useDeleteGroupCodeMutation,
-} = groupCodeApi; 
+} = groupCodeApi;

@@ -9,7 +9,12 @@ import EditContent from "@/app/components/content/edit-content";
 export default function EditContentPage() {
   const { id } = useParams();
   const router = useRouter();
-  if (!id) return <Wrapper><p>No content selected.</p></Wrapper>;
+  if (!id)
+    return (
+      <Wrapper>
+        <p>No content selected.</p>
+      </Wrapper>
+    );
 
   return (
     <Wrapper>

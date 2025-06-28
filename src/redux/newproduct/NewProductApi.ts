@@ -5,13 +5,20 @@ export const newProductApi = apiSlice.injectEndpoints({
   overrideExisting: false,
   endpoints: (builder) => ({
     // List products
-    getProducts: builder.query<{ data: IProduct[] }, { page: number; limit: number }>({
-      query: ({ page, limit }) => `/api/newproduct/view?page=${page}&limit=${limit}`,
+    getProducts: builder.query<
+      { data: IProduct[] },
+      { page: number; limit: number }
+    >({
+      query: ({ page, limit }) =>
+        `/api/newproduct/view?page=${page}&limit=${limit}`,
       providesTags: (result) =>
         result
           ? [
               { type: "Product" as const, id: "LIST" },
-              ...result.data.map((p) => ({ type: "Product" as const, id: p._id })),
+              ...result.data.map((p) => ({
+                type: "Product" as const,
+                id: p._id,
+              })),
             ]
           : [{ type: "Product", id: "LIST" }],
     }),
@@ -28,7 +35,7 @@ export const newProductApi = apiSlice.injectEndpoints({
       query: (groupcodeId) => `/api/newproduct/groupcode/${groupcodeId}`,
       providesTags: (result, error, groupcodeId) => [
         { type: "Product", id: "GROUPCODE" },
-        { type: "Product", id: groupcodeId }
+        { type: "Product", id: groupcodeId },
       ],
     }),
 
@@ -43,10 +50,7 @@ export const newProductApi = apiSlice.injectEndpoints({
     }),
 
     // Update product (multipart/form-data)
-    updateProduct: builder.mutation<
-      IProduct,
-      { id: string; body: FormData }
-    >({
+    updateProduct: builder.mutation<IProduct, { id: string; body: FormData }>({
       query: ({ id, body }) => ({
         url: `/api/newproduct/update/${id}`,
         method: "PUT",
@@ -59,13 +63,18 @@ export const newProductApi = apiSlice.injectEndpoints({
     }),
 
     // Delete product
-    deleteProduct: builder.mutation<{ status: number; data: IProduct }, string>({
-      query: (id) => ({ url: `/api/newproduct/delete/${id}`, method: "DELETE" }),
-      invalidatesTags: (result, error, id) => [
-        { type: "Product", id },
-        { type: "Product", id: "LIST" },
-      ],
-    }),
+    deleteProduct: builder.mutation<{ status: number; data: IProduct }, string>(
+      {
+        query: (id) => ({
+          url: `/api/newproduct/delete/${id}`,
+          method: "DELETE",
+        }),
+        invalidatesTags: (result, error, id) => [
+          { type: "Product", id },
+          { type: "Product", id: "LIST" },
+        ],
+      },
+    ),
 
     getPopularProducts: builder.query<{ data: IProduct[] }, void>({
       query: () => `/api/newproduct/popular`,
@@ -77,7 +86,8 @@ export const newProductApi = apiSlice.injectEndpoints({
       query: () => `/api/newproduct/toprated`,
     }),
     getProductsByDescription: builder.query<{ data: IProduct[] }, string>({
-      query: (desc) => `/api/newproduct/view?productdescription=${encodeURIComponent(desc)}`,
+      query: (desc) =>
+        `/api/newproduct/view?productdescription=${encodeURIComponent(desc)}`,
     }),
   }),
 });

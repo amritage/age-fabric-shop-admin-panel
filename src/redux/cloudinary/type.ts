@@ -7,11 +7,11 @@ export interface ICloudinaryDeleteResponse {
 export interface ICloudinaryPostResponse {
   status: string;
   message: string;
-  data: {url:string,id:string};
+  data: { url: string; id: string };
 }
 
 export interface ICloudinaryMultiplePostRes {
   success: boolean;
   message: string;
-  data: {url:string,id:string}[] | [];
+  data: { url: string; id: string }[] | [];
 }

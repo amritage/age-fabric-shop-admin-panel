@@ -12,7 +12,7 @@ const schema = Yup.object().shape({
   password: Yup.string().required().min(6).label("Password"),
   confirmPassword: Yup.string().oneOf(
     [Yup.ref("password"), undefined],
-    "Passwords must match"
+    "Passwords must match",
   ),
 });
 
@@ -44,7 +44,7 @@ const ForgetPasswordPage = ({ params }: { params: { token: string } }) => {
       }
     } else {
       if ("data" in res) {
-        if("message" in res.data){
+        if ("message" in res.data) {
           notifySuccess(res.data.message);
         }
       }
@@ -78,7 +78,7 @@ const ForgetPasswordPage = ({ params }: { params: { token: string } }) => {
                 </div>
                 <div className="mb-5">
                   <p className="mb-0 text-base text-black">
-                  confirm password <span className="text-red">*</span>
+                    confirm password <span className="text-red">*</span>
                   </p>
                   <input
                     {...register("confirmPassword")}

@@ -1,16 +1,20 @@
+"use client";
+
 // File: app/components/fabric-products/MetadataForm.tsx
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from 'next/navigation';
-import { useSelector, useDispatch } from 'react-redux';
-import { clearProductMedia } from '@/redux/features/productImageSlice';
-import { notifyError } from '@/utils/toast';
+import { useRouter } from "next/navigation";
+import { useSelector, useDispatch } from "react-redux";
+import { clearProductMedia } from "@/redux/features/productImageSlice";
+import { notifyError } from "@/utils/toast";
 
 // Grab your base API URL from NEXT_PUBLIC_ env
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 if (!BASE_URL) {
-  notifyError("API base URL is not set. Please configure NEXT_PUBLIC_API_BASE_URL in your environment.");
+  notifyError(
+    "API base URL is not set. Please configure NEXT_PUBLIC_API_BASE_URL in your environment.",
+  );
 }
 
 interface MetadataFormProps {
@@ -53,11 +57,15 @@ interface MetadataFormProps {
   onBack: () => void;
 }
 
-export default function MetadataForm({ initial = {}, onSubmit, onBack }: MetadataFormProps) {
+export default function MetadataForm({
+  initial = {},
+  onSubmit,
+  onBack,
+}: MetadataFormProps) {
   const [meta, setMeta] = useState<Record<string, any>>({
     // Preserve all base product data from initial
     ...initial,
-    
+
     // Set defaults for metadata fields if not provided
     charset: initial.charset || "UTF-8",
     xUaCompatible: initial.xUaCompatible || "IE=edge",
@@ -89,11 +97,18 @@ export default function MetadataForm({ initial = {}, onSubmit, onBack }: Metadat
   });
   const router = useRouter();
   const dispatch = useDispatch();
-  const { image, image1, image2, video } = useSelector((state: any) => state.productMedia);
+  const { image, image1, image2, video } = useSelector(
+    (state: any) => state.productMedia,
+  );
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
+  ) => {
     const { name, value, type } = e.target;
-    const newValue = type === 'checkbox' ? (e.target as HTMLInputElement).checked : value;
+    const newValue =
+      type === "checkbox" ? (e.target as HTMLInputElement).checked : value;
     setMeta((prev) => ({ ...prev, [name]: newValue }));
   };
 
@@ -106,16 +121,42 @@ export default function MetadataForm({ initial = {}, onSubmit, onBack }: Metadat
 
     // Validate required fields
     const requiredFields = [
-      'name', 'sku', 'slug', 'newCategoryId', 'structureId', 'contentId',
-      'gsm', 'oz', 'cm', 'inch', 'quantity', 'um', 'currency', 'finishId',
-      'designId', 'colorId', 'css', 'motifsizeId', 'suitableforId', 'vendorId',
-      'groupcodeId', 'purchasePrice', 'salesPrice', 'locationCode', 'productIdentifier',
-      'title', 'description', 'keywords', 'ogTitle', 'ogDescription', 'ogUrl'
+      "name",
+      "sku",
+      "slug",
+      "newCategoryId",
+      "structureId",
+      "contentId",
+      "gsm",
+      "oz",
+      "cm",
+      "inch",
+      "quantity",
+      "um",
+      "currency",
+      "finishId",
+      "designId",
+      "colorId",
+      "css",
+      "motifsizeId",
+      "suitableforId",
+      "vendorId",
+      "groupcodeId",
+      "purchasePrice",
+      "salesPrice",
+      "locationCode",
+      "productIdentifier",
+      "title",
+      "description",
+      "keywords",
+      "ogTitle",
+      "ogDescription",
+      "ogUrl",
     ];
-    
-    const missingFields = requiredFields.filter(field => !meta[field]);
+
+    const missingFields = requiredFields.filter((field) => !meta[field]);
     if (missingFields.length > 0) {
-      notifyError(`Missing required fields: ${missingFields.join(', ')}`);
+      notifyError(`Missing required fields: ${missingFields.join(", ")}`);
       return;
     }
 
@@ -124,11 +165,18 @@ export default function MetadataForm({ initial = {}, onSubmit, onBack }: Metadat
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-6 max-w-4xl mx-auto space-y-8 rounded-xl border border-gray-200">
-      <h2 className="text-2xl font-semibold text-center text-gray-800 mb-4 tracking-tight">Product Metadata</h2>
+    <form
+      onSubmit={handleSubmit}
+      className="bg-white p-6 max-w-4xl mx-auto space-y-8 rounded-xl border border-gray-200"
+    >
+      <h2 className="text-2xl font-semibold text-center text-gray-800 mb-4 tracking-tight">
+        Product Metadata
+      </h2>
       {/* Product Name (required) */}
       <div>
-        <label className="block text-xs font-medium text-gray-600 mb-1">Product Name<span className="text-red-500">*</span></label>
+        <label className="block text-xs font-medium text-gray-600 mb-1">
+          Product Name<span className="text-red-500">*</span>
+        </label>
         <input
           type="text"
           name="name"
@@ -141,7 +189,9 @@ export default function MetadataForm({ initial = {}, onSubmit, onBack }: Metadat
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Charset */}
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">Charset</label>
+          <label className="block text-xs font-medium text-gray-600 mb-1">
+            Charset
+          </label>
           <select
             name="charset"
             value={meta.charset}
@@ -153,7 +203,9 @@ export default function MetadataForm({ initial = {}, onSubmit, onBack }: Metadat
         </div>
         {/* X-UA-Compatible */}
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">X-UA-Compatible</label>
+          <label className="block text-xs font-medium text-gray-600 mb-1">
+            X-UA-Compatible
+          </label>
           <input
             type="text"
             name="xUaCompatible"
@@ -164,7 +216,9 @@ export default function MetadataForm({ initial = {}, onSubmit, onBack }: Metadat
         </div>
         {/* Viewport */}
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">Viewport</label>
+          <label className="block text-xs font-medium text-gray-600 mb-1">
+            Viewport
+          </label>
           <input
             type="text"
             name="viewport"
@@ -175,7 +229,9 @@ export default function MetadataForm({ initial = {}, onSubmit, onBack }: Metadat
         </div>
         {/* Title */}
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">Title</label>
+          <label className="block text-xs font-medium text-gray-600 mb-1">
+            Title
+          </label>
           <input
             type="text"
             name="title"
@@ -189,7 +245,9 @@ export default function MetadataForm({ initial = {}, onSubmit, onBack }: Metadat
       {/* Description & Keywords */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">Description</label>
+          <label className="block text-xs font-medium text-gray-600 mb-1">
+            Description
+          </label>
           <textarea
             name="description"
             maxLength={160}
@@ -200,7 +258,9 @@ export default function MetadataForm({ initial = {}, onSubmit, onBack }: Metadat
           />
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">Keywords</label>
+          <label className="block text-xs font-medium text-gray-600 mb-1">
+            Keywords
+          </label>
           <input
             type="text"
             name="keywords"
@@ -214,22 +274,29 @@ export default function MetadataForm({ initial = {}, onSubmit, onBack }: Metadat
       {/* Robots, Content Language, Google Site Verification, msValidate */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">Robots</label>
+          <label className="block text-xs font-medium text-gray-600 mb-1">
+            Robots
+          </label>
           <select
             name="robots"
             value={meta.robots}
             onChange={handleChange}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-400 focus:border-indigo-400 text-sm bg-white"
           >
-            {["index, follow", "noindex, nofollow", "index, nofollow", "noindex, follow"].map(
-              (r) => (
-                <option key={r}>{r}</option>
-              )
-            )}
+            {[
+              "index, follow",
+              "noindex, nofollow",
+              "index, nofollow",
+              "noindex, follow",
+            ].map((r) => (
+              <option key={r}>{r}</option>
+            ))}
           </select>
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">Content Language</label>
+          <label className="block text-xs font-medium text-gray-600 mb-1">
+            Content Language
+          </label>
           <input
             type="text"
             name="contentLanguage"
@@ -240,7 +307,9 @@ export default function MetadataForm({ initial = {}, onSubmit, onBack }: Metadat
           />
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">Google Site Verification</label>
+          <label className="block text-xs font-medium text-gray-600 mb-1">
+            Google Site Verification
+          </label>
           <input
             type="text"
             name="googleSiteVerification"
@@ -250,7 +319,9 @@ export default function MetadataForm({ initial = {}, onSubmit, onBack }: Metadat
           />
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">msValidate</label>
+          <label className="block text-xs font-medium text-gray-600 mb-1">
+            msValidate
+          </label>
           <input
             type="text"
             name="msValidate"
@@ -263,7 +334,9 @@ export default function MetadataForm({ initial = {}, onSubmit, onBack }: Metadat
       {/* Theme Color, Mobile Web App Capable, Apple Status Bar Style, Format Detection */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">Theme Color</label>
+          <label className="block text-xs font-medium text-gray-600 mb-1">
+            Theme Color
+          </label>
           <input
             type="color"
             name="themeColor"
@@ -280,10 +353,14 @@ export default function MetadataForm({ initial = {}, onSubmit, onBack }: Metadat
             onChange={handleChange}
             className="accent-indigo-500"
           />
-          <label className="text-xs font-medium text-gray-600">Mobile Web App Capable</label>
+          <label className="text-xs font-medium text-gray-600">
+            Mobile Web App Capable
+          </label>
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">Apple Status Bar Style</label>
+          <label className="block text-xs font-medium text-gray-600 mb-1">
+            Apple Status Bar Style
+          </label>
           <select
             name="appleStatusBarStyle"
             value={meta.appleStatusBarStyle}
@@ -296,7 +373,9 @@ export default function MetadataForm({ initial = {}, onSubmit, onBack }: Metadat
           </select>
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">Format Detection</label>
+          <label className="block text-xs font-medium text-gray-600 mb-1">
+            Format Detection
+          </label>
           <select
             name="formatDetection"
             value={meta.formatDetection}
@@ -312,7 +391,9 @@ export default function MetadataForm({ initial = {}, onSubmit, onBack }: Metadat
       {/* OpenGraph & Twitter */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">OG Locale</label>
+          <label className="block text-xs font-medium text-gray-600 mb-1">
+            OG Locale
+          </label>
           <input
             type="text"
             name="ogLocale"
@@ -323,7 +404,9 @@ export default function MetadataForm({ initial = {}, onSubmit, onBack }: Metadat
           />
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">OG Title</label>
+          <label className="block text-xs font-medium text-gray-600 mb-1">
+            OG Title
+          </label>
           <input
             type="text"
             name="ogTitle"
@@ -334,7 +417,9 @@ export default function MetadataForm({ initial = {}, onSubmit, onBack }: Metadat
           />
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">OG Description</label>
+          <label className="block text-xs font-medium text-gray-600 mb-1">
+            OG Description
+          </label>
           <input
             type="text"
             name="ogDescription"
@@ -345,7 +430,9 @@ export default function MetadataForm({ initial = {}, onSubmit, onBack }: Metadat
           />
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">OG Type</label>
+          <label className="block text-xs font-medium text-gray-600 mb-1">
+            OG Type
+          </label>
           <input
             type="text"
             name="ogType"
@@ -355,7 +442,9 @@ export default function MetadataForm({ initial = {}, onSubmit, onBack }: Metadat
           />
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">OG URL</label>
+          <label className="block text-xs font-medium text-gray-600 mb-1">
+            OG URL
+          </label>
           <input
             type="text"
             name="ogUrl"
@@ -366,7 +455,9 @@ export default function MetadataForm({ initial = {}, onSubmit, onBack }: Metadat
           />
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">OG Site Name</label>
+          <label className="block text-xs font-medium text-gray-600 mb-1">
+            OG Site Name
+          </label>
           <input
             type="text"
             name="ogSiteName"
@@ -377,7 +468,9 @@ export default function MetadataForm({ initial = {}, onSubmit, onBack }: Metadat
           />
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">Twitter Card</label>
+          <label className="block text-xs font-medium text-gray-600 mb-1">
+            Twitter Card
+          </label>
           <select
             name="twitterCard"
             value={meta.twitterCard}
@@ -390,7 +483,9 @@ export default function MetadataForm({ initial = {}, onSubmit, onBack }: Metadat
           </select>
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">Twitter Site</label>
+          <label className="block text-xs font-medium text-gray-600 mb-1">
+            Twitter Site
+          </label>
           <input
             type="text"
             name="twitterSite"
@@ -401,7 +496,9 @@ export default function MetadataForm({ initial = {}, onSubmit, onBack }: Metadat
           />
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">Twitter Title</label>
+          <label className="block text-xs font-medium text-gray-600 mb-1">
+            Twitter Title
+          </label>
           <input
             type="text"
             name="twitterTitle"
@@ -412,7 +509,9 @@ export default function MetadataForm({ initial = {}, onSubmit, onBack }: Metadat
           />
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">Twitter Description</label>
+          <label className="block text-xs font-medium text-gray-600 mb-1">
+            Twitter Description
+          </label>
           <input
             type="text"
             name="twitterDescription"
@@ -426,7 +525,9 @@ export default function MetadataForm({ initial = {}, onSubmit, onBack }: Metadat
       {/* hreflang, x_default, Author Name */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">hreflang</label>
+          <label className="block text-xs font-medium text-gray-600 mb-1">
+            hreflang
+          </label>
           <input
             type="text"
             name="hreflang"
@@ -437,7 +538,9 @@ export default function MetadataForm({ initial = {}, onSubmit, onBack }: Metadat
           />
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">x_default</label>
+          <label className="block text-xs font-medium text-gray-600 mb-1">
+            x_default
+          </label>
           <input
             type="text"
             name="x_default"
@@ -448,7 +551,9 @@ export default function MetadataForm({ initial = {}, onSubmit, onBack }: Metadat
           />
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">Author Name</label>
+          <label className="block text-xs font-medium text-gray-600 mb-1">
+            Author Name
+          </label>
           <input
             type="text"
             name="author_name"
@@ -462,7 +567,9 @@ export default function MetadataForm({ initial = {}, onSubmit, onBack }: Metadat
       {/* Pricing & codes */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">Purchase Price</label>
+          <label className="block text-xs font-medium text-gray-600 mb-1">
+            Purchase Price
+          </label>
           <input
             type="number"
             name="purchasePrice"
@@ -472,7 +579,9 @@ export default function MetadataForm({ initial = {}, onSubmit, onBack }: Metadat
           />
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">Sales Price</label>
+          <label className="block text-xs font-medium text-gray-600 mb-1">
+            Sales Price
+          </label>
           <input
             type="number"
             name="salesPrice"
@@ -484,7 +593,9 @@ export default function MetadataForm({ initial = {}, onSubmit, onBack }: Metadat
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">Location Code</label>
+          <label className="block text-xs font-medium text-gray-600 mb-1">
+            Location Code
+          </label>
           <input
             type="text"
             name="locationCode"
@@ -494,7 +605,9 @@ export default function MetadataForm({ initial = {}, onSubmit, onBack }: Metadat
           />
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">Product Identifier</label>
+          <label className="block text-xs font-medium text-gray-600 mb-1">
+            Product Identifier
+          </label>
           <input
             type="text"
             name="productIdentifier"

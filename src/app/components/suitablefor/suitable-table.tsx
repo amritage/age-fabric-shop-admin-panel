@@ -13,14 +13,19 @@ export default function SuitableForTable() {
   const [deleteSuitableFor] = useDeleteSuitableForMutation();
 
   if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div className="text-red-500">Error loading suitable-for</div>;
+  if (isError)
+    return <div className="text-red-500">Error loading suitable-for</div>;
 
   return (
     <div className="bg-white p-6 rounded shadow">
       <h2 className="text-lg font-bold mb-4">SuitableFor List</h2>
       <table className="w-full text-left">
         <thead>
-          <tr><th className="py-2">Image</th><th className="py-2">Name</th><th className="py-2">Actions</th></tr>
+          <tr>
+            <th className="py-2">Image</th>
+            <th className="py-2">Name</th>
+            <th className="py-2">Actions</th>
+          </tr>
         </thead>
         <tbody>
           {!data || !data.data || data.data.length === 0 ? (
@@ -33,7 +38,15 @@ export default function SuitableForTable() {
             data.data.map((s: ISuitableFor) => (
               <tr key={s._id}>
                 <td className="py-2">
-                  {s.img && <Image src={s.img} alt={s.name} width={48} height={48} className="w-12 h-12 object-cover rounded" />}
+                  {s.img && (
+                    <Image
+                      src={s.img}
+                      alt={s.name}
+                      width={48}
+                      height={48}
+                      className="w-12 h-12 object-cover rounded"
+                    />
+                  )}
                 </td>
                 <td className="py-2">{s.name}</td>
                 <td className="py-2 flex space-x-2">
@@ -42,7 +55,10 @@ export default function SuitableForTable() {
                       ✏️ Edit
                     </button>
                   </Link>
-                  <button onClick={() => deleteSuitableFor(s._id!)} className="tp-btn px-3 py-1 bg-red-500 text-white rounded">
+                  <button
+                    onClick={() => deleteSuitableFor(s._id!)}
+                    className="tp-btn px-3 py-1 bg-red-500 text-white rounded"
+                  >
                     🗑️ Delete
                   </button>
                 </td>

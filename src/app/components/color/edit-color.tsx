@@ -1,9 +1,12 @@
-// src/app/components/color/EditColor.tsx
 "use client";
+// src/app/components/color/EditColor.tsx
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { IColor } from "@/types/color-type";
-import { useGetColorQuery, useUpdateColorMutation } from "@/redux/color/colorApi";
+import {
+  useGetColorQuery,
+  useUpdateColorMutation,
+} from "@/redux/color/colorApi";
 import GlobalImgUpload from "@/app/components/structure/global-img-upload";
 import ErrorMsg from "@/app/components/common/error-msg";
 import { useParams, useRouter } from "next/navigation";
@@ -11,9 +14,18 @@ import { useParams, useRouter } from "next/navigation";
 export default function EditColor() {
   const { id } = useParams();
   const router = useRouter();
-  const { data, isLoading: isFetching, isError: fetchError } = useGetColorQuery(id || "");
+  const {
+    data,
+    isLoading: isFetching,
+    isError: fetchError,
+  } = useGetColorQuery(id || "");
   const [updateColor, { isLoading: isUpdating }] = useUpdateColorMutation();
-  const { register, handleSubmit, setValue, formState: { errors } } = useForm<IColor>();
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<IColor>();
   const [img, setImg] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
 
@@ -28,7 +40,10 @@ export default function EditColor() {
   const onSubmit = async (vals: IColor) => {
     setErrorMessage("");
     try {
-      await updateColor({ id: id!, changes: { name: vals.name, css: vals.css, img } }).unwrap();
+      await updateColor({
+        id: id!,
+        changes: { name: vals.name, css: vals.css, img },
+      }).unwrap();
       router.push("/colors");
     } catch (err: any) {
       setErrorMessage(err?.data?.message || "Failed to update color.");
@@ -39,7 +54,10 @@ export default function EditColor() {
   if (fetchError || !data) return <ErrorMsg msg="Failed to load color." />;
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="bg-white px-8 py-8 rounded-md space-y-6">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="bg-white px-8 py-8 rounded-md space-y-6"
+    >
       <GlobalImgUpload image={img} setImage={setImg} isSubmitted={isUpdating} />
 
       <div>
@@ -49,7 +67,9 @@ export default function EditColor() {
           className="input w-full h-[44px] rounded-md border border-gray6 px-6 text-base"
           placeholder="Enter color name"
         />
-        {errors.name && <span className="text-red-500 text-sm">{errors.name.message}</span>}
+        {errors.name && (
+          <span className="text-red-500 text-sm">{errors.name.message}</span>
+        )}
       </div>
 
       <div>
@@ -59,7 +79,9 @@ export default function EditColor() {
           className="input w-full h-[44px] rounded-md border border-gray6 px-6 text-base"
           placeholder="e.g. #ff0000"
         />
-        {errors.css && <span className="text-red-500 text-sm">{errors.css.message}</span>}
+        {errors.css && (
+          <span className="text-red-500 text-sm">{errors.css.message}</span>
+        )}
       </div>
 
       {errorMessage && <p className="text-red-500 text-sm">{errorMessage}</p>}

@@ -64,4 +64,4 @@ export {
   Next,
   Prev,
   SmClose,
-}
+};

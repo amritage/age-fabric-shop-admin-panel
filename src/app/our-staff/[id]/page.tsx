@@ -11,7 +11,7 @@ const CategoryEditPage = ({ params }: { params: { id: string } }) => {
         {/* breadcrumb end */}
 
         {/*staff area start */}
-        <EditStaffArea id={params.id}/>
+        <EditStaffArea id={params.id} />
         {/*staff area end */}
       </div>
     </Wrapper>

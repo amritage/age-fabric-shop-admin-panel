@@ -18,4 +18,3 @@ export default function useSubstructureSubmit() {
 
   return { register, handleSubmit, errors, isSubmitted, handleEdit };
 }
-

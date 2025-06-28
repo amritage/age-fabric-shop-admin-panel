@@ -66,8 +66,7 @@ export default function EditStructure({ id, onDone }: EditStructureProps) {
   };
 
   if (isFetching) return <p>Loading…</p>;
-  if (fetchError || !data)
-    return <ErrorMsg msg="Failed to load structure." />;
+  if (fetchError || !data) return <ErrorMsg msg="Failed to load structure." />;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -92,16 +91,12 @@ export default function EditStructure({ id, onDone }: EditStructureProps) {
           placeholder="Enter structure name"
         />
         {errors.name && (
-          <p className="mt-1 text-sm text-red-600">
-            {errors.name.message}
-          </p>
+          <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
         )}
       </div>
 
       {/* Error Message */}
-      {errorMessage && (
-        <p className="text-sm text-red-600">{errorMessage}</p>
-      )}
+      {errorMessage && <p className="text-sm text-red-600">{errorMessage}</p>}
 
       {/* Submit Button */}
       <button

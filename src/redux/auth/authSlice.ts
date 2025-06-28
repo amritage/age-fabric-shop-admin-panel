@@ -28,7 +28,8 @@ let initialAuthState: {
 // If the cookie exists, parse its value and set it as the initial state
 if (cookieData) {
   try {
-    const parsedData: { accessToken: string; user: IUser } = JSON.parse(cookieData);
+    const parsedData: { accessToken: string; user: IUser } =
+      JSON.parse(cookieData);
     initialAuthState = {
       accessToken: parsedData.accessToken,
       user: parsedData.user,
@@ -40,19 +41,23 @@ if (cookieData) {
 
 const authSlice = createSlice({
   name: "auth",
-  initialState:initialAuthState,
+  initialState: initialAuthState,
   reducers: {
     userLoggedIn: (state, { payload }: { payload: IAuth }) => {
       state.accessToken = payload.accessToken;
       state.user = payload.user;
-      Cookies.set("admin", JSON.stringify({
-        accessToken: payload.accessToken,
-        user: payload.user
-      }), {
-        expires: 0.5,
-        secure: true,
-        sameSite: "strict"
-      });
+      Cookies.set(
+        "admin",
+        JSON.stringify({
+          accessToken: payload.accessToken,
+          user: payload.user,
+        }),
+        {
+          expires: 0.5,
+          secure: true,
+          sameSite: "strict",
+        },
+      );
     },
     userLoggedOut: (state) => {
       state.accessToken = undefined;

@@ -10,7 +10,10 @@ export const subsuitableforApi = apiSlice.injectEndpoints({
       query: () => `/api/subsuitable/view`,
       providesTags: (res) =>
         res?.data
-          ? res.data.map(({ _id }) => ({ type: "SubSuitableFor" as const, id: _id }))
+          ? res.data.map(({ _id }) => ({
+              type: "SubSuitableFor" as const,
+              id: _id,
+            }))
           : [],
     }),
 
@@ -21,7 +24,10 @@ export const subsuitableforApi = apiSlice.injectEndpoints({
     }),
 
     // POST /subsuitablefor/add
-    addSubSuitableFor: builder.mutation<{ data: ISubSuitableFor }, Partial<ISubSuitableFor>>({
+    addSubSuitableFor: builder.mutation<
+      { data: ISubSuitableFor },
+      Partial<ISubSuitableFor>
+    >({
       query: (body) => ({
         url: `/api/subsuitable/add`,
         method: "POST",

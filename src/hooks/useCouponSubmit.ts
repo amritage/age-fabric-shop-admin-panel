@@ -2,7 +2,11 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { notifyError, notifySuccess } from "@/utils/toast";
-import { useAddCouponMutation, useEditCouponMutation, useGetCouponQuery } from "@/redux/coupon/couponApi";
+import {
+  useAddCouponMutation,
+  useEditCouponMutation,
+  useGetCouponQuery,
+} from "@/redux/coupon/couponApi";
 import dayjs from "dayjs";
 
 const useCouponSubmit = () => {
@@ -14,9 +18,9 @@ const useCouponSubmit = () => {
   const router = useRouter();
 
   // add coupon
-  const [addCoupon, { }] = useAddCouponMutation();
+  const [addCoupon, {}] = useAddCouponMutation();
   // edit coupon
-  const [editCoupon, { }] = useEditCouponMutation();
+  const [editCoupon, {}] = useEditCouponMutation();
   // react hook form
   const {
     register,
@@ -26,14 +30,13 @@ const useCouponSubmit = () => {
     control,
   } = useForm();
 
-
   useEffect(() => {
     if (!openSidebar) {
-      setLogo("")
+      setLogo("");
       setSelectProductType("");
       reset();
     }
-  }, [openSidebar, reset])
+  }, [openSidebar, reset]);
   // submit handle
   const handleCouponSubmit = async (data: any) => {
     try {
@@ -41,7 +44,7 @@ const useCouponSubmit = () => {
         logo: logo,
         title: data?.name,
         couponCode: data?.code,
-        endTime: dayjs(data.endtime).format('YYYY-MM-DDTHH:mm:ss.SSSZ'),
+        endTime: dayjs(data.endtime).format("YYYY-MM-DDTHH:mm:ss.SSSZ"),
         discountPercentage: data?.discountpercentage,
         minimumAmount: data?.minimumamount,
         productType: selectProductType,
@@ -58,7 +61,7 @@ const useCouponSubmit = () => {
       } else {
         notifySuccess("Coupon added successfully");
         setIsSubmitted(true);
-        setLogo("")
+        setLogo("");
         setOpenSidebar(false);
         setSelectProductType("");
         reset();
@@ -69,14 +72,14 @@ const useCouponSubmit = () => {
     }
   };
 
-   //handle Submit edit Category
-   const handleSubmitEditCoupon = async (data: any, id: string) => {
+  //handle Submit edit Category
+  const handleSubmitEditCoupon = async (data: any, id: string) => {
     try {
       const coupon_data = {
         logo: logo,
         title: data?.name,
         couponCode: data?.code,
-        endTime: dayjs(data.endtime).format('YYYY-MM-DDTHH:mm:ss.SSSZ'),
+        endTime: dayjs(data.endtime).format("YYYY-MM-DDTHH:mm:ss.SSSZ"),
         discountPercentage: data?.discountpercentage,
         minimumAmount: data?.minimumamount,
         productType: selectProductType,
@@ -91,7 +94,7 @@ const useCouponSubmit = () => {
         }
       } else {
         notifySuccess("Coupon update successfully");
-        router.push('/coupon')
+        router.push("/coupon");
         setIsSubmitted(true);
         reset();
       }

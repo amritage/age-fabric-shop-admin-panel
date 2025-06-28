@@ -1,9 +1,9 @@
 export interface ICategory {
-  _id?:        string;
-  name:        string;
+  _id?: string;
+  name: string;
   productType: string;
-  parent:      string;
-  image?:      string;
+  parent: string;
+  image?: string;
 }
 
 export interface CategoryResponse {
@@ -37,5 +37,3 @@ export interface ICategoryDeleteRes {
   success?: boolean;
   message?: string;
 }
-
-

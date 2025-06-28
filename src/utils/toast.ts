@@ -1,8 +1,8 @@
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
 const notifySuccess = (message: string) =>
   toast.success(message, {
-    position: 'top-center',
+    position: "top-center",
     autoClose: 3000,
     hideProgressBar: false,
     closeOnClick: true,
@@ -13,7 +13,7 @@ const notifySuccess = (message: string) =>
 
 const notifyError = (message: string) =>
   toast.error(message, {
-    position: 'top-center',
+    position: "top-center",
     autoClose: 3000,
     hideProgressBar: false,
     closeOnClick: true,
@@ -23,4 +23,3 @@ const notifyError = (message: string) =>
   });
 
 export { notifySuccess, notifyError };
-

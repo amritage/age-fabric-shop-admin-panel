@@ -16,7 +16,7 @@ type IPropType = {
 const CategoryEditDelete = ({ id }: IPropType) => {
   const [showEdit, setShowEdit] = useState<boolean>(false);
   const [showDelete, setShowDelete] = useState<boolean>(false);
-  const router = useRouter()
+  const router = useRouter();
   const [deleteCategory, { data: delData, error: delErr }] =
     useDeleteCategoryMutation();
 
@@ -42,7 +42,7 @@ const CategoryEditDelete = ({ id }: IPropType) => {
             }
           } else {
             Swal.fire("Deleted!", `Your category has been deleted.`, "success");
-            router.push('/category')
+            router.push("/category");
           }
         } catch (error) {
           // Handle error or show error message

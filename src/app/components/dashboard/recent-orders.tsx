@@ -29,14 +29,16 @@ const RecentOrders = () => {
           <TableHead />
           <tbody>
             {currentItems?.map((order) => (
-                <TableItem key={order._id} order={order} />
-              ))}
+              <TableItem key={order._id} order={order} />
+            ))}
           </tbody>
         </table>
         {/*  */}
         <div className="px-4 pt-6 border-t border-gray6">
           <div className="flex flex-col justify-between sm:flex-row pagination">
-          <span className="flex items-center uppercase">Showing 1-{currentItems.length} of {recentOrders?.orders.length}</span>
+            <span className="flex items-center uppercase">
+              Showing 1-{currentItems.length} of {recentOrders?.orders.length}
+            </span>
             <Pagination
               handlePageClick={handlePageClick}
               pageCount={pageCount}

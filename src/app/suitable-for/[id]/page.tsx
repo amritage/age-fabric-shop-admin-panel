@@ -8,7 +8,12 @@ import EditSuitableFor from "@/app/components/suitablefor/edit-suitable";
 export default function EditSuitableForPage() {
   const { id } = useParams();
   const router = useRouter();
-  if (!id) return <Wrapper><p className="p-8 text-red-500">No item selected.</p></Wrapper>;
+  if (!id)
+    return (
+      <Wrapper>
+        <p className="p-8 text-red-500">No item selected.</p>
+      </Wrapper>
+    );
 
   return (
     <Wrapper>

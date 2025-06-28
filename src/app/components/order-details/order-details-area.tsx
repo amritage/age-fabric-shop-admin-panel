@@ -1,6 +1,6 @@
 "use client";
 import dayjs from "dayjs";
-import React,{useRef} from "react";
+import React, { useRef } from "react";
 import ErrorMsg from "../common/error-msg";
 import { Card, Typography } from "@material-tailwind/react";
 import { useGetSingleOrderQuery } from "@/redux/order/orderApi";
@@ -40,7 +40,10 @@ const OrderDetailsArea = ({ id }: { id: string }) => {
           <h1 className="my-6 text-lg font-bold text-gray-700 dark:text-gray-300">
             Invoice
           </h1>
-          <div ref={printRef} className="bg-white mb-4 p-6 lg:p-8 rounded-xl shadow-sm overflow-hidden">
+          <div
+            ref={printRef}
+            className="bg-white mb-4 p-6 lg:p-8 rounded-xl shadow-sm overflow-hidden"
+          >
             <div className=" mb-7">
               <div className="flex lg:flex-row md:flex-row flex-col lg:items-center justify-between pb-4 border-b border-slate-200">
                 <h1 className="font-bold font-heading text-xl uppercase">
@@ -108,11 +111,21 @@ const OrderDetailsArea = ({ id }: { id: string }) => {
                   <table className="w-full text-base text-left text-gray-500 whitespace-no-wrap">
                     <thead className="bg-white">
                       <tr className="border-b border-gray6 text-tiny">
-                        <td className="pl-3 py-3 text-tiny text-textBody uppercase font-semibold">SR.</td>
-                        <td className="pr-8 py-3 text-tiny text-textBody uppercase font-semibold">Product Title</td>
-                        <td className="pr-8 py-3 text-tiny text-textBody uppercase font-semibold text-center">QUANTITY</td>
-                        <td className="pr-3 py-3 text-tiny text-textBody uppercase font-semibold text-center">ITEM PRICE</td>
-                        <td className="pr-3 py-3 text-tiny text-textBody uppercase font-semibold text-right">AMOUNT</td>
+                        <td className="pl-3 py-3 text-tiny text-textBody uppercase font-semibold">
+                          SR.
+                        </td>
+                        <td className="pr-8 py-3 text-tiny text-textBody uppercase font-semibold">
+                          Product Title
+                        </td>
+                        <td className="pr-8 py-3 text-tiny text-textBody uppercase font-semibold text-center">
+                          QUANTITY
+                        </td>
+                        <td className="pr-3 py-3 text-tiny text-textBody uppercase font-semibold text-center">
+                          ITEM PRICE
+                        </td>
+                        <td className="pr-3 py-3 text-tiny text-textBody uppercase font-semibold text-right">
+                          AMOUNT
+                        </td>
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y text-base ">

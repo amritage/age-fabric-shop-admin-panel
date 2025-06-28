@@ -19,7 +19,7 @@ export default function FormField({
   placeHolder: string;
   register: UseFormRegister<any>;
   errors: FieldErrors<any>;
-  defaultValue?:string | number;
+  defaultValue?: string | number;
 }) {
   return (
     <div className="mb-5">

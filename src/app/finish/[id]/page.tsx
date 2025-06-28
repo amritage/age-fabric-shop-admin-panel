@@ -9,7 +9,12 @@ import EditFinish from "@/app/components/finish/edit-finish";
 export default function EditFinishPage() {
   const { id } = useParams();
   const router = useRouter();
-  if (!id) return <Wrapper><p className="p-8 text-red-500">No finish selected.</p></Wrapper>;
+  if (!id)
+    return (
+      <Wrapper>
+        <p className="p-8 text-red-500">No finish selected.</p>
+      </Wrapper>
+    );
 
   return (
     <Wrapper>

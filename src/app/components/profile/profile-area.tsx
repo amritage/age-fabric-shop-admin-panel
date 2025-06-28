@@ -14,10 +14,7 @@ const ProfileArea = () => {
       </div>
 
       {/* profile content start */}
-      <ProfileContent
-        profileImg={profileImg}
-        updateProfile={updateProfile}
-      />
+      <ProfileContent profileImg={profileImg} updateProfile={updateProfile} />
       {/* profile content end */}
     </>
   );

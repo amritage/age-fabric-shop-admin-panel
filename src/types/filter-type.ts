@@ -23,4 +23,4 @@ export interface IAddFilterResponse {
   success: boolean;
   message: string;
   result: IFilter;
-} 
+}

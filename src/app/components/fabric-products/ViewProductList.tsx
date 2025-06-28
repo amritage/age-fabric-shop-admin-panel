@@ -1,4 +1,3 @@
-// File: app/components/fabric-products/ViewProductTable.tsx
 "use client";
 
 import React, { useMemo, useState, useCallback } from "react";
@@ -18,7 +17,11 @@ import { notifyError } from "@/utils/toast";
 
 export default function ViewProductTable() {
   const router = useRouter();
-  const { data: resp, isLoading, isFetching } = useGetProductsQuery({
+  const {
+    data: resp,
+    isLoading,
+    isFetching,
+  } = useGetProductsQuery({
     page: 1,
     limit: 1000,
   });
@@ -30,8 +33,13 @@ export default function ViewProductTable() {
     const products = resp?.data || [];
     const lower = filterText.toLowerCase();
     return products.filter((p) =>
-      [p.name, p.sku, p.productIdentifier, p.locationCode, p.newCategoryId]
-        .some((field) => (field || "").toLowerCase().includes(lower))
+      [
+        p.name,
+        p.sku,
+        p.productIdentifier,
+        p.locationCode,
+        p.newCategoryId,
+      ].some((field) => (field || "").toLowerCase().includes(lower)),
     );
   }, [resp?.data, filterText]);
 
@@ -53,16 +61,15 @@ export default function ViewProductTable() {
           Swal.fire(
             "Deleted!",
             `"${product.name}" has been deleted.`,
-            "success"
+            "success",
           );
         } catch (err: any) {
-          const message =
-            err.data?.message ?? "Failed to delete product.";
+          const message = err.data?.message ?? "Failed to delete product.";
           notifyError(message);
         }
       });
     },
-    [deleteProduct]
+    [deleteProduct],
   );
 
   // PDF export
@@ -123,7 +130,11 @@ export default function ViewProductTable() {
         selector: (r) => r.productIdentifier || "—",
         maxWidth: "100px",
       },
-      { name: "Location", selector: (r) => r.locationCode || "—", maxWidth: "80px" },
+      {
+        name: "Location",
+        selector: (r) => r.locationCode || "—",
+        maxWidth: "80px",
+      },
       { name: "GSM", selector: (r) => r.gsm, maxWidth: "60px" },
       { name: "OZ", selector: (r) => r.oz, maxWidth: "60px" },
       { name: "CM", selector: (r) => r.cm, maxWidth: "60px" },
@@ -151,7 +162,7 @@ export default function ViewProductTable() {
         ),
       },
     ],
-    [handleDelete, router]
+    [handleDelete, router],
   );
 
   // Sub-header with search & export controls
@@ -186,7 +197,7 @@ export default function ViewProductTable() {
         </button>
       </div>
     ),
-    [filterText, filtered, exportPDF]
+    [filterText, filtered, exportPDF],
   );
 
   return (

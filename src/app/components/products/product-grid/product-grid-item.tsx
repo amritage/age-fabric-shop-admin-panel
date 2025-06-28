@@ -5,7 +5,8 @@ import { Rating } from "react-simple-star-rating";
 import { IProduct } from "@/types/product-type";
 
 const ProductGridItem = ({ product }: { product: IProduct }) => {
-  const { _id,img, title, sku, price, reviews, status, quantity } = product || {};
+  const { _id, img, title, sku, price, reviews, status, quantity } =
+    product || {};
   // averageRating
   const averageRating =
     reviews && reviews?.length > 0

@@ -11,7 +11,7 @@ const CategoryPage = () => {
         {/* breadcrumb end */}
 
         {/*staff area start */}
-        <AddStaffArea/>
+        <AddStaffArea />
         {/*staff area end */}
       </div>
     </Wrapper>

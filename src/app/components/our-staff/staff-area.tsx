@@ -7,9 +7,17 @@ import FormFieldTwo from "../brand/form-field-two";
 import AdminRole from "../profile/admin-role";
 
 const AddStaffArea = () => {
-  const { setStaffImg, isSubmitted, errors, register,setRole,handleSubmit,handleSubmitStuff } = useStaffSubmit();
+  const {
+    setStaffImg,
+    isSubmitted,
+    errors,
+    register,
+    setRole,
+    handleSubmit,
+    handleSubmitStuff,
+  } = useStaffSubmit();
   const handleChange = (value: string | number | undefined) => {
-    setRole(value as string)
+    setRole(value as string);
   };
   return (
     <div className="grid grid-cols-12 gap-6">
@@ -58,12 +66,14 @@ const AddStaffArea = () => {
             <div className="mb-6">
               <p className="mb-0 text-base text-black">Admin role</p>
               <div className="category-add-select select-bordered">
-                <AdminRole handleChange={handleChange}/>
+                <AdminRole handleChange={handleChange} />
               </div>
             </div>
             {/* Product Type */}
 
-            <button type="submit" className="tp-btn px-7 py-2">Add Stuff</button>
+            <button type="submit" className="tp-btn px-7 py-2">
+              Add Stuff
+            </button>
           </div>
         </form>
       </div>

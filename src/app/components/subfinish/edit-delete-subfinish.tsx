@@ -17,8 +17,12 @@ export default function SubFinishEditDelete({ id, onDelete }: Props) {
 
   const handleDelete = async () => {
     const res = await Swal.fire({
-      title: "Are you sure?", text: `Delete this item?`, icon: "warning",
-      showCancelButton: true, confirmButtonText: "Yes, delete!", cancelButtonText: "Cancel",
+      title: "Are you sure?",
+      text: `Delete this item?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete!",
+      cancelButtonText: "Cancel",
     });
     if (res.isConfirmed) {
       try {
@@ -34,7 +38,7 @@ export default function SubFinishEditDelete({ id, onDelete }: Props) {
   return (
     <div className="flex space-x-2">
       <div className="relative">
-<Link href={`/subfinish/${id}`}>
+        <Link href={`/subfinish/${id}`}>
           <button
             onMouseEnter={() => setShowEdit(true)}
             onMouseLeave={() => setShowEdit(false)}
@@ -57,5 +61,5 @@ export default function SubFinishEditDelete({ id, onDelete }: Props) {
         <DeleteTooltip showDelete={showDelete} />
       </div>
     </div>
-);
+  );
 }

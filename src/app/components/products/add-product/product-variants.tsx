@@ -21,7 +21,7 @@ const ProductVariants = ({
   const [formData, setFormData] = useState<ImageURL[]>(
     default_value
       ? default_value
-      : [{ color: { clrCode: "", name: "" }, img: "", sizes: [] }]
+      : [{ color: { clrCode: "", name: "" }, img: "", sizes: [] }],
   );
   const [isSubmitField, setIsSubmitField] = useState<boolean>(false);
   // set default value
@@ -80,17 +80,17 @@ const ProductVariants = ({
       <h4 className="text-[22px]">Product Variations</h4>
       {formData.map((field, i) => (
         <div key={i} className="mt-10 pt-10 border-t border-gray relative">
-           {i !== 0 && (
-              <div className="text-end">
-                <button
-                  className="h-[44px] w-[44px] rounded-md border border-gray6 hover:border-red "
-                  type="button"
-                  onClick={() => handleRemoveProduct(i)}
-                >
-                  <SmClose />
-                </button>
-              </div>
-            )}
+          {i !== 0 && (
+            <div className="text-end">
+              <button
+                className="h-[44px] w-[44px] rounded-md border border-gray6 hover:border-red "
+                type="button"
+                onClick={() => handleRemoveProduct(i)}
+              >
+                <SmClose />
+              </button>
+            </div>
+          )}
           <div className="grid sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2 gap-x-6">
             <div className="mb-5">
               <p className="mb-0 text-base text-black">Color Name</p>

@@ -5,7 +5,7 @@ import Image from "next/image";
 import { IVendor } from "@/types/vendor-type";
 import {
   useGetAllVendorsQuery,
-  useDeleteVendorMutation
+  useDeleteVendorMutation,
 } from "@/redux/vendor/vendorApi";
 
 export default function VendorTable() {
@@ -13,7 +13,7 @@ export default function VendorTable() {
   const [deleteVendor] = useDeleteVendorMutation();
 
   if (isLoading) return <div>Loading...</div>;
-  if (isError)   return <div className="text-red-500">Error loading vendors</div>;
+  if (isError) return <div className="text-red-500">Error loading vendors</div>;
 
   return (
     <div className="bg-white p-6 rounded shadow">
@@ -27,7 +27,7 @@ export default function VendorTable() {
           </tr>
         </thead>
         <tbody>
-          {(!data || !data.data || data.data.length === 0) ? (
+          {!data || !data.data || data.data.length === 0 ? (
             <tr>
               <td colSpan={3} className="text-center text-gray-500 py-4">
                 No vendors found.

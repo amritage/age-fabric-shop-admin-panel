@@ -1,4 +1,3 @@
-// src/app/structure/[id]/page.tsx
 "use client";
 
 import React from "react";
@@ -8,7 +7,7 @@ import Breadcrumb from "@/app/components/breadcrumb/breadcrumb";
 import EditStructure from "@/app/components/structure/edit-structure";
 
 export default function EditStructurePage() {
- const { id } = useParams();
+  const { id } = useParams();
 
   if (!id) {
     return (

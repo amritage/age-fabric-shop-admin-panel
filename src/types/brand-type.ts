@@ -1,5 +1,3 @@
-
-
 export interface Brand {
   _id: string;
   name: string;
@@ -27,12 +25,11 @@ export interface IAddBrand {
   website?: string;
   location?: string;
   description?: string;
-  status?:string;
+  status?: string;
 }
 
 export interface IBrandAddResponse {
   success: boolean;
   message: string;
-  data:Brand
+  data: Brand;
 }
-

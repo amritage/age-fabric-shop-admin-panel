@@ -1,6 +1,6 @@
 import "./globals.css";
 import { Metadata } from "next";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 import { Poppins } from "next/font/google";
 import { Providers } from "@/redux/provider";
 
@@ -13,8 +13,11 @@ const poppins = Poppins({
   subsets: ["latin"],
 });
 
-
-export default function RootLayout({children}:{children: React.ReactNode}) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       <head>
@@ -29,9 +32,7 @@ export default function RootLayout({children}:{children: React.ReactNode}) {
         <link rel="stylesheet" href="/assets/css/custom.css" />
       </head>
       <body className={poppins.className + " bg-blue-50 min-h-screen"}>
-        <Providers>
-          {children}
-        </Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

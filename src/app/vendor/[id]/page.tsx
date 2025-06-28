@@ -8,7 +8,12 @@ import EditVendor from "@/app/components/vendor/edit-vendor";
 export default function EditVendorPage() {
   const { id } = useParams();
   const router = useRouter();
-  if (!id) return <Wrapper><p className="p-8 text-red-500">No vendor selected.</p></Wrapper>;
+  if (!id)
+    return (
+      <Wrapper>
+        <p className="p-8 text-red-500">No vendor selected.</p>
+      </Wrapper>
+    );
 
   return (
     <Wrapper>

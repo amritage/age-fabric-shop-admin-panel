@@ -1,7 +1,10 @@
 import { useState } from "react";
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { useAddBrandMutation, useEditBrandMutation } from "@/redux/brand/brandApi";
+import {
+  useAddBrandMutation,
+  useEditBrandMutation,
+} from "@/redux/brand/brandApi";
 import { notifyError, notifySuccess } from "@/utils/toast";
 
 const useBrandSubmit = () => {
@@ -10,10 +13,13 @@ const useBrandSubmit = () => {
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const router = useRouter();
   // add
-  const [addBrand,{ data:brandData,isError,isLoading }] = useAddBrandMutation();
+  const [addBrand, { data: brandData, isError, isLoading }] =
+    useAddBrandMutation();
   // add
-  const [editBrand, { data: brandEditData, isError: brandIsErr, isLoading: brandLoading }] =
-    useEditBrandMutation();
+  const [
+    editBrand,
+    { data: brandEditData, isError: brandIsErr, isLoading: brandLoading },
+  ] = useEditBrandMutation();
 
   // react hook form
   const {
@@ -33,7 +39,7 @@ const useBrandSubmit = () => {
         website: data.website,
         location: data.location,
         logo: logo,
-        status: status
+        status: status,
       };
       const res = await addBrand({ ...brand_data });
       if ("error" in res) {
@@ -64,7 +70,7 @@ const useBrandSubmit = () => {
         website: data.website,
         location: data.location,
         logo: logo,
-        status: status
+        status: status,
       };
       const res = await editBrand({ id, data: brand_data });
       if ("error" in res) {
@@ -76,7 +82,7 @@ const useBrandSubmit = () => {
         }
       } else {
         notifySuccess("Brand update successfully");
-        router.push('/brands')
+        router.push("/brands");
         setIsSubmitted(true);
         reset();
       }

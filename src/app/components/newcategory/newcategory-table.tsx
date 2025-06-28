@@ -15,7 +15,8 @@ export default function CategoryTable() {
   const [deleteCategory] = useDeleteCategoryMutation();
 
   if (isLoading) return <div>Loading...</div>;
-  if (isError)   return <div className="text-red-500">Error loading categories</div>;
+  if (isError)
+    return <div className="text-red-500">Error loading categories</div>;
 
   // Base URL of your API server, must match what you use in express
   const BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "";
@@ -34,7 +35,7 @@ export default function CategoryTable() {
           </tr>
         </thead>
         <tbody>
-          {(!data || !data.data || data.data.length === 0) ? (
+          {!data || !data.data || data.data.length === 0 ? (
             <tr>
               <td colSpan={5} className="text-center text-gray-500 py-4">
                 No categories found.
@@ -72,7 +73,7 @@ export default function CategoryTable() {
                     onClick={() => deleteCategory(c._id!)}
                     className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
                   >
-                  🗑️ Delete
+                    🗑️ Delete
                   </button>
                 </td>
               </tr>

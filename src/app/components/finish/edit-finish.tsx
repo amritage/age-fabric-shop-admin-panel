@@ -2,7 +2,10 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { useGetFinishQuery, useUpdateFinishMutation } from "@/redux/finish/finishApi";
+import {
+  useGetFinishQuery,
+  useUpdateFinishMutation,
+} from "@/redux/finish/finishApi";
 import GlobalImgUpload from "@/app/components/structure/global-img-upload";
 import ErrorMsg from "@/app/components/common/error-msg";
 import { IFinish } from "@/types/finish-type";
@@ -47,7 +50,10 @@ export default function EditFinish({ id }: EditFinishProps) {
   const onSubmit = async (vals: IFinish) => {
     setErrorMessage("");
     try {
-      await updateFinish({ id: id!, changes: { name: vals.name, img } }).unwrap();
+      await updateFinish({
+        id: id!,
+        changes: { name: vals.name, img },
+      }).unwrap();
       router.push("/finish");
     } catch (err: any) {
       setErrorMessage(err?.data?.message || "Failed to update finish.");
@@ -55,11 +61,13 @@ export default function EditFinish({ id }: EditFinishProps) {
   };
 
   if (isFetching) return <p>Loading…</p>;
-  if (fetchError || !data)
-    return <ErrorMsg msg="Failed to load finish." />;
+  if (fetchError || !data) return <ErrorMsg msg="Failed to load finish." />;
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="bg-white px-8 py-8 rounded-md space-y-6">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="bg-white px-8 py-8 rounded-md space-y-6"
+    >
       {/* Image Upload */}
       <GlobalImgUpload image={img} setImage={setImg} isSubmitted={isUpdating} />
 
@@ -75,16 +83,12 @@ export default function EditFinish({ id }: EditFinishProps) {
           placeholder="Enter finish name"
         />
         {errors.name && (
-          <p className="mt-1 text-sm text-red-600">
-            {errors.name.message}
-          </p>
+          <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
         )}
       </div>
 
       {/* Error Message */}
-      {errorMessage && (
-        <p className="text-sm text-red-600">{errorMessage}</p>
-      )}
+      {errorMessage && <p className="text-sm text-red-600">{errorMessage}</p>}
 
       {/* Submit Button */}
       <button

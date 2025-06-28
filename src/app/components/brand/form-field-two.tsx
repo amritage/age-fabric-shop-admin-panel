@@ -17,7 +17,10 @@ export default function FormFieldTwo({
   errors: FieldErrors<any>;
   type?: string;
 }) {
-  const label = name.split(/(?=[A-Z])/).map((word) => word.toLowerCase()).join(" ");
+  const label = name
+    .split(/(?=[A-Z])/)
+    .map((word) => word.toLowerCase())
+    .join(" ");
   const format_date =
     type === "date" && default_val
       ? dayjs(default_val).format("YYYY-MM-DD")

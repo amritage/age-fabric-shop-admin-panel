@@ -4,14 +4,13 @@ import LineChart from "../chart/line-chart";
 import PieChart from "../chart/pie-chart";
 
 const SalesReport = () => {
- 
   return (
     <>
       <div className="chart-main-wrapper mb-6 grid grid-cols-12 gap-6">
         <div className=" col-span-12 2xl:col-span-7">
           <div className="chart-single bg-white py-3 px-3 sm:py-10 sm:px-10 h-fit rounded-md">
             <h3 className="text-xl">Sales Statistics</h3>
-            <LineChart/>
+            <LineChart />
           </div>
         </div>
 
@@ -24,7 +23,7 @@ const SalesReport = () => {
                 id="earningStatics"
               ></canvas>
             </div> */}
-            <PieChart/>
+            <PieChart />
           </div>
         </div>
       </div>

@@ -3,7 +3,7 @@ import React from "react";
 const Pages = () => {
   return (
     <svg
-      style={{ transform: 'translateY(-5px)' }}
+      style={{ transform: "translateY(-5px)" }}
       height="16"
       viewBox="-78 -18 560 560.00187"
       width="16"

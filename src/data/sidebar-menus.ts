@@ -20,39 +20,39 @@ const sidebar_menu: Array<ISidebarMenus> = [
     link: "/dashboard",
     title: "Dashboard",
   },
-    {
+  {
     id: 2,
     icon: Dashboard,
     link: "/dashboard",
     title: "Fabric-products",
-        subMenus: [
+    subMenus: [
       { title: "Add Product", link: "/fabric-products/add" },
       { title: "View Product", link: "/fabric-products/view" },
-      { title: "Edit Product", link: "/fabric-products/edit" }
+      { title: "Edit Product", link: "/fabric-products/edit" },
     ],
   },
   {
-  id: 3,
-  icon: Orders,
-  title: "Filters",
-  subMenus: [
-    { title: "Category", link: "/newcategory" },
-    { title: "Structure", link: "/structure" },
-    { title: "Sub Structure", link: "/sub-structure" },
-    { title: "Content", link: "/content" },
-    { title: "Finish", link: "/finish" },
-    { title: "Sub Finish", link: "/subfinish" },
-    { title: "Design", link: "/design" },
-    { title: "Color", link: "/colors" },
-    { title: "Motif", link: "/motif" },
-    { title: "Suitable For", link: "/suitable-for" },
-    { title: "Sub Suitable For", link: "/subsuitablefor" },
-    { title: "Availability", link: "/availability" },
-    { title: "Vendor", link: "/vendor" },
-    { title: "Unique code", link: "/unique-code" },
-    { title: "Group Code", link: "/group-code" },
-  ],
-},
+    id: 3,
+    icon: Orders,
+    title: "Filters",
+    subMenus: [
+      { title: "Category", link: "/newcategory" },
+      { title: "Structure", link: "/structure" },
+      { title: "Sub Structure", link: "/sub-structure" },
+      { title: "Content", link: "/content" },
+      { title: "Finish", link: "/finish" },
+      { title: "Sub Finish", link: "/subfinish" },
+      { title: "Design", link: "/design" },
+      { title: "Color", link: "/colors" },
+      { title: "Motif", link: "/motif" },
+      { title: "Suitable For", link: "/suitable-for" },
+      { title: "Sub Suitable For", link: "/subsuitablefor" },
+      { title: "Availability", link: "/availability" },
+      { title: "Vendor", link: "/vendor" },
+      { title: "Unique code", link: "/unique-code" },
+      { title: "Group Code", link: "/group-code" },
+    ],
+  },
   {
     id: 4,
     icon: Categories,
@@ -95,7 +95,7 @@ const sidebar_menu: Array<ISidebarMenus> = [
     link: "#",
     title: "Online store",
   },
-    {
+  {
     id: 11,
     icon: Products,
     link: "/product-list",
@@ -103,7 +103,7 @@ const sidebar_menu: Array<ISidebarMenus> = [
     subMenus: [
       { title: "Product List", link: "/product-list" },
       { title: "Product Grid", link: "/product-grid" },
-      { title: "Add Product", link: "/add-product" }
+      { title: "Add Product", link: "/add-product" },
     ],
   },
 ];

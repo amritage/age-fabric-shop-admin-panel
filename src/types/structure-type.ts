@@ -1,4 +1,3 @@
-
 export interface IStrucutreItem {
   name: string | undefined;
   _id: string;
@@ -43,5 +42,3 @@ export interface IStrucutreDeleteRes {
   success?: boolean;
   message?: string;
 }
-
-

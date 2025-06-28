@@ -9,7 +9,10 @@ export const uniquecodeApi = apiSlice.injectEndpoints({
       query: () => "/api/uniquecode/view",
       providesTags: (res) =>
         res?.data
-          ? res.data.map(({ _id }) => ({ type: "UniqueCode" as const, id: _id }))
+          ? res.data.map(({ _id }) => ({
+              type: "UniqueCode" as const,
+              id: _id,
+            }))
           : [],
     }),
     getUniqueCode: builder.query<{ data: IUniqueCode }, string>({
@@ -17,7 +20,10 @@ export const uniquecodeApi = apiSlice.injectEndpoints({
       providesTags: (res, err, id) => [{ type: "UniqueCode" as const, id }],
       keepUnusedDataFor: 300,
     }),
-    addUniqueCode: builder.mutation<{ data: IUniqueCode }, Partial<IUniqueCode>>({
+    addUniqueCode: builder.mutation<
+      { data: IUniqueCode },
+      Partial<IUniqueCode>
+    >({
       query: (body) => ({ url: "/api/uniquecode/add", method: "POST", body }),
       invalidatesTags: [{ type: "UniqueCode", id: "LIST" }],
     }),
@@ -36,7 +42,10 @@ export const uniquecodeApi = apiSlice.injectEndpoints({
       ],
     }),
     deleteUniqueCode: builder.mutation<{ status: number }, string>({
-      query: (id) => ({ url: `/api/uniquecode/delete/${id}`, method: "DELETE" }),
+      query: (id) => ({
+        url: `/api/uniquecode/delete/${id}`,
+        method: "DELETE",
+      }),
       invalidatesTags: (res, err, id) => [
         { type: "UniqueCode" as const, id },
         { type: "UniqueCode", id: "LIST" },
@@ -47,7 +56,7 @@ export const uniquecodeApi = apiSlice.injectEndpoints({
 
 export const {
   useGetAllUniqueCodesQuery,
-  useGetUniqueCodeQuery,    // ← exported hook for single fetch
+  useGetUniqueCodeQuery, // ← exported hook for single fetch
   useAddUniqueCodeMutation,
   useUpdateUniqueCodeMutation,
   useDeleteUniqueCodeMutation,

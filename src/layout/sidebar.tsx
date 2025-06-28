@@ -24,17 +24,15 @@ export default function Sidebar({ sideMenu, setSideMenu }: IProps) {
 
   // Toggle submenu expansion
   const toggleSubMenu = (title: string) => {
-    setExpandedMenus(prev => 
-      prev.includes(title) 
-        ? prev.filter(t => t !== title)
-        : [...prev, title]
+    setExpandedMenus((prev) =>
+      prev.includes(title) ? prev.filter((t) => t !== title) : [...prev, title],
     );
   };
 
   // Recursive function to render submenus
   const renderSubMenu = (subMenus: ISubMenu[], level = 0) => {
     return (
-      <ul className={`${level > 0 ? 'pl-6' : ''}`}>
+      <ul className={`${level > 0 ? "pl-6" : ""}`}>
         {subMenus.map((subMenu) => (
           <li key={subMenu.link}>
             {subMenu.subMenus ? (
@@ -43,19 +41,22 @@ export default function Sidebar({ sideMenu, setSideMenu }: IProps) {
                 <button
                   onClick={() => toggleSubMenu(subMenu.title)}
                   className={`group rounded-md relative text-black text-lg font-medium inline-flex items-center w-full transition-colors ease-in-out duration-300 px-5 py-[9px] mb-2 hover:bg-gray ${
-                    expandedMenus.includes(subMenu.title) ? 'bg-gray' : ''
+                    expandedMenus.includes(subMenu.title) ? "bg-gray" : ""
                   }`}
                 >
                   <span className="inline-block mr-[10px] text-xl">
                     {subMenu.title}
                   </span>
-                  <span className={`absolute right-4 top-[52%] transition-transform duration-300 origin-center w-4 h-4 ${
-                    expandedMenus.includes(subMenu.title) ? 'rotate-180' : ''
-                  }`}>
+                  <span
+                    className={`absolute right-4 top-[52%] transition-transform duration-300 origin-center w-4 h-4 ${
+                      expandedMenus.includes(subMenu.title) ? "rotate-180" : ""
+                    }`}
+                  >
                     <DownArrow />
                   </span>
                 </button>
-                {expandedMenus.includes(subMenu.title) && renderSubMenu(subMenu.subMenus, level + 1)}
+                {expandedMenus.includes(subMenu.title) &&
+                  renderSubMenu(subMenu.subMenus, level + 1)}
               </>
             ) : (
               // Render regular menu item
@@ -63,7 +64,7 @@ export default function Sidebar({ sideMenu, setSideMenu }: IProps) {
                 href={subMenu.link}
                 onClick={() => handleMenuActive(subMenu.title)}
                 className={`group rounded-md relative text-black text-lg font-medium inline-flex items-center w-full transition-colors ease-in-out duration-300 px-5 py-[9px] mb-2 hover:bg-gray ${
-                  pathname === subMenu.link ? 'bg-gray' : ''
+                  pathname === subMenu.link ? "bg-gray" : ""
                 }`}
               >
                 {subMenu.title}
@@ -76,9 +77,13 @@ export default function Sidebar({ sideMenu, setSideMenu }: IProps) {
   };
 
   return (
-    <aside className={`w-[300px] lg:w-[250px] xl:w-[300px] border-r border-gray overflow-y-auto sidebar-scrollbar fixed left-0 top-0 h-full bg-white z-50 transition-transform duration-300 ${
-      sideMenu ? "translate-x-[0px]" : "-translate-x-[300px] lg:translate-x-[0]"
-    }`}>
+    <aside
+      className={`w-[300px] lg:w-[250px] xl:w-[300px] border-r border-gray overflow-y-auto sidebar-scrollbar fixed left-0 top-0 h-full bg-white z-50 transition-transform duration-300 ${
+        sideMenu
+          ? "translate-x-[0px]"
+          : "-translate-x-[300px] lg:translate-x-[0]"
+      }`}
+    >
       <div className="flex flex-col justify-between h-full">
         <div>
           {/* Logo */}
@@ -106,28 +111,33 @@ export default function Sidebar({ sideMenu, setSideMenu }: IProps) {
                       <button
                         onClick={() => toggleSubMenu(menu.title)}
                         className={`group rounded-md relative text-black text-lg font-medium inline-flex items-center w-full transition-colors ease-in-out duration-300 px-5 py-[9px] mb-2 hover:bg-gray ${
-                          expandedMenus.includes(menu.title) ? 'bg-gray' : ''
+                          expandedMenus.includes(menu.title) ? "bg-gray" : ""
                         }`}
                       >
                         <span className="inline-block mr-[10px] text-xl">
                           <menu.icon />
                         </span>
                         {menu.title}
-                        <span className={`absolute right-4 top-[52%] transition-transform duration-300 origin-center w-4 h-4 ${
-                          expandedMenus.includes(menu.title) ? 'rotate-180' : ''
-                        }`}>
+                        <span
+                          className={`absolute right-4 top-[52%] transition-transform duration-300 origin-center w-4 h-4 ${
+                            expandedMenus.includes(menu.title)
+                              ? "rotate-180"
+                              : ""
+                          }`}
+                        >
                           <DownArrow />
                         </span>
                       </button>
-                      {expandedMenus.includes(menu.title) && renderSubMenu(menu.subMenus)}
+                      {expandedMenus.includes(menu.title) &&
+                        renderSubMenu(menu.subMenus)}
                     </>
                   ) : (
                     // Render regular menu item
                     <Link
-                      href={menu.link || '#'}
+                      href={menu.link || "#"}
                       onClick={() => handleMenuActive(menu.title)}
                       className={`group rounded-md relative text-black text-lg font-medium inline-flex items-center w-full transition-colors ease-in-out duration-300 px-5 py-[9px] mb-2 hover:bg-gray ${
-                        pathname === menu.link ? 'bg-gray' : ''
+                        pathname === menu.link ? "bg-gray" : ""
                       }`}
                     >
                       <span className="inline-block mr-[10px] text-xl">

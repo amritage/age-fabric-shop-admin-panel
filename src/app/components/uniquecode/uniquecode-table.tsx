@@ -30,12 +30,9 @@ export default function UniqueCodeTable() {
           </tr>
         </thead>
         <tbody>
-          {(!data || !data.data || data.data.length === 0) ? (
+          {!data || !data.data || data.data.length === 0 ? (
             <tr>
-              <td
-                colSpan={3}
-                className="text-center text-gray-500 py-4"
-              >
+              <td colSpan={3} className="text-center text-gray-500 py-4">
                 No items found.
               </td>
             </tr>

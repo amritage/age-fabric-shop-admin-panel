@@ -1,3 +1,4 @@
+"use client";
 // src/app/components/color/ColorTable.tsx
 "use client";
 import React from "react";

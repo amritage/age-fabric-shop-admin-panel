@@ -1,8 +1,11 @@
 import { notifySuccess, notifyError } from "@/utils/toast";
-import { useAddCategoryMutation, useEditCategoryMutation } from "@/redux/category/categoryApi";
+import {
+  useAddCategoryMutation,
+  useEditCategoryMutation,
+} from "@/redux/category/categoryApi";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
 
 const useCategorySubmit = () => {
   const [categoryImg, setCategoryImg] = useState<string>("");
@@ -21,7 +24,12 @@ const useCategorySubmit = () => {
   // edit
   const [
     editCategory,
-    { data: editCateData, isError: editErr, isLoading: editLoading, error: editCateErr },
+    {
+      data: editCateData,
+      isError: editErr,
+      isLoading: editLoading,
+      error: editCateErr,
+    },
   ] = useEditCategoryMutation();
 
   // react hook form
@@ -83,7 +91,7 @@ const useCategorySubmit = () => {
         }
       } else {
         notifySuccess("Category update successfully");
-        router.push('/category')
+        router.push("/category");
         setIsSubmitted(true);
         reset();
       }

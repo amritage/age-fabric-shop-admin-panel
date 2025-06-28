@@ -23,7 +23,8 @@ export default function GroupCodeEditDelete({ id }: Props) {
       text: `Delete this item?`,
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Yes, delete!", cancelButtonText: "Cancel",
+      confirmButtonText: "Yes, delete!",
+      cancelButtonText: "Cancel",
     });
     if (result.isConfirmed) {
       try {
@@ -63,4 +64,4 @@ export default function GroupCodeEditDelete({ id }: Props) {
       </div>
     </div>
   );
-} 
+}

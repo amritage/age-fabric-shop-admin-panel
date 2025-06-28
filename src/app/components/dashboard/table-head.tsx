@@ -1,6 +1,12 @@
 import React from "react";
 
-function ThItem({ title,cls }: { title: string,cls?:string }): React.JSX.Element {
+function ThItem({
+  title,
+  cls,
+}: {
+  title: string;
+  cls?: string;
+}): React.JSX.Element {
   return (
     <th
       scope="col"

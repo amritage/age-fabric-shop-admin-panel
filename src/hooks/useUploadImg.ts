@@ -12,7 +12,6 @@ const useUploadImage = () => {
       uploadImage(formData);
     }
   };
-  
 
   return {
     handleImageUpload,

@@ -14,8 +14,7 @@ export default function ContentTable() {
   const [deleteContent] = useDeleteContentMutation();
 
   if (isLoading) return <div>Loading...</div>;
-  if (isError)
-    return <div className="text-red-500">Error loading content</div>;
+  if (isError) return <div className="text-red-500">Error loading content</div>;
 
   return (
     <div className="bg-white p-6 rounded shadow">

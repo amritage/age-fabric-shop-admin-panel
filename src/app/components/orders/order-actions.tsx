@@ -6,7 +6,7 @@ import { Invoice, View } from "@/svg";
 import { notifyError } from "@/utils/toast";
 import InvoicePrint from "./invoice-print";
 
-const OrderActions = ({ id,cls }: { id: string,cls?:string }) => {
+const OrderActions = ({ id, cls }: { id: string; cls?: string }) => {
   const [showInvoice, setShowInvoice] = useState<boolean>(false);
   const [showView, setShowView] = useState<boolean>(false);
   const printRefTwo = useRef<HTMLDivElement | null>(null);
@@ -36,7 +36,7 @@ const OrderActions = ({ id,cls }: { id: string,cls?:string }) => {
         )}
       </td>
 
-      <td className={`${cls?cls:'px-9 py-3 text-end'}`}>
+      <td className={`${cls ? cls : "px-9 py-3 text-end"}`}>
         <div className="flex items-center justify-end space-x-2">
           <div className="relative">
             <button

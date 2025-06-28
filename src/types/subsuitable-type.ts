@@ -1,5 +1,5 @@
 export interface ISubSuitableFor {
   _id: string;
   name: string;
-  suitableForId: string;  // parent SuitableFor reference
+  suitableForId: string; // parent SuitableFor reference
 }

@@ -61,7 +61,6 @@ const VariantImgUpload = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [index, uploadData, isError]);
 
-
   useEffect(() => {
     if (uploadData && !isError) {
       setIsSubmitField(false);

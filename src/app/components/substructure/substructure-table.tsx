@@ -12,7 +12,8 @@ export default function SubstructureTable() {
   const [deleteSub] = useDeleteSubstructureMutation();
 
   if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div className="text-red-500">Error loading substructures</div>;
+  if (isError)
+    return <div className="text-red-500">Error loading substructures</div>;
 
   return (
     <div className="bg-white p-6 rounded shadow">
@@ -40,8 +41,8 @@ export default function SubstructureTable() {
                   {s.structureId == null
                     ? "—"
                     : typeof s.structureId === "object"
-                    ? (s.structureId as any).name
-                    : s.structureId}
+                      ? (s.structureId as any).name
+                      : s.structureId}
                 </td>
                 <td className="py-2">
                   <SubstructureEditDelete

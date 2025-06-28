@@ -1,3 +1,5 @@
+"use client";
+
 // src/app/components/color/ColorEditDelete.tsx
 "use client";
 

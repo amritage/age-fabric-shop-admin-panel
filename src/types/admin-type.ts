@@ -1,4 +1,3 @@
-
 // admin add
 export interface IAdminRegisterAdd {
   name: string;
@@ -8,8 +7,8 @@ export interface IAdminRegisterAdd {
 
 // admin add
 export interface IAdminLoginAdd {
-  email: string,
-  password: string,
+  email: string;
+  password: string;
 }
 
 export interface IAdminLoginRes {
@@ -62,7 +61,7 @@ export interface IAddStuff {
 }
 // single stuff
 export interface IStuff {
-  _id:string;
+  _id: string;
   name: string;
   image?: string;
   address?: string;
@@ -81,5 +80,5 @@ export interface IStuff {
 export interface IAdminGetRes {
   status: boolean;
   message: string;
-  data: IStuff[]
+  data: IStuff[];
 }

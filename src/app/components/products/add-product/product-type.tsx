@@ -1,5 +1,5 @@
 // /*
-import React,{useEffect} from "react";
+import React, { useEffect } from "react";
 import ReactSelect from "react-select";
 import { FieldErrors, Controller, Control } from "react-hook-form";
 import ErrorMsg from "../../common/error-msg";
@@ -9,7 +9,7 @@ type IPropType = {
   errors: FieldErrors<any>;
   control: Control;
   setSelectProductType: React.Dispatch<React.SetStateAction<string>>;
-  default_value?:string;
+  default_value?: string;
 };
 
 const ProductType = ({
@@ -24,20 +24,18 @@ const ProductType = ({
   };
   // set default product
   useEffect(() => {
-    if(default_value){
-      setSelectProductType(default_value)
+    if (default_value) {
+      setSelectProductType(default_value);
     }
-  }, [default_value, setSelectProductType])
-  
+  }, [default_value, setSelectProductType]);
+
   return (
     <>
       <Controller
         name="productType"
         control={control}
         rules={{
-          required: default_value
-            ? false
-            : "productType is required!",
+          required: default_value ? false : "productType is required!",
         }}
         render={({ field }) => (
           <ReactSelect

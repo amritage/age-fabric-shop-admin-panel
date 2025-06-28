@@ -1,6 +1,13 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-const initialState = {
+interface ProductImageState {
+  image: string | null;
+  image1: string | null;
+  image2: string | null;
+  video: string | null;
+}
+
+const initialState: ProductImageState = {
   image: null,
   image1: null,
   image2: null,
@@ -8,14 +15,11 @@ const initialState = {
 };
 
 const productImageSlice = createSlice({
-  name: 'productMedia',
+  name: "productMedia",
   initialState,
   reducers: {
-    setProductMedia: (state, action) => {
-      state.image = action.payload.image;
-      state.image1 = action.payload.image1;
-      state.image2 = action.payload.image2;
-      state.video = action.payload.video;
+    setProductMedia: (state, action: PayloadAction<Partial<ProductImageState>>) => {
+      Object.assign(state, action.payload);
     },
     clearProductMedia: (state) => {
       state.image = null;

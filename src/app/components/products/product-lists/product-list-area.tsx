@@ -10,7 +10,11 @@ import { useGetProductsQuery } from "@/redux/newproduct/NewProductApi";
 import usePagination from "@/hooks/use-pagination";
 
 const ProductListArea = () => {
-  const { data: products, isError, isLoading } = useGetProductsQuery({ page: 1, limit: 100 });
+  const {
+    data: products,
+    isError,
+    isLoading,
+  } = useGetProductsQuery({ page: 1, limit: 100 });
   const paginationData = usePagination(products?.data || [], 8);
   const { currentItems, handlePageClick, pageCount } = paginationData;
   const [searchValue, setSearchValue] = useState<string>("");
@@ -45,14 +49,14 @@ const ProductListArea = () => {
     // search field
     if (searchValue) {
       productItems = productItems.filter((p) =>
-        p.name.toLowerCase().includes(searchValue.toLowerCase())
+        p.name.toLowerCase().includes(searchValue.toLowerCase()),
       );
     }
 
     if (selectValue) {
       productItems = productItems.filter((p) => {
-        if (selectValue === 'in-stock') return p.quantity > 0;
-        if (selectValue === 'out-of-stock') return p.quantity === 0;
+        if (selectValue === "in-stock") return p.quantity > 0;
+        if (selectValue === "out-of-stock") return p.quantity === 0;
         return true;
       });
     }
@@ -75,8 +79,7 @@ const ProductListArea = () => {
         {/* bottom  */}
         <div className="flex justify-between items-center flex-wrap mx-8">
           <p className="mb-0 text-tiny">
-            Showing {currentItems.length} of{" "}
-            {products?.data.length}
+            Showing {currentItems.length} of {products?.data.length}
           </p>
           <div className="pagination py-3 flex justify-end items-center mx-8 pagination">
             <Pagination

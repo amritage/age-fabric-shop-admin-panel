@@ -1,5 +1,5 @@
 // File: src/hooks/useAddProductForm.tsx
-"use client";                                 // ← add this!
+"use client"; // ← add this!
 import React from "react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -7,14 +7,14 @@ import { filterConfig } from "@/utils/filterconfig";
 import { notifySuccess, notifyError } from "@/utils/toast";
 
 export const useAddProductForm = () => {
-  const router = useRouter();                   // ← now valid
+  const router = useRouter(); // ← now valid
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [filters, setFilters] = useState<any[]>([]);
-  const [previewMedia, setPreviewMedia] = useState<Record<string,string>>({});
+  const [previewMedia, setPreviewMedia] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -22,7 +22,7 @@ export const useAddProductForm = () => {
 
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    field: string
+    field: string,
   ) => {
     const file = e.target.files?.[0] || null;
     setFormData((prev) => ({ ...prev, [field]: file }));
@@ -75,14 +75,14 @@ export const useAddProductForm = () => {
         filterConfig.map((f) =>
           fetch(f.api)
             .then((r) => r.json())
-            .catch(() => ({ data: [] }))
-        )
+            .catch(() => ({ data: [] })),
+        ),
       );
       setFilters(
         filterConfig.map((f, i) => ({
           ...f,
           options: results[i].data || [],
-        }))
+        })),
       );
     })();
   }, []);

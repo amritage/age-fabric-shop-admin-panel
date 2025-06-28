@@ -1,11 +1,11 @@
-// src/app/structure/page.tsx
 "use client";
+// src/app/structure/page.tsx
 import React, { useState } from "react";
 import Wrapper from "@/layout/wrapper";
 import Breadcrumb from "@/app/components/breadcrumb/breadcrumb";
-import AddStructure    from "@/app/components/structure/add-structure";
-import EditStructure   from "@/app/components/structure/edit-structure";
-import StructureTable  from "@/app/components/structure/structure-table";
+import AddStructure from "@/app/components/structure/add-structure";
+import EditStructure from "@/app/components/structure/edit-structure";
+import StructureTable from "@/app/components/structure/structure-table";
 
 export default function StructurePage() {
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -19,10 +19,7 @@ export default function StructurePage() {
           {/* ← Left: Add form or Edit form */}
           <div className="col-span-12 lg:col-span-4">
             {editingId ? (
-              <EditStructure
-                id={editingId}
-                onDone={() => setEditingId(null)}
-              />
+              <EditStructure id={editingId} onDone={() => setEditingId(null)} />
             ) : (
               <AddStructure />
             )}
@@ -37,4 +34,3 @@ export default function StructurePage() {
     </Wrapper>
   );
 }
- 

@@ -34,7 +34,7 @@ export default function ProductCategory({
   const [open, setOpen] = React.useState<string>("");
   const { data: categories, isError, isLoading } = useGetAllCategoriesQuery();
   const [selectedCategory, setSelectedCategory] = useState<string[]>(
-    default_value ? [default_value.parent, default_value.children] : []
+    default_value ? [default_value.parent, default_value.children] : [],
   );
 
   useEffect(() => {
@@ -107,7 +107,7 @@ export default function ProductCategory({
             >
               <ListItem className="p-0" selected={open === item._id}>
                 <AccordionHeader
-                  onClick={() => handleCategory(item._id || '', item.parent)}
+                  onClick={() => handleCategory(item._id || "", item.parent)}
                   className="border-b-0 p-3"
                 >
                   <Typography

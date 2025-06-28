@@ -48,7 +48,10 @@ export default function EditContent({ id, onDone }: EditContentProps) {
   const onSubmit = async (vals: IContent) => {
     setErrorMessage("");
     try {
-      await updateContent({ id: id!, changes: { name: vals.name, img } }).unwrap();
+      await updateContent({
+        id: id!,
+        changes: { name: vals.name, img },
+      }).unwrap();
       onDone();
     } catch (err: any) {
       setErrorMessage(err?.data?.message || "Failed to update content.");
@@ -56,8 +59,7 @@ export default function EditContent({ id, onDone }: EditContentProps) {
   };
 
   if (isFetching) return <p>Loading…</p>;
-  if (fetchError || !data)
-    return <ErrorMsg msg="Failed to load content." />;
+  if (fetchError || !data) return <ErrorMsg msg="Failed to load content." />;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -76,16 +78,12 @@ export default function EditContent({ id, onDone }: EditContentProps) {
           placeholder="Enter content name"
         />
         {errors.name && (
-          <p className="mt-1 text-sm text-red-600">
-            {errors.name.message}
-          </p>
+          <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
         )}
       </div>
 
       {/* Error Message */}
-      {errorMessage && (
-        <p className="text-sm text-red-600">{errorMessage}</p>
-      )}
+      {errorMessage && <p className="text-sm text-red-600">{errorMessage}</p>}
 
       {/* Submit Button */}
       <button

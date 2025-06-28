@@ -1,9 +1,9 @@
-"use client"
+"use client";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import {useRouter} from 'next/navigation';
+import { useRouter } from "next/navigation";
 import { notifyError, notifySuccess } from "@/utils/toast";
 import { useLoginAdminMutation } from "@/redux/auth/authApi";
 import ErrorMsg from "@/app/components/common/error-msg";
@@ -15,15 +15,23 @@ const schema = Yup.object().shape({
 });
 
 const LoginForm = () => {
-  const [loginAdmin, {data:loginData}] = useLoginAdminMutation();
+  const [loginAdmin, { data: loginData }] = useLoginAdminMutation();
   const router = useRouter();
   // react hook form
-  const {register,handleSubmit,formState: { errors },reset} = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
     resolver: yupResolver(schema),
   });
   // onSubmit
-  const onSubmit =async (data: { email: string; password: string }) => {
-    const res = await loginAdmin({ email: data.email, password: data.password });
+  const onSubmit = async (data: { email: string; password: string }) => {
+    const res = await loginAdmin({
+      email: data.email,
+      password: data.password,
+    });
     if ("error" in res) {
       if ("data" in res.error) {
         const errorData = res.error.data as { message?: string };
@@ -33,7 +41,7 @@ const LoginForm = () => {
       }
     } else {
       notifySuccess("Login successfully");
-      router.push('/dashboard')
+      router.push("/dashboard");
       reset();
     }
   };

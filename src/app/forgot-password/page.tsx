@@ -1,6 +1,5 @@
 import ForgotForm from "../components/forgot/forgot-form";
 
-
 const ForgetPage = () => {
   return (
     <div className="tp-main-wrapper h-screen">
@@ -11,7 +10,7 @@ const ForgetPage = () => {
             <p>Enter your email address to request password reset.</p>
           </div>
           <div className="">
-            <ForgotForm/>
+            <ForgotForm />
           </div>
         </div>
       </div>
