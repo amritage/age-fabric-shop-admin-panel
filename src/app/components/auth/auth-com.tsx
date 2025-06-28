@@ -4,7 +4,7 @@ import useAuthCheck from "@/hooks/use-auth-check";
 import Cookies from "js-cookie";
 
 const AuthCom = ({ children }: { children: React.ReactNode }) => {
-  const { authChecked, user } = useAuthCheck();
+  const { authChecked } = useAuthCheck();
 
   let content;
   if (!authChecked) {
