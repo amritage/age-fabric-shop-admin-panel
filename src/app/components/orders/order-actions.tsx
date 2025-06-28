@@ -23,7 +23,6 @@ const OrderActions = ({ id, cls }: { id: string; cls?: string }) => {
     } catch (err) {
       notifyError("Failed to print");
     }
-    // console.log('id', id);
   };
 
   return (

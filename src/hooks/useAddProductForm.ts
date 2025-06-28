@@ -1,6 +1,5 @@
 // File: src/hooks/useAddProductForm.tsx
-"use client"; // ← add this!
-import React from "react";
+"use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { filterConfig } from "@/utils/filterconfig";

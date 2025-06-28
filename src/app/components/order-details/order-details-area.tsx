@@ -206,7 +206,6 @@ const OrderDetailsArea = ({ id }: { id: string }) => {
     } catch (err) {
       notifyError("Failed to print");
     }
-    // console.log('id', id);
   };
 
   return (

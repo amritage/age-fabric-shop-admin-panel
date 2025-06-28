@@ -9,6 +9,15 @@ import {
 } from "@/redux/coupon/couponApi";
 import dayjs from "dayjs";
 
+// Define a type for coupon form data
+interface CouponFormData {
+  name: string;
+  code: string;
+  endtime: string;
+  discountpercentage: number;
+  minimumamount: number;
+}
+
 const useCouponSubmit = () => {
   const [logo, setLogo] = useState<string>("");
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
@@ -38,7 +47,7 @@ const useCouponSubmit = () => {
     }
   }, [openSidebar, reset]);
   // submit handle
-  const handleCouponSubmit = async (data: any) => {
+  const handleCouponSubmit = async (data: CouponFormData) => {
     try {
       const coupon_data = {
         logo: logo,
@@ -73,7 +82,7 @@ const useCouponSubmit = () => {
   };
 
   //handle Submit edit Category
-  const handleSubmitEditCoupon = async (data: any, id: string) => {
+  const handleSubmitEditCoupon = async (data: CouponFormData, id: string) => {
     try {
       const coupon_data = {
         logo: logo,

@@ -7,6 +7,15 @@ import {
 } from "@/redux/brand/brandApi";
 import { notifyError, notifySuccess } from "@/utils/toast";
 
+// Define a type for brand form data
+interface BrandFormData {
+  name: string;
+  description: string;
+  email: string;
+  website: string;
+  location: string;
+}
+
 const useBrandSubmit = () => {
   const [logo, setLogo] = useState<string>("");
   const [status, setStatus] = useState<string>("active");
@@ -30,7 +39,7 @@ const useBrandSubmit = () => {
   } = useForm();
 
   // submit handle
-  const handleSubmitBrand = async (data: any) => {
+  const handleSubmitBrand = async (data: BrandFormData) => {
     try {
       const brand_data = {
         name: data?.name,
@@ -61,7 +70,7 @@ const useBrandSubmit = () => {
   };
 
   //handle Submit edit Category
-  const handleSubmitEditBrand = async (data: any, id: string) => {
+  const handleSubmitEditBrand = async (data: BrandFormData, id: string) => {
     try {
       const brand_data = {
         name: data?.name,

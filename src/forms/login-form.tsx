@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { notifyError, notifySuccess } from "@/utils/toast";
 import { useLoginAdminMutation } from "@/redux/auth/authApi";
 import ErrorMsg from "@/app/components/common/error-msg";
+import Link from "next/link";
 
 // schema
 const schema = Yup.object().shape({
@@ -82,12 +83,7 @@ const LoginForm = () => {
           </label>
         </div>
         <div className="mb-4">
-          <a
-            href="/forgot-password"
-            className="text-tiny font-medium text-theme border-b border-transparent hover:border-theme"
-          >
-            Forgot Password ?
-          </a>
+          <Link href="/forgot-password" className="text-tiny font-medium text-theme border-b border-transparent hover:border-theme">Forgot Password ?</Link>
         </div>
       </div>
       <button type="submit" className="tp-btn h-[49px] w-full justify-center">
