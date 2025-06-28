@@ -1,13 +1,12 @@
 import { apiSlice } from "../api/apiSlice";
 import { IDesign } from "@/types/design-type";
-import { EndpointBuilder } from "@reduxjs/toolkit/dist/query/endpointDefinitions";
 
 export const designApi = apiSlice.injectEndpoints({
   overrideExisting: true,
-  endpoints: (builder: EndpointBuilder<any, any, any>) => ({
+  endpoints: (builder) => ({
     getAllDesign: builder.query<{ data: IDesign[] }, void>({
       query: () => "/api/design/view",
-      providesTags: (res) =>
+      providesTags: (res: { data: IDesign[] } | undefined) =>
         res
           ? [
               { type: "Design" as const, id: "LIST" },
@@ -17,7 +16,7 @@ export const designApi = apiSlice.injectEndpoints({
     }),
     getDesign: builder.query<{ data: IDesign }, string>({
       query: (id) => `/api/design/view/${id}`,
-      providesTags: (res, err, id) => [{ type: "Design", id }],
+      providesTags: (res: { data: IDesign } | undefined, err: unknown, id: string) => [{ type: "Design", id }],
       keepUnusedDataFor: 300,
     }),
     addDesign: builder.mutation<{ data: IDesign }, Partial<IDesign>>({
@@ -33,14 +32,14 @@ export const designApi = apiSlice.injectEndpoints({
         method: "PUT",
         body: changes,
       }),
-      invalidatesTags: (res, err, { id }) => [
-        { type: "Design", id },
+      invalidatesTags: (res: { data: IDesign } | undefined, err: unknown, arg: { id: string }) => [
+        { type: "Design", id: arg.id },
         { type: "Design", id: "LIST" },
       ],
     }),
     deleteDesign: builder.mutation<{ status: number }, string>({
       query: (id) => ({ url: `/api/design/delete/${id}`, method: "DELETE" }),
-      invalidatesTags: (res, err, id) => [
+      invalidatesTags: (res: { status: number } | undefined, err: unknown, id: string) => [
         { type: "Design", id },
         { type: "Design", id: "LIST" },
       ],

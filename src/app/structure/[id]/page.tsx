@@ -27,7 +27,9 @@ export default function EditStructurePage() {
         {/* Center the form in a card */}
         <div className="mt-6 flex justify-center">
           <div className="w-full max-w-md bg-white rounded-md shadow p-8">
-            <EditStructure id={id} />
+            <EditStructure id={id} onDone={function (): void {
+              throw new Error("Function not implemented.");
+            } } />
           </div>
         </div>
       </div>
