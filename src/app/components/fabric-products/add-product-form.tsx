@@ -277,7 +277,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     ["image", "image1", "image2", "video"].forEach((key) => {
       delete cleanedFormData[key];
     });
-    localStorage.setItem("NEW_PRODUCT_BASE", JSON.stringify(cleanedFormData));
+    Cookies.set("NEW_PRODUCT_BASE", JSON.stringify(cleanedFormData));
     router.push(
       isEdit
         ? `/fabric-products/metadata?editId=${editId}`

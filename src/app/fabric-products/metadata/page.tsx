@@ -12,6 +12,7 @@ import Wrapper from "@/layout/wrapper";
 import { useSelector, useDispatch } from "react-redux";
 import { clearProductMedia } from "@/redux/features/productImageSlice";
 import { notifySuccess, notifyError } from "@/utils/toast";
+import Cookies from "js-cookie";
 
 export default function MetadataPage() {
   const router = useRouter();
@@ -27,7 +28,7 @@ export default function MetadataPage() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const raw = localStorage.getItem("NEW_PRODUCT_BASE");
+    const raw = Cookies.get("NEW_PRODUCT_BASE");
     if (!raw) {
       router.replace("/fabric-products/add");
       return;
@@ -73,7 +74,7 @@ export default function MetadataPage() {
         await addProduct(fd).unwrap();
       }
 
-      localStorage.removeItem("NEW_PRODUCT_BASE");
+      Cookies.remove("NEW_PRODUCT_BASE");
       dispatch(clearProductMedia()); // Clear Redux state after submission
       notifySuccess("Product saved successfully!");
       router.push("/fabric-products/view");

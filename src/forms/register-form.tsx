@@ -91,6 +91,7 @@ const RegisterForm = () => {
           className="input w-full h-[49px] rounded-md border border-gray6 px-6 text-base"
           type="password"
           placeholder="Password"
+          autoComplete="new-password"
         />
         <ErrorMsg msg={errors.password?.message as string} />
       </div>

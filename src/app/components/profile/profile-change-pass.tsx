@@ -68,6 +68,7 @@ const ProfileChangePass = () => {
           className="input w-full h-[49px] rounded-md border border-gray6 px-6 text-base text-black"
           type="password"
           placeholder="Current Password"
+          autoComplete="current-password"
         />
         <ErrorMsg msg={errors.password?.message as string} />
       </div>
@@ -81,6 +82,7 @@ const ProfileChangePass = () => {
           className="input w-full h-[49px] rounded-md border border-gray6 px-6 text-base text-black"
           type="password"
           placeholder="New Password"
+          autoComplete="new-password"
         />
         <ErrorMsg msg={errors.newPassword?.message as string} />
       </div>
@@ -92,6 +94,7 @@ const ProfileChangePass = () => {
           className="input w-full h-[49px] rounded-md border border-gray6 px-6 text-base text-black"
           type="password"
           placeholder="Confirm Password"
+          autoComplete="new-password"
         />
         <ErrorMsg msg={errors.confirmPassword?.message as string} />
       </div>
