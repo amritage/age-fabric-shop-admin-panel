@@ -18,7 +18,7 @@ export default function EditColor() {
     data,
     isLoading: isFetching,
     isError: fetchError,
-  } = useGetColorQuery(id || "");
+  } = useGetColorQuery(Array.isArray(id) ? id[0] : id || "");
   const [updateColor, { isLoading: isUpdating }] = useUpdateColorMutation();
   const {
     register,
@@ -41,7 +41,7 @@ export default function EditColor() {
     setErrorMessage("");
     try {
       await updateColor({
-        id: id!,
+        id: Array.isArray(id) ? id[0] : id || "",
         changes: { name: vals.name, css: vals.css, img },
       }).unwrap();
       router.push("/colors");
