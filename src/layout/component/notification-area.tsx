@@ -7,7 +7,7 @@ import { IProduct } from "@/types/product-type";
 
 // prop type
 type IPropType = {
-  nRef: React.RefObject<HTMLDivElement | null>;
+  nRef: React.RefObject<HTMLDivElement>;
   notificationOpen: boolean;
   handleNotificationOpen: () => void;
 };

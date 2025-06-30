@@ -3,13 +3,13 @@ import Datepicker from "react-tailwindcss-datepicker";
 
 type IPropType = {
   offerDate: {
-    startDate: null;
-    endDate: null;
+    startDate: Date | null;
+    endDate: Date | null;
   };
   setOfferDate: React.Dispatch<
     React.SetStateAction<{
-      startDate: null;
-      endDate: null;
+      startDate: Date | null;
+      endDate: Date | null;
     }>
   >;
   defaultValue?: {
@@ -29,11 +29,19 @@ const OfferDatePicker = ({
     setOfferDate(newValue);
   };
 
+  // Convert defaultValue strings to Date objects if present
+  const datePickerValue = defaultValue
+    ? {
+        startDate: defaultValue.startDate ? new Date(defaultValue.startDate) : null,
+        endDate: defaultValue.endDate ? new Date(defaultValue.endDate) : null,
+      }
+    : offerDate;
+
   return (
     <Datepicker
-      useRange={isRange ? true : false}
+      useRange={isRange}
       inputClassName="input w-full h-[44px] rounded-md border border-gray6 px-6 text-base"
-      value={defaultValue ? defaultValue : offerDate}
+      value={datePickerValue}
       onChange={handleValueChange}
     />
   );

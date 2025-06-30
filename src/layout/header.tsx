@@ -23,7 +23,7 @@ const Header = ({ setSideMenu }: IProps) => {
   // const pRef: React.RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
   // const nRef: React.RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
   const pRef = useRef<HTMLDivElement | null>(null);
-  const nRef = useRef<HTMLDivElement | null>(null);
+  const nRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch();
   const router = useRouter();
 

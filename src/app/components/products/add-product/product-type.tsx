@@ -39,6 +39,14 @@ function ProductType<T extends FieldValues>({
     }
   }, [default_value, setSelectProductType]);
 
+  // Define options array
+  const options = [
+    { value: "electronics", label: "Electronics" },
+    { value: "fashion", label: "Fashion" },
+    { value: "beauty", label: "Beauty" },
+    { value: "jewelry", label: "Jewelry" },
+  ];
+
   return (
     <>
       <Controller
@@ -50,28 +58,13 @@ function ProductType<T extends FieldValues>({
         render={({ field }) => (
           <ReactSelect
             {...field}
-            value={field.value}
-            defaultValue={
-              default_value
-                ? {
-                    label: default_value,
-                    value: default_value,
-                  }
-                : {
-                    label: "Select..",
-                    value: 0,
-                  }
-            }
-            onChange={(selectedOption: { value: string; label: string } | null) => {
-              field.onChange(selectedOption);
+            value={options.find(option => option.value === field.value)}
+            defaultValue={options.find(option => option.value === default_value)}
+            onChange={(selectedOption) => {
+              field.onChange(selectedOption?.value ?? "");
               handleSelectProduct(selectedOption?.value ?? "");
             }}
-            options={[
-              { value: "electronics", label: "Electronics" },
-              { value: "fashion", label: "Fashion" },
-              { value: "beauty", label: "Beauty" },
-              { value: "jewelry", label: "Jewelry" },
-            ]}
+            options={options}
           />
         )}
       />
