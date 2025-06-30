@@ -27,12 +27,12 @@ type IPropType = {
     setIsSubmitted: React.Dispatch<React.SetStateAction<boolean>>;
     setSelectProductType: React.Dispatch<React.SetStateAction<string>>;
     setLogo: React.Dispatch<React.SetStateAction<string>>;
-    handleCouponSubmit: (data: any) => void;
+    handleCouponSubmit: (data: CouponFormData) => void;
     isSubmitted: boolean;
-    register: UseFormRegister<any>;
-    errors: FieldErrors<any>;
+    register: UseFormRegister<CouponFormData>;
+    errors: FieldErrors<CouponFormData>;
     logo: string;
-    handleSubmit: UseFormHandleSubmit<any, undefined>;
+    handleSubmit: UseFormHandleSubmit<CouponFormData>;
     control: Control<CouponFormData, any>;
   };
 };
@@ -45,7 +45,7 @@ const CouponOffcanvas = ({ propsItems }: IPropType) => {
     setIsSubmitted,
     setLogo,
     errors,
-    handleCouponSubmit,
+    handleCouponSubmit = (_data: CouponFormData) => {},
     handleSubmit,
     logo,
     register,
@@ -59,7 +59,7 @@ const CouponOffcanvas = ({ propsItems }: IPropType) => {
       >
         <div className="flex flex-col justify-between h-full">
           {/* main wrap */}
-          <form onSubmit={handleSubmit((data) => handleCouponSubmit(data))}>
+          <form onSubmit={handleSubmit(handleCouponSubmit)}>
             <div className="flex items-center space-x-3 py-3 px-8 shadow-md sticky top-0 left-0 right-0 w-full z-[99] bg-white">
               <button
                 onClick={() => setOpenSidebar(false)}
@@ -87,32 +87,32 @@ const CouponOffcanvas = ({ propsItems }: IPropType) => {
                 <CouponFormField
                   register={register}
                   errors={errors}
-                  name="Name"
+                  name="name"
                   isReq={true}
                 />
                 <CouponFormField
                   register={register}
                   errors={errors}
-                  name="Code"
+                  name="code"
                   isReq={true}
                 />
                 <CouponFormField
                   register={register}
                   errors={errors}
-                  name="endTime"
+                  name="endtime"
                   isReq={true}
                   type="date"
                 />
                 <CouponFormField
                   register={register}
                   errors={errors}
-                  name="discountPercentage"
+                  name="discountpercentage"
                   isReq={true}
                 />
                 <CouponFormField
                   register={register}
                   errors={errors}
-                  name="minimumAmount"
+                  name="minimumamount"
                   isReq={true}
                 />
                 {/* Product Type */}
