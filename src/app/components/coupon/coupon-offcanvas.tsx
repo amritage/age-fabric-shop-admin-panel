@@ -9,15 +9,7 @@ import {
 } from "react-hook-form";
 import CouponFormField from "../brand/form-field-two";
 import ProductType from "../products/add-product/product-type";
-
-// CouponFormData type (should match useCouponSubmit definition)
-interface CouponFormData {
-  name: string;
-  code: string;
-  endtime: string;
-  discountpercentage: number;
-  minimumamount: number;
-}
+import { CouponFormData } from "@/types/coupon-type";
 
 // prop type
 type IPropType = {

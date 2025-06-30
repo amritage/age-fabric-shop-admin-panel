@@ -8,15 +8,7 @@ import {
   useGetCouponQuery,
 } from "@/redux/coupon/couponApi";
 import dayjs from "dayjs";
-
-// Define a type for coupon form data
-interface CouponFormData {
-  name: string;
-  code: string;
-  endtime: string;
-  discountpercentage: number;
-  minimumamount: number;
-}
+import { CouponFormData } from "@/types/coupon-type";
 
 const useCouponSubmit = () => {
   const [logo, setLogo] = useState<string>("");
