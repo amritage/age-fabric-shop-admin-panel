@@ -13,6 +13,7 @@ import { setProductMedia } from "@/redux/features/productImageSlice";
 import { IProduct } from "@/types/fabricproduct-type";
 import { notifyError } from "@/utils/toast";
 import Image from "next/image";
+import Cookies from "js-cookie";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -111,7 +112,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
       setFilterErrors({});
 
       try {
-        const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+        const token = typeof window !== "undefined" ? Cookies.get("admin") : null;
         const results = await Promise.all(
           filterConfig.map(async (f) => {
             const url = `${BASE_URL}${f.api}`;
