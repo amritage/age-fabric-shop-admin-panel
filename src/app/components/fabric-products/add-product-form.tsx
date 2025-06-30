@@ -111,11 +111,14 @@ export default function AddProductForm({ productId }: { productId?: string }) {
       setFilterErrors({});
 
       try {
+        const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
         const results = await Promise.all(
           filterConfig.map(async (f) => {
             const url = `${BASE_URL}${f.api}`;
             try {
-              const response = await fetch(url);
+              const response = await fetch(url, {
+                headers: { Authorization: `Bearer ${token}` }
+              });
               if (!response.ok) {
                 throw new Error(
                   `HTTP ${response.status}: ${response.statusText}`,
