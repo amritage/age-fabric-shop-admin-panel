@@ -1,66 +1,62 @@
 // src/redux/category/categoryApi.ts
 import { apiSlice } from "../api/apiSlice";
-import { ICategory } from "@/types/newcategory-type";
+import { INewCategory } from "@/types/newcategory-type";
 
-export const categoryApi = apiSlice.injectEndpoints({
+export const newcategoryApi = apiSlice.injectEndpoints({
+  overrideExisting: true,
   endpoints: (builder) => ({
-    getAllCategory: builder.query<{ data: ICategory[] }, void>({
-      // FULL absolute path:
+    getAllNewCategories: builder.query<{ data: INewCategory[] }, void>({
       query: () => "/api/newcategory/viewcategory",
       providesTags: (res) =>
-        res
-          ? [
-              { type: "Category" as const, id: "LIST" },
-              ...res.data.map((c) => ({
-                type: "Category" as const,
-                id: c._id!,
-              })),
-            ]
-          : [{ type: "Category", id: "LIST" }],
+        res?.data
+          ? res.data.map(({ _id }) => ({ type: "Category" as const, id: _id }))
+          : [],
+      keepUnusedDataFor: 600,
     }),
-    getCategory: builder.query<{ data: ICategory }, string>({
+    getNewCategory: builder.query<{ data: INewCategory }, string>({
       query: (id) => `/api/newcategory/viewcategory/${id}`,
-      providesTags: (res, err, id) => [{ type: "Category", id }],
+      providesTags: (res, err, id) => [{ type: "Category" as const, id }],
+      keepUnusedDataFor: 300,
     }),
-    addCategory: builder.mutation<{ data: ICategory }, FormData>({
+    addNewCategory: builder.mutation<{ data: INewCategory }, FormData>({
       query: (formData) => ({
         url: "/api/newcategory/addcategory",
         method: "POST",
         body: formData,
       }),
-      invalidatesTags: [{ type: "Category", id: "LIST" }],
+      invalidatesTags: [{ type: "Category" as const, id: "LIST" }],
     }),
-    updateCategory: builder.mutation<
-      { data: ICategory },
-      { id: string; formData: FormData }
+    updateNewCategory: builder.mutation<
+      { data: INewCategory },
+      { id: string; changes: FormData }
     >({
-      query: ({ id, formData }) => ({
+      query: ({ id, changes }) => ({
         url: `/api/newcategory/update/${id}`,
         method: "PUT",
-        body: formData,
+        body: changes,
       }),
       invalidatesTags: (res, err, { id }) => [
-        { type: "Category", id },
-        { type: "Category", id: "LIST" },
+        { type: "Category" as const, id },
+        { type: "Category" as const, id: "LIST" },
       ],
     }),
-    deleteCategory: builder.mutation<{ status: number }, string>({
+    deleteNewCategory: builder.mutation<{ status: number }, string>({
       query: (id) => ({
         url: `/api/newcategory/deletecategory/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: (res, err, id) => [
-        { type: "Category", id },
-        { type: "Category", id: "LIST" },
+        { type: "Category" as const, id },
+        { type: "Category" as const, id: "LIST" },
       ],
     }),
   }),
 });
 
 export const {
-  useGetAllCategoryQuery,
-  useGetCategoryQuery,
-  useAddCategoryMutation,
-  useUpdateCategoryMutation,
-  useDeleteCategoryMutation,
-} = categoryApi;
+  useGetAllNewCategoriesQuery,
+  useGetNewCategoryQuery,
+  useAddNewCategoryMutation,
+  useUpdateNewCategoryMutation,
+  useDeleteNewCategoryMutation,
+} = newcategoryApi;

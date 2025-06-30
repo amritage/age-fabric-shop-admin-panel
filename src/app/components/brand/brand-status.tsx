@@ -1,5 +1,5 @@
 import React from "react";
-import ReactSelect from "react-select";
+import ReactSelect, { SingleValue } from "react-select";
 
 // type
 type IPropType = {
@@ -11,7 +11,7 @@ const BrandStatus = ({ handleChange }: IPropType) => {
     <div className="mb-5">
       <p className="mb-0 text-base text-black">Status</p>
       <ReactSelect
-        onChange={(value) => handleChange(value?.value)}
+        onChange={(value: SingleValue<{ value: string; label: string }>) => handleChange(value?.value)}
         options={[
           { value: "active", label: "Active" },
           { value: "inactive", label: "Inactive" },

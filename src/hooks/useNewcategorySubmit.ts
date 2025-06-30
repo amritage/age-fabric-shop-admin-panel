@@ -1,29 +1,29 @@
-// src/hooks/useNewCategorySubmit.ts
+// src/hooks/useNewcategorySubmit.ts
 "use client";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { notifySuccess, notifyError } from "@/utils/toast";
 import {
-  useAddCategoryMutation,
-  useUpdateCategoryMutation,
+  useAddNewCategoryMutation,
+  useUpdateNewCategoryMutation,
 } from "@/redux/newcategory/newcategoryApi";
 
 interface FormValues {
   name: string;
 }
 
-export default function useNewCategorySubmit() {
+export default function useNewcategorySubmit() {
   const router = useRouter();
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [addCategory] = useAddCategoryMutation();
-  const [updateCategory] = useUpdateCategoryMutation();
+  const [addCategory] = useAddNewCategoryMutation();
+  const [updateCategory] = useUpdateNewCategoryMutation();
 
   const {
     register,
     handleSubmit,
+    formState: { errors, isSubmitted },
     reset,
-    formState: { errors, isSubmitting },
   } = useForm<FormValues>();
 
   /** Add handler */
@@ -49,7 +49,7 @@ export default function useNewCategorySubmit() {
     if (imageFile) fd.append("image", imageFile);
 
     try {
-      await updateCategory({ id, formData: fd }).unwrap();
+      await updateCategory({ id, changes: fd }).unwrap();
       notifySuccess("Category updated");
       router.push("/categories");
     } catch (err: any) {
@@ -57,15 +57,21 @@ export default function useNewCategorySubmit() {
     }
   };
 
+  const handleEdit = async (data: any, id: string) => {
+    await updateCategory({ id, changes: data }).unwrap();
+    reset();
+  };
+
   return {
     register,
     handleSubmit,
     errors,
-    isSubmitting,
+    isSubmitted,
     reset,
     imageFile,
     setImageFile,
     onAdd,
     onEdit,
+    handleEdit,
   };
 }

@@ -115,9 +115,9 @@ const ProductTypeBrand = ({
                       value: 0,
                     }
               }
-              onChange={(selectedOption) => {
+              onChange={(selectedOption: { value: string; label: string } | null) => {
                 field.onChange(selectedOption);
-                handleBrandChange(selectedOption?.value);
+                handleBrandChange(selectedOption?.value ?? "");
               }}
               options={option}
             />

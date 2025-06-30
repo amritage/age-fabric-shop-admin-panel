@@ -1,34 +1,33 @@
 // src/app/components/category/EditCategory.tsx
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import {
-  useGetCategoryQuery,
-  useUpdateCategoryMutation,
+  useGetNewCategoryQuery,
+  useUpdateNewCategoryMutation,
 } from "@/redux/newcategory/newcategoryApi";
 import { useForm } from "react-hook-form";
 import { ICategory } from "@/types/newcategory-type";
-import Image from "next/image";
+import GlobalImgUpload from "./global-img-upload";
 
 export default function EditCategory() {
   const { id } = useParams();
-  const { data, isLoading: isFetching } = useGetCategoryQuery(id || "");
-  const [updateCategory, { isLoading: isSubmitting }] =
-    useUpdateCategoryMutation();
+  const { data, isLoading: isFetching, isError: fetchError } = useGetNewCategoryQuery(id || "");
+  const [updateCategory, { isLoading: isSubmitting }] = useUpdateNewCategoryMutation();
 
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<Pick<ICategory, "name" | "productType" | "parent">>();
+  } = useForm<Pick<ICategory, "name">>();
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // Local state for image file and preview URL
-  const [file, setFile] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string>("");
+  // Local state for image file and url
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState<string>("");
+  const [submitAttempted, setSubmitAttempted] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
   if (!BASE) {
@@ -38,116 +37,66 @@ export default function EditCategory() {
   // Prefill form fields and initial preview from fetched data
   useEffect(() => {
     if (data?.data) {
-      const { name, productType, parent, image } = data.data;
-      setValue("name", name);
-      setValue("productType", productType);
-      setValue("parent", parent);
-
-      if (image) {
-        setPreview(`${BASE}/uploads/${image}`);
-      }
+      setValue("name", data.data.name);
+      // No need to set image here; default_img will handle preview
     }
-  }, [data, setValue, BASE]);
-
-  // When user selects a new file, update preview
-  useEffect(() => {
-    if (!file) return;
-    const objectUrl = URL.createObjectURL(file);
-    setPreview(objectUrl);
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [file]);
+  }, [data, setValue]);
 
   // Handle form submit
   const onSubmit = async (vals: any) => {
-    const fd = new FormData();
-    fd.append("name", vals.name);
-    fd.append("productType", vals.productType);
-    fd.append("parent", vals.parent);
-    if (file) {
-      fd.append("image", file);
+    setSubmitAttempted(true);
+    setErrorMessage("");
+    try {
+      const fd = new FormData();
+      fd.append("name", vals.name);
+      if (imageFile) fd.append("image", imageFile);
+      await updateCategory({ id: id!, changes: fd }).unwrap();
+      // Optionally navigate back or show a toast here
+    } catch (err: any) {
+      setErrorMessage(err?.data?.message || "Failed to update category.");
     }
-
-    await updateCategory({ id: id!, formData: fd }).unwrap();
-    // you can navigate back or show a toast here
   };
 
   if (isFetching) return <p>Loading…</p>;
+  if (fetchError || !data) return <p className="text-red-500">Failed to load category.</p>;
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      encType="multipart/form-data"
-      className="bg-white p-8 rounded-md space-y-6"
-    >
-      {/* Name */}
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      {/* Image Upload */}
+      <GlobalImgUpload
+        setImageFile={setImageFile}
+        setImageUrl={setImageUrl}
+        isSubmitted={submitAttempted}
+        default_img={data?.data?.image ? `${BASE}/uploadimage/${data.data.image}` : ""}
+        imageFile={imageFile}
+        imageUrl={imageUrl}
+        setIsSubmitted={setSubmitAttempted}
+      />
+
+      {/* Name Field */}
       <div>
-        <label className="block mb-1">Name</label>
+        <label className="block mb-1 text-sm font-medium text-gray-700">Name</label>
         <input
+          type="text"
           {...register("name", { required: "Name is required" })}
-          className="input w-full"
+          className="w-full px-4 py-2 border rounded-md focus:outline-none"
+          placeholder="Enter category name"
         />
-        {errors.name && <p className="text-red-500">{errors.name.message}</p>}
-      </div>
-
-      {/* Product Type */}
-      <div>
-        <label className="block mb-1">Product Type</label>
-        <input
-          {...register("productType", { required: "Required" })}
-          className="input w-full"
-        />
-        {errors.productType && (
-          <p className="text-red-500">{errors.productType.message}</p>
+        {errors.name && (
+          <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
         )}
       </div>
 
-      {/* Parent Category */}
-      <div>
-        <label className="block mb-1">Parent Category</label>
-        <input
-          {...register("parent", { required: "Required" })}
-          className="input w-full"
-        />
-        {errors.parent && (
-          <p className="text-red-500">{errors.parent.message}</p>
-        )}
-      </div>
+      {/* Error Message */}
+      {errorMessage && <p className="text-sm text-red-600">{errorMessage}</p>}
 
-      {/* Image Preview + Upload */}
-      <div>
-        <label className="block mb-1">Image</label>
-        {preview ? (
-          <Image
-            src={preview}
-            alt="Category preview"
-            width={96}
-            height={96}
-            unoptimized
-            className="mb-2 w-24 h-24 object-cover rounded border"
-          />
-        ) : (
-          <div className="mb-2 w-24 h-24 bg-gray-100 flex items-center justify-center rounded text-gray-400">
-            No Image
-          </div>
-        )}
-
-        {/* File input */}
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          onChange={(e) => setFile(e.target.files?.[0] || null)}
-          className="w-full"
-        />
-      </div>
-
-      {/* Submit */}
+      {/* Submit Button */}
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full px-7 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+        className="w-full px-4 py-2 font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:opacity-50"
       >
-        {isSubmitting ? "Saving…" : "Save Changes"}
+        {isSubmitting ? "Updating…" : "Save Changes"}
       </button>
     </form>
   );

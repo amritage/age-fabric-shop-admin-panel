@@ -1,23 +1,33 @@
 // /*
 import React, { useEffect } from "react";
 import ReactSelect from "react-select";
-import { FieldErrors, Controller, Control } from "react-hook-form";
+import { FieldErrors, Controller, Control, FieldValues } from "react-hook-form";
 import ErrorMsg from "../../common/error-msg";
 
+// CouponFormData type (should match useCouponSubmit definition)
+interface CouponFormData {
+  name: string;
+  code: string;
+  endtime: string;
+  discountpercentage: number;
+  minimumamount: number;
+  productType: string;
+}
+
 // prop type
-type IPropType = {
-  errors: FieldErrors<any>;
-  control: Control;
+type IPropType<T extends FieldValues> = {
+  errors: FieldErrors<T>;
+  control: Control<T, any>;
   setSelectProductType: React.Dispatch<React.SetStateAction<string>>;
   default_value?: string;
 };
 
-const ProductType = ({
+function ProductType<T extends FieldValues>({
   errors,
   control,
   default_value,
   setSelectProductType,
-}: IPropType) => {
+}: IPropType<T>) {
   // handleSelectProduct
   const handleSelectProduct = (value: string) => {
     setSelectProductType(value);
@@ -32,7 +42,7 @@ const ProductType = ({
   return (
     <>
       <Controller
-        name="productType"
+        name={"productType" as any}
         control={control}
         rules={{
           required: default_value ? false : "productType is required!",
@@ -52,9 +62,9 @@ const ProductType = ({
                     value: 0,
                   }
             }
-            onChange={(selectedOption) => {
+            onChange={(selectedOption: { value: string; label: string } | null) => {
               field.onChange(selectedOption);
-              handleSelectProduct(selectedOption?.value);
+              handleSelectProduct(selectedOption?.value ?? "");
             }}
             options={[
               { value: "electronics", label: "Electronics" },
@@ -65,10 +75,10 @@ const ProductType = ({
           />
         )}
       />
-      <ErrorMsg msg={errors?.productType?.message as string} />
+      <ErrorMsg msg={(errors as any)?.productType?.message as string} />
     </>
   );
-};
+}
 
 export default ProductType;
 // */

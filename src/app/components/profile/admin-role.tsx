@@ -16,7 +16,7 @@ const AdminRole = ({ handleChange, default_value, setRole }: IPropType) => {
   }, [default_value, setRole]);
   return (
     <ReactSelect
-      onChange={(value) => handleChange(value?.value)}
+      onChange={(value: { value: string | number; label: string } | null) => handleChange(value?.value)}
       defaultValue={
         default_value
           ? {

@@ -91,7 +91,7 @@ export default function ProductCategory({
 
     content = (
       <>
-        <List className="p-0">
+        <List className="p-0" {...({} as any)}>
           {categoryItems.map((item) => (
             <Accordion
               key={item._id}
@@ -104,15 +104,18 @@ export default function ProductCategory({
                   }`}
                 />
               }
+              {...({} as any)}
             >
-              <ListItem className="p-0" selected={open === item._id}>
+              <ListItem className="p-0" selected={open === item._id} {...({} as any)}>
                 <AccordionHeader
                   onClick={() => handleCategory(item._id || "", item.parent)}
                   className="border-b-0 p-3"
+                  {...({} as any)}
                 >
                   <Typography
                     color="blue-gray"
                     className="mr-auto font-normal mb-0"
+                    {...({} as any)}
                   >
                     {item.parent}
                   </Typography>
@@ -136,7 +139,7 @@ export default function ProductCategory({
         ))}
       </div>
       <div className="h-80 overflow-y-scroll overflow-x-hidden">
-        <Card>{content}</Card>
+        <Card {...({} as any)}>{content}</Card>
       </div>
     </>
   );

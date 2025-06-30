@@ -37,7 +37,7 @@ const useCouponSubmit = () => {
     formState: { errors },
     reset,
     control,
-  } = useForm();
+  } = useForm<CouponFormData>();
 
   useEffect(() => {
     if (!openSidebar) {

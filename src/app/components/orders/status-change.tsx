@@ -25,7 +25,7 @@ const OrderStatusChange = ({ id }: { id: string }) => {
   };
   return (
     <ReactSelect
-      onChange={(value) => handleChange(value?.value, id)}
+      onChange={(value: { value: string; label: string } | null) => handleChange(value?.value, id)}
       options={options}
     />
   );

@@ -1,83 +1,54 @@
 // src/app/components/category/AddCategory.tsx
 "use client";
-import React from "react";
-import { useRef } from "react";
-import { useCategoryForm } from "@/hooks/use-newcategory-form";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useAddNewCategoryMutation } from "@/redux/newcategory/newcategoryApi";
 
-export default function AddCategory() {
+export default function AddNewCategory() {
   const {
     register,
     handleSubmit,
-    errors,
-    isSubmitting,
-    imageFile,
-    setImageFile,
-    onAdd,
-  } = useCategoryForm();
+    reset,
+    formState: { errors },
+  } = useForm();
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [addNewCategory] = useAddNewCategoryMutation();
 
-  const fileRef = useRef<HTMLInputElement>(null);
+  const onSubmit = async (data: any) => {
+    const fd = new FormData();
+    fd.append("name", data.name);
+    if (imageFile) {
+      fd.append("image", imageFile);
+    }
+    await addNewCategory(fd);
+    reset();
+    setImageFile(null);
+  };
 
   return (
-    <form
-      onSubmit={handleSubmit(onAdd)}
-      encType="multipart/form-data"
-      className="bg-white p-8 rounded-md space-y-6"
-    >
-      {/* Name */}
-      <div>
-        <label className="block mb-1">Name</label>
+    <form onSubmit={handleSubmit(onSubmit)} className="bg-white px-8 py-8 rounded-md">
+      <div className="mb-6">
+        <p className="mb-1 text-base text-black">Upload Image</p>
         <input
-          {...register("name", { required: "Name is required" })}
-          className="input w-full"
-          placeholder="Enter category name"
-        />
-        {errors.name && <p className="text-red-500">{errors.name.message}</p>}
-      </div>
-
-      {/* Product Type */}
-      <div>
-        <label className="block mb-1">Product Type</label>
-        <input
-          {...register("productType", { required: "Product Type is required" })}
-          className="input w-full"
-          placeholder="e.g. Electronics"
-        />
-        {errors.productType && (
-          <p className="text-red-500">{errors.productType.message}</p>
-        )}
-      </div>
-
-      {/* Parent */}
-      <div>
-        <label className="block mb-1">Parent Category</label>
-        <input
-          {...register("parent", { required: "Parent is required" })}
-          className="input w-full"
-          placeholder="e.g. Gadgets"
-        />
-        {errors.parent && (
-          <p className="text-red-500">{errors.parent.message}</p>
-        )}
-      </div>
-
-      {/* Image */}
-      <div>
-        <label className="block mb-1">Image</label>
-        <input
-          ref={fileRef}
           type="file"
           accept="image/*"
-          onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+          onChange={e => setImageFile(e.target.files?.[0] || null)}
           className="w-full"
         />
       </div>
-
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        className="tp-btn px-7 py-2"
-      >
-        {isSubmitting ? "Adding…" : "Add Category"}
+      <div className="mb-6">
+        <p className="mb-0 text-base text-black">Name</p>
+        <input
+          {...register("name", { required: "Name is required" })}
+          className="input w-full h-[44px] rounded-md border border-gray6 px-6 text-base"
+          placeholder="Enter category name"
+        />
+        {errors.name && (
+          <span className="text-red-500 text-sm">{typeof errors.name.message === "string" ? errors.name.message : ""}</span>
+        )}
+      </div>
+      <button type="submit" className="tp-btn px-7 py-2">
+        Add Category
       </button>
     </form>
   );

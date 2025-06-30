@@ -51,7 +51,7 @@ const AddCategory = () => {
             <div className="mb-6">
               <p className="mb-0 text-base text-black">Product Type</p>
               <div className="category-add-select select-bordered">
-                <ProductType
+                <ProductType<any>
                   setSelectProductType={setSelectProductType}
                   control={control}
                   errors={errors}

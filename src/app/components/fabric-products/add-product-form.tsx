@@ -16,15 +16,7 @@ import { IProduct } from "@/types/fabricproduct-type";
 import { notifyError } from "@/utils/toast";
 import Image from "next/image";
 
-// Grab your base API URL from NEXT_PUBLIC_ env
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-
-// Show error toast only on mount if BASE_URL is missing
-useEffect(() => {
-  if (!BASE_URL) {
-    notifyError("API base URL is not set. Please configure NEXT_PUBLIC_API_BASE_URL in your environment.");
-  }
-}, []);
 
 // Related Products Component
 const RelatedProducts = ({ groupcodeId }: { groupcodeId: string }) => {
@@ -107,6 +99,12 @@ export default function AddProductForm({ productId }: { productId?: string }) {
   const [isLoadingFilters, setIsLoadingFilters] = useState(true);
   const [filterErrors, setFilterErrors] = useState<Record<string, string>>({});
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!BASE_URL) {
+      notifyError("API base URL is not set. Please configure NEXT_PUBLIC_API_BASE_URL in your environment.");
+    }
+  }, []);
 
   // load all filter dropdowns from your backend
   useEffect(() => {

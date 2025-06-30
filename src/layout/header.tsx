@@ -20,9 +20,10 @@ const Header = ({ setSideMenu }: IProps) => {
   const [searchOverlay, setSearchOverlay] = useState<boolean>(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [notificationOpen, setNotificationOpen] = useState(false);
-  const pRef: React.RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
-  const nRef: React.RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
-
+  // const pRef: React.RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
+  // const nRef: React.RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
+  const pRef = useRef<HTMLDivElement | null>(null);
+  const nRef = useRef<HTMLDivElement | null>(null);
   const dispatch = useDispatch();
   const router = useRouter();
 

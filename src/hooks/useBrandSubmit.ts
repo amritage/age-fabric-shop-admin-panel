@@ -36,7 +36,7 @@ const useBrandSubmit = () => {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm();
+  } = useForm<BrandFormData>();
 
   // submit handle
   const handleSubmitBrand = async (data: BrandFormData) => {

@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import "react-toastify/dist/ReactToastify.css";
 import { Poppins } from "next/font/google";
 import { Providers } from "@/redux/provider";
+import "../../public/assets/css/custom.css";
 
 export const metadata: Metadata = {
   title: "Shofy - eCommerce Admin Template",
@@ -29,7 +30,6 @@ export default function RootLayout({
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
         <link rel="icon" href="/favicon.png" />
-        <link rel="stylesheet" href="/assets/css/custom.css" />
       </head>
       <body className={poppins.className + " bg-blue-50 min-h-screen"}>
         <Providers>{children}</Providers>

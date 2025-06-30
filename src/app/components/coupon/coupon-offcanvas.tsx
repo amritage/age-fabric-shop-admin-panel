@@ -10,6 +10,15 @@ import {
 import CouponFormField from "../brand/form-field-two";
 import ProductType from "../products/add-product/product-type";
 
+// CouponFormData type (should match useCouponSubmit definition)
+interface CouponFormData {
+  name: string;
+  code: string;
+  endtime: string;
+  discountpercentage: number;
+  minimumamount: number;
+}
+
 // prop type
 type IPropType = {
   propsItems: {
@@ -24,7 +33,7 @@ type IPropType = {
     errors: FieldErrors<any>;
     logo: string;
     handleSubmit: UseFormHandleSubmit<any, undefined>;
-    control: Control;
+    control: Control<CouponFormData, any>;
   };
 };
 

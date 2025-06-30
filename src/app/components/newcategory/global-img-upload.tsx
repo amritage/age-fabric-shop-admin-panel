@@ -7,18 +7,22 @@ import UploadImage from "../products/add-product/upload-image";
 
 // prop type
 type IPropType = {
-  setImage: React.Dispatch<React.SetStateAction<string>>;
+  setImageFile: React.Dispatch<React.SetStateAction<File | null>>;
+  setImageUrl: React.Dispatch<React.SetStateAction<string>>;
   isSubmitted: boolean;
   default_img?: string;
-  image?: string;
+  imageFile?: File | null;
+  imageUrl?: string;
   setIsSubmitted?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const GlobalImgUpload = ({
-  setImage,
+  setImageFile,
+  setImageUrl,
   isSubmitted,
   default_img,
-  image,
+  imageFile,
+  imageUrl,
   setIsSubmitted,
 }: IPropType) => {
   const { handleImageUpload, uploadData, isError, isLoading } =
@@ -34,7 +38,7 @@ const GlobalImgUpload = ({
         id: uploadData.data.id,
       }}
       isCenter={true}
-      setImgUrl={setImage}
+      setImgUrl={setImageUrl}
     />
   ) : showDefaultImage ? (
     <Image src={default_img} alt="upload-img" width={100} height={91} />
@@ -51,11 +55,11 @@ const GlobalImgUpload = ({
 
   useEffect(() => {
     if (uploadData && !isError && !isLoading) {
-      setImage(uploadData.data.url);
+      setImageUrl(uploadData.data.url);
     } else if (default_img) {
-      setImage(default_img);
+      setImageUrl(default_img);
     }
-  }, [default_img, uploadData, isError, isLoading, setImage]);
+  }, [default_img, uploadData, isError, isLoading, setImageUrl]);
 
   return (
     <div className="mb-6">
@@ -77,7 +81,7 @@ const GlobalImgUpload = ({
       </span>
       <div className="">
         <input
-          onChange={handleImageUpload}
+          onChange={e => setImageFile(e.target.files?.[0] || null)}
           type="file"
           name="image"
           id="categoryImage"

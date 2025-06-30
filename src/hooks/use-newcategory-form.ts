@@ -5,9 +5,9 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { notifySuccess, notifyError } from "@/utils/toast";
 import {
-  useAddCategoryMutation,
-  useUpdateCategoryMutation,
-  useGetCategoryQuery,
+  useAddNewCategoryMutation,
+  useUpdateNewCategoryMutation,
+  useGetNewCategoryQuery,
 } from "@/redux/newcategory/newcategoryApi";
 import { ICategory } from "@/types/newcategory-type";
 
@@ -22,11 +22,11 @@ export function useCategoryForm(id?: string) {
   const [imageFile, setImageFile] = useState<File | null>(null);
 
   // Queries & mutations
-  const { data, isLoading: isFetching } = useGetCategoryQuery(id || "", {
+  const { data, isLoading: isFetching } = useGetNewCategoryQuery(id || "", {
     skip: !id,
   });
-  const [addCategory] = useAddCategoryMutation();
-  const [updateCategory] = useUpdateCategoryMutation();
+  const [addCategory] = useAddNewCategoryMutation();
+  const [updateCategory] = useUpdateNewCategoryMutation();
 
   const {
     register,
@@ -39,10 +39,9 @@ export function useCategoryForm(id?: string) {
   // Prefill on edit
   useEffect(() => {
     if (data?.data) {
-      const { name, productType, parent } = data.data;
+      const { name } = data.data;
       setValue("name", name);
-      setValue("productType", productType);
-      setValue("parent", parent);
+      // If you want to prefill image, handle it here
     }
   }, [data, setValue]);
 
@@ -74,7 +73,7 @@ export function useCategoryForm(id?: string) {
   const onEdit = async (vals: FormValues) => {
     try {
       const fd = buildFormData(vals);
-      await updateCategory({ id: id!, formData: fd }).unwrap();
+      await updateCategory({ id: id!, changes: fd }).unwrap();
       notifySuccess("Category updated");
       router.push("/newcategory");
     } catch (err: any) {

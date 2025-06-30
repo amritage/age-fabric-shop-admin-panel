@@ -11,6 +11,14 @@ const nextConfig = {
   },
   images: {
     domains: ["i.ibb.co", "res.cloudinary.com", "lh3.googleusercontent.com"],
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '7000',
+        pathname: '/uploadimage/**',
+      },
+    ],
   },
 };
 

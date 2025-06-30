@@ -7,7 +7,7 @@ import { useAddSubFinishMutation } from "@/redux/subfinish/subfinishApi";
 import { useGetAllFinishQuery } from "@/redux/finish/finishApi";
 import ErrorMsg from "@/app/components/common/error-msg";
 
-type FormVals = { name: string; finishId: string };
+type FormVals = { name: string; structureId: string };
 
 export default function AddSubFinish() {
   const {
@@ -24,7 +24,7 @@ export default function AddSubFinish() {
   const onSubmit = async (vals: FormVals) => {
     setApiError(null);
     try {
-      await addSF({ name: vals.name, structureId: vals.finishId }).unwrap();
+      await addSF({ name: vals.name, structureId: vals.structureId }).unwrap();
       reset();
     } catch (err: any) {
       setApiError(err?.data?.message || "Server error – please try again");
@@ -48,7 +48,7 @@ export default function AddSubFinish() {
           Parent Finish
         </label>
         <select
-          {...register("finishId", { required: "Select a parent finish" })}
+          {...register("structureId", { required: "Select a parent finish" })}
           className="input w-full h-[44px] rounded-md border border-gray6 px-6 text-base"
         >
           <option value="">Select…</option>
@@ -58,8 +58,8 @@ export default function AddSubFinish() {
             </option>
           ))}
         </select>
-        {errors.finishId && (
-          <p className="text-red-500 text-sm mt-1">{errors.finishId.message}</p>
+        {errors.structureId && (
+          <p className="text-red-500 text-sm mt-1">{errors.structureId.message}</p>
         )}
       </div>
 

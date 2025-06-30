@@ -1,36 +1,46 @@
 // src/app/components/category/CategoryEditDelete.tsx
 "use client";
-import { Edit, Delete } from "@/svg";
+import { Delete, Edit } from "@/svg";
 import React, { useState } from "react";
 import Link from "next/link";
 import Swal from "sweetalert2";
 import EditTooltip from "../tooltip/edit-tooltip";
 import DeleteTooltip from "../tooltip/delete-tooltip";
-import { useDeleteCategoryMutation } from "@/redux/newcategory/newcategoryApi";
+import { useDeleteNewCategoryMutation } from "@/redux/newcategory/newcategoryApi";
 import { notifyError } from "@/utils/toast";
 import { useRouter } from "next/navigation";
 
-export default function CategoryEditDelete({ id }: { id: string }) {
+type Props = {
+  id: string;
+};
+
+const NewCategoryEditDelete: React.FC<Props> = ({ id }) => {
   const [showEdit, setShowEdit] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
-  const [deleteCategory] = useDeleteCategoryMutation();
   const router = useRouter();
+  const [deleteNewCategory] = useDeleteNewCategoryMutation();
 
-  const handleDelete = async () => {
+  const handleDelete = async (id: string) => {
     const result = await Swal.fire({
       title: "Are you sure?",
       text: `Delete this category?`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "Cancel",
     });
+
     if (result.isConfirmed) {
       try {
-        await deleteCategory(id).unwrap();
-        Swal.fire("Deleted!", "Category has been deleted.", "success");
-        router.push("/categories");
+        await deleteNewCategory(id).unwrap();
+        Swal.fire("Deleted!", "Your category has been deleted.", "success");
+        router.push("/newcategory");
       } catch (err: any) {
-        notifyError(err?.data?.error || "Failed to delete category.");
+        if (err?.data?.message) {
+          notifyError(err.data.message);
+        } else {
+          notifyError("Failed to delete category.");
+        }
       }
     }
   };
@@ -38,7 +48,7 @@ export default function CategoryEditDelete({ id }: { id: string }) {
   return (
     <div className="flex space-x-2">
       <div className="relative">
-        <Link href={`/categories/${id}`}>
+        <Link href={`/newcategory/${id}`}>
           <button
             onMouseEnter={() => setShowEdit(true)}
             onMouseLeave={() => setShowEdit(false)}
@@ -51,7 +61,7 @@ export default function CategoryEditDelete({ id }: { id: string }) {
       </div>
       <div className="relative">
         <button
-          onClick={handleDelete}
+          onClick={() => handleDelete(id)}
           onMouseEnter={() => setShowDelete(true)}
           onMouseLeave={() => setShowDelete(false)}
           className="w-8 h-8 flex items-center justify-center bg-white border border-gray text-slate-600 rounded-md hover:bg-danger hover:border-danger hover:text-white"
@@ -62,4 +72,6 @@ export default function CategoryEditDelete({ id }: { id: string }) {
       </div>
     </div>
   );
-}
+};
+
+export default NewCategoryEditDelete;
