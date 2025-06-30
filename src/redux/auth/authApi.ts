@@ -19,7 +19,7 @@ export const authApi = apiSlice.injectEndpoints({
     // registerAdmin
     registerAdmin: builder.mutation<IAdminRegisterRes, IAdminRegisterAdd>({
       query: (data) => ({
-        url: "https://newshopy-production.up.railway.app/admin/register",
+        url: "/admin/register",
         method: "POST",
         body: data,
       }),
