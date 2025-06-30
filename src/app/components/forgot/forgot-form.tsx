@@ -7,6 +7,9 @@ import ErrorMsg from "../common/error-msg";
 import { useForgetPasswordMutation } from "@/redux/auth/authApi";
 import { notifyError, notifySuccess } from "@/utils/toast";
 
+import  LoginForm from '../../../forms/login-form';
+import Link from "next/link";
+
 // schema
 const schema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -66,12 +69,12 @@ const ForgotForm = () => {
       <div className="tp-checkbox flex items-start space-x-2 mt-5 justify-center">
         <p className="mb-0 leading-none">
           Remember password ?{" "}
-          <a
-            href="login.html"
+          <Link
+            href="/login"
             className="text-theme border-b border-transparent hover:border-theme"
           >
             Login
-          </a>
+          </Link>
         </p>
       </div>
     </form>

@@ -19,7 +19,7 @@ export const authApi = apiSlice.injectEndpoints({
     // registerAdmin
     registerAdmin: builder.mutation<IAdminRegisterRes, IAdminRegisterAdd>({
       query: (data) => ({
-        url: "/admin/register",
+        url: "/api/admin/register",
         method: "POST",
         body: data,
       }),
@@ -83,7 +83,7 @@ export const authApi = apiSlice.injectEndpoints({
     // reset password
     forgetPassword: builder.mutation<{ message: string }, { email: string }>({
       query: (data) => ({
-        url: "api/admin/forget-password",
+        url: "/api/admin/forget-password",
         method: "PATCH",
         body: data,
       }),
@@ -94,7 +94,7 @@ export const authApi = apiSlice.injectEndpoints({
       { token: string; password: string }
     >({
       query: (data) => ({
-        url: "api/admin/confirm-forget-password",
+        url: "/api/admin/confirm-forget-password",
         method: "PATCH",
         body: data,
       }),
@@ -105,7 +105,7 @@ export const authApi = apiSlice.injectEndpoints({
       { email: string; oldPass: string; newPass: string }
     >({
       query: (data) => ({
-        url: "api/admin/change-password",
+        url: "/api/admin/change-password",
         method: "PATCH",
         body: data,
       }),
@@ -148,7 +148,7 @@ export const authApi = apiSlice.injectEndpoints({
     }),
     addStaff: builder.mutation<{ message: string }, IAddStuff>({
       query: (data) => ({
-        url: "api/admin/add",
+        url: "/api/admin/add",
         method: "POST",
         body: data,
       }),
