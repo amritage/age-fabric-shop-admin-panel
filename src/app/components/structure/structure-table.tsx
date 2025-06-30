@@ -4,7 +4,7 @@
 "use client";
 
 import React from "react";
-import { IStrucutreItem } from "@/types/structure-type";
+import { IStructureItem } from "@/types/structure-type";
 import {
   useGetAllStructuresQuery,
   useDeleteStructureMutation,
@@ -41,7 +41,7 @@ const StructureTable: React.FC<StructureTableProps> = ({ onEditClick }) => {
               </td>
             </tr>
           ) : (
-            data.data.map((item: IStrucutreItem) => (
+            data.data.map((item: IStructureItem) => (
               <tr key={item._id}>
                 <td className="py-2">
                   {item.img && (

@@ -9,7 +9,7 @@ import {
 import { useGetAllStructuresQuery } from "@/redux/structure/structureApi";
 import ErrorMsg from "@/app/components/common/error-msg";
 import { ISubstructure } from "@/types/substructure-type";
-import { IStrucutreItem } from "@/types/structure-type";
+import { IStructureItem } from "@/types/structure-type";
 
 type FormValues = {
   name: string;
@@ -71,7 +71,7 @@ export default function EditSubstructure({ id }: { id: string }) {
           className="input w-full h-[44px] rounded-md border border-gray6 px-6 text-base"
         >
           <option value="">Select a structure</option>
-          {structures?.data.map((s: IStrucutreItem) => (
+          {structures?.data.map((s: IStructureItem) => (
             <option key={s._id} value={s._id}>
               {s.name || ""}
             </option>

@@ -1,10 +1,10 @@
 import { apiSlice } from "../api/apiSlice";
-import { IStrucutreItem } from "@/types/structure-type";
+import { IStructureItem } from "@/types/structure-type";
 
 export const structureApi = apiSlice.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({
-    getAllStructures: builder.query<{ data: IStrucutreItem[] }, void>({
+    getAllStructures: builder.query<{ data: IStructureItem[] }, void>({
       query: () => "/api/structure/view",
       providesTags: (res) =>
         res?.data
@@ -14,15 +14,15 @@ export const structureApi = apiSlice.injectEndpoints({
     }),
 
     // Fetch one by ID
-    getStructure: builder.query<{ data: IStrucutreItem }, string>({
+    getStructure: builder.query<{ data: IStructureItem }, string>({
       query: (id) => `/api/structure/view/${id}`,
       providesTags: (res, err, id) => [{ type: "Structure" as const, id }],
       keepUnusedDataFor: 300,
     }),
 
     addStructure: builder.mutation<
-      { data: IStrucutreItem },
-      Partial<IStrucutreItem>
+      { data: IStructureItem },
+      Partial<IStructureItem>
     >({
       query: (data) => ({
         url: "/api/structure/add",
@@ -33,8 +33,8 @@ export const structureApi = apiSlice.injectEndpoints({
     }),
 
     updateStructure: builder.mutation<
-      { data: IStrucutreItem },
-      { id: string; changes: Partial<IStrucutreItem> }
+      { data: IStructureItem },
+      { id: string; changes: Partial<IStructureItem> }
     >({
       query: ({ id, changes }) => ({
         url: `/api/structure/update/${id}`,

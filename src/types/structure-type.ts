@@ -1,4 +1,4 @@
-export interface IStrucutreItem {
+export interface IStructureItem {
   name: string | undefined;
   _id: string;
   img: string;
@@ -11,12 +11,12 @@ export interface IStrucutreItem {
   updatedAt: string;
 }
 
-export interface StrucutreResponse {
+export interface StructureResponse {
   success: boolean;
-  result: IStrucutreItem[];
+  result: IStructureItem[];
 }
 
-export interface IAddStrucutre {
+export interface IAddStructure {
   img?: string;
   parent: string;
   children?: string[];
@@ -24,7 +24,7 @@ export interface IAddStrucutre {
   description?: string;
 }
 
-export interface IAddStrucutreResponse {
+export interface IAddStructureResponse {
   status: string;
   message: string;
   data: {
@@ -38,7 +38,7 @@ export interface IAddStrucutreResponse {
   };
 }
 
-export interface IStrucutreDeleteRes {
+export interface IStructureDeleteRes {
   success?: boolean;
   message?: string;
 }

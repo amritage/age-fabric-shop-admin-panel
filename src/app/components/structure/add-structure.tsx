@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { IStrucutreItem } from "@/types/structure-type";
+import { IStructureItem } from "@/types/structure-type";
 import { useAddStructureMutation } from "@/redux/structure/structureApi";
 import GlobalImgUpload from "../category/global-img-upload"; // Reuse if possible
 
@@ -11,11 +11,11 @@ const AddStructure: React.FC = () => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<IStrucutreItem>();
+  } = useForm<IStructureItem>();
   const [img, setImg] = useState<string>("");
   const [addStructure] = useAddStructureMutation();
 
-  const onSubmit = async (data: IStrucutreItem) => {
+  const onSubmit = async (data: IStructureItem) => {
     await addStructure({ ...data, img });
     reset();
     setImg("");

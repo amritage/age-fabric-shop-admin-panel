@@ -1,5 +1,3 @@
-"use client";
-
 // File: app/components/fabric-products/MetadataForm.tsx
 "use client";
 
