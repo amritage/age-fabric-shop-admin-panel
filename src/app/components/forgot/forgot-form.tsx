@@ -7,8 +7,10 @@ import ErrorMsg from "../common/error-msg";
 import { useForgetPasswordMutation } from "@/redux/auth/authApi";
 import { notifyError, notifySuccess } from "@/utils/toast";
 
-import  LoginForm from '../../../forms/login-form';
+
 import Link from "next/link";
+import login from "src/forms/login-form"
+
 
 // schema
 const schema = Yup.object().shape({
