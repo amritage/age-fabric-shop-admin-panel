@@ -465,8 +465,9 @@ export default function AddProductForm({ productId }: { productId?: string }) {
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-400 focus:border-indigo-400 text-sm bg-white"
           >
             <option value="">Select Unit</option>
-            <option value="meter">Meter</option>
-            <option value="yard">Yard</option>
+            <option value="meter">Meters</option>
+            <option value="yard">Yards</option>
+            <option value="kgs">kgs</option>
           </select>
         </div>
 

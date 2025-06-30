@@ -17,7 +17,15 @@ const Wrapper = ({ children }: { children: React.ReactNode }) => {
   }, [router]);
   return (
     <div className="tp-main-wrapper bg-slate-100 h-screen">
+      {/* Sidebar and overlay for mobile */}
       <Sidebar sideMenu={sideMenu} setSideMenu={setSideMenu} />
+      {/* Overlay outside sidebar for mobile */}
+      <div
+        onClick={() => setSideMenu(false)}
+        className={`fixed top-0 left-0 w-full h-full z-40 bg-black/70 transition-all duration-300 ${
+          sideMenu ? "visible opacity-100" : "invisible opacity-0"
+        } lg:hidden`}
+      />
       <div className="tp-main-content lg:ml-[250px] xl:ml-[300px] w-[calc(100% - 300px)]">
         {/* header start */}
         <div className="fixed top-0 left-[250px] xl:left-[300px] right-0 z-30 bg-white border-b border-gray-200">
