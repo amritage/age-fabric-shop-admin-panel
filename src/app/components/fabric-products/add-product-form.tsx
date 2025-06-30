@@ -1,5 +1,3 @@
-"use client";
-
 // File: app/components/fabric-products/AddProductForm.tsx
 "use client";
 
@@ -126,7 +124,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
               const data = await response.json();
               return data;
             } catch (error) {
-              console.error(`Error loading ${f.label}:`, error);
+             /*  console.error(`Error loading ${f.label}:`, error); */
               setFilterErrors((prev) => ({
                 ...prev,
                 [f.name]: `Failed to load ${f.label}`,
@@ -144,7 +142,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           })),
         );
       } catch (error) {
-        console.error("Error loading filters:", error);
+       /*  console.error("Error loading filters:", error); */
       } finally {
         setIsLoadingFilters(false);
       }

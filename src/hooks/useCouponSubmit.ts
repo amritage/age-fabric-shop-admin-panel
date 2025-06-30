@@ -68,7 +68,7 @@ const useCouponSubmit = () => {
         reset();
       }
     } catch (error) {
-      console.error("Coupon submit error:", error);
+     /*  console.error("Coupon submit error:", error); */
       notifyError("Something went wrong");
     }
   };
@@ -100,7 +100,7 @@ const useCouponSubmit = () => {
         reset();
       }
     } catch (error) {
-      console.error("Coupon edit error:", error);
+     /*  console.error("Coupon edit error:", error); */
       notifyError("Something went wrong");
     }
   };
