@@ -359,6 +359,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     ["image", "image1", "image2", "video"].forEach((key) => {
       delete cleanedFormData[key];
     });
+    console.log("Submitting productdescription:", cleanedFormData.productdescription, typeof cleanedFormData.productdescription);
     Cookies.set("NEW_PRODUCT_BASE", JSON.stringify(cleanedFormData));
     // Clear localStorage when moving to metadata (form is complete)
     if (!isEdit) {
