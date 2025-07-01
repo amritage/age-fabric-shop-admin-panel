@@ -56,8 +56,12 @@ export default function MetadataPage() {
       }
     }
     // Map frontend fields to backend-required keys
-    fd.append("productdescription", fullData.description || "");
-    fd.append("description", fullData.description || "");
+    // Ensure productdescription is a string, not an array
+    const productDescription = Array.isArray(fullData.description) 
+      ? fullData.description.join(' ') 
+      : (fullData.description || "");
+    fd.append("productdescription", productDescription);
+    fd.append("description", productDescription);
     fd.append("productoffer", fullData.isProductOffer ? "yes" : "no");
     fd.append("topratedproduct", fullData.isTopRated ? "yes" : "no");
 

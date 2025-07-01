@@ -167,10 +167,19 @@ export default function AddProductForm({ productId }: { productId?: string }) {
   // when productDetail arrives, seed form + previews
   useEffect(() => {
     if (!productDetail) return;
-    setFormData(productDetail);
+    
+    // Handle the case where productdescription might be an array
+    const processedProductDetail = { ...productDetail };
+    if (Array.isArray(processedProductDetail.productdescription)) {
+      processedProductDetail.description = processedProductDetail.productdescription.join(' ');
+    } else if (processedProductDetail.productdescription) {
+      processedProductDetail.description = processedProductDetail.productdescription;
+    }
+    
+    setFormData(processedProductDetail);
 
     ["image", "image1", "image2", "video"].forEach((key) => {
-      const url = (productDetail as any)[key];
+      const url = (processedProductDetail as any)[key];
       if (url) {
         setPreviews((p) => ({ ...p, [key]: url }));
       }
