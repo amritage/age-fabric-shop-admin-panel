@@ -107,6 +107,12 @@ export default function AddProductForm({ productId }: { productId?: string }) {
       if (savedFormData) {
         try {
           const parsedData = JSON.parse(savedFormData);
+          // Defensive: ensure productdescription is always a string
+          if (Array.isArray(parsedData.productdescription)) {
+            parsedData.productdescription = parsedData.productdescription.join(" ");
+          } else if (typeof parsedData.productdescription !== "string") {
+            parsedData.productdescription = String(parsedData.productdescription ?? "");
+          }
           setFormData(parsedData);
           setHasRestoredData(true);
         } catch (error) {
