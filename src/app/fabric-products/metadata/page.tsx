@@ -34,10 +34,6 @@ export default function MetadataPage() {
       return;
     }
     const parsed = JSON.parse(raw);
-    // Ensure description_html is initialized from productdescription if missing
-    if (!parsed.description_html && parsed.productdescription) {
-      parsed.description_html = parsed.productdescription;
-    }
     setBaseData(parsed);
   }, [router]);
 
