@@ -46,7 +46,7 @@ const RelatedProducts = ({ groupcodeId }: { groupcodeId: string }) => {
     );
 
   return (
-    <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+    <div className="w-full mt-4 p-4 bg-gray-50 rounded-lg">
       <h4 className="text-sm font-medium text-gray-700 mb-3">
         Related Products ({relatedProducts.length})
       </h4>
@@ -297,522 +297,524 @@ export default function AddProductForm({ productId }: { productId?: string }) {
   };
 
   return (
-    <form
-      onSubmit={goNext}
-      className="bg-white p-6 my-8 border border-gray-200 rounded-xl max-w-4xl mx-auto space-y-8"
-    >
-      <h1 className="text-3xl font-bold text-center text-indigo-700 mb-6 tracking-tight drop-shadow-sm">
-        {isEdit ? "Edit" : "Add New"} Fabric Product
-      </h1>
+    <div className="w-full min-h-screen bg-sky-100 flex justify-center items-start py-8">
+      <form
+        onSubmit={goNext}
+        className="w-full max-w-7xl bg-white rounded-xl shadow-md p-8 space-y-8"
+      >
+        <h1 className="text-3xl font-bold text-center text-indigo-700 mb-6 tracking-tight drop-shadow-sm">
+          {isEdit ? "Edit" : "Add New"} Fabric Product
+        </h1>
 
-      {/* Loading and Error Indicators */}
-      {isLoadingFilters && (
-        <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mb-6">
-          <div className="flex items-center">
-            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
-            <span className="text-blue-800 text-sm">
-              Loading dropdown options...
-            </span>
+        {/* Loading and Error Indicators */}
+        {isLoadingFilters && (
+          <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mb-6">
+            <div className="flex items-center">
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
+              <span className="text-blue-800 text-sm">
+                Loading dropdown options...
+              </span>
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {Object.keys(filterErrors).length > 0 && (
-        <div className="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
-          <h3 className="text-red-800 font-medium text-sm mb-2">
-            Some dropdowns failed to load:
-          </h3>
-          <ul className="text-red-700 text-sm space-y-1">
-            {Object.entries(filterErrors).map(([fieldName, error]) => (
-              <li key={fieldName}>• {error}</li>
-            ))}
-          </ul>
-          <p className="text-red-600 text-xs mt-2">
-            Please refresh the page or check if the backend server is running
-            properly.
-          </p>
-        </div>
-      )}
+        {Object.keys(filterErrors).length > 0 && (
+          <div className="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
+            <h3 className="text-red-800 font-medium text-sm mb-2">
+              Some dropdowns failed to load:
+            </h3>
+            <ul className="text-red-700 text-sm space-y-1">
+              {Object.entries(filterErrors).map(([fieldName, error]) => (
+                <li key={fieldName}>• {error}</li>
+              ))}
+            </ul>
+            <p className="text-red-600 text-xs mt-2">
+              Please refresh the page or check if the backend server is running
+              properly.
+            </p>
+          </div>
+        )}
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {/* Product Name */}
-        <div>
-          <label
-            htmlFor="name"
-            className="block text-base font-semibold mb-2 text-gray-700"
-          >
-            Product Name <span className="text-red-500">*</span>
-          </label>
-          <input
-            id="name"
-            name="name"
-            required
-            value={formData.name || ""}
-            onChange={handleInputChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
-          />
-        </div>
-
-        {/* SKU */}
-        <div>
-          <label
-            htmlFor="sku"
-            className="block text-base font-semibold mb-2 text-gray-700"
-          >
-            SKU <span className="text-red-500">*</span>
-          </label>
-          <input
-            id="sku"
-            name="sku"
-            required
-            value={formData.sku || ""}
-            onChange={handleInputChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
-          />
-        </div>
-
-        {/* Slug */}
-        <div>
-          <label
-            htmlFor="slug"
-            className="block text-base font-semibold mb-2 text-gray-700"
-          >
-            Slug <span className="text-red-500">*</span>
-          </label>
-          <input
-            id="slug"
-            name="slug"
-            required
-            value={formData.slug || ""}
-            onChange={handleInputChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
-          />
-        </div>
-
-        {/* Product Identifier */}
-        <div>
-          <label
-            htmlFor="productIdentifier"
-            className="block text-base font-semibold mb-2 text-gray-700"
-          >
-            Product Identifier <span className="text-red-500">*</span>
-          </label>
-          <input
-            id="productIdentifier"
-            name="productIdentifier"
-            required
-            value={formData.productIdentifier || ""}
-            onChange={handleInputChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
-          />
-        </div>
-
-        {/* Location Code */}
-        <div>
-          <label
-            htmlFor="locationCode"
-            className="block text-base font-semibold mb-2 text-gray-700"
-          >
-            Location Code <span className="text-red-500">*</span>
-          </label>
-          <input
-            id="locationCode"
-            name="locationCode"
-            required
-            maxLength={3}
-            value={formData.locationCode || ""}
-            onChange={handleInputChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
-          />
-        </div>
-
-        {/* CSS */}
-        <div>
-          <label
-            htmlFor="css"
-            className="block text-base font-semibold mb-2 text-gray-700"
-          >
-            CSS <span className="text-red-500">*</span>
-          </label>
-          <input
-            id="css"
-            name="css"
-            required
-            value={formData.css || ""}
-            onChange={handleInputChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
-          />
-        </div>
-
-        {/* Quantity */}
-        <div>
-          <label
-            htmlFor="quantity"
-            className="block text-base font-semibold mb-2 text-gray-700"
-          >
-            Quantity <span className="text-red-500">*</span>
-          </label>
-          <input
-            id="quantity"
-            name="quantity"
-            type="number"
-            required
-            value={formData.quantity || ""}
-            onChange={handleInputChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
-          />
-        </div>
-
-        {/* Unit */}
-        <div>
-          <label
-            htmlFor="um"
-            className="block text-base font-semibold mb-2 text-gray-700"
-          >
-            Unit (UM) <span className="text-red-500">*</span>
-          </label>
-          <select
-            id="um"
-            name="um"
-            required
-            value={formData.um || ""}
-            onChange={handleInputChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
-          >
-            <option value="">Select Unit</option>
-            <option value="meter">Meters</option>
-            <option value="yard">Yards</option>
-            <option value="kgs">kgs</option>
-          </select>
-        </div>
-
-        {/* Purchase Price */}
-        <div>
-          <label
-            htmlFor="purchasePrice"
-            className="block text-base font-semibold mb-2 text-gray-700"
-          >
-            Purchase Price <span className="text-red-500">*</span>
-          </label>
-          <input
-            id="purchasePrice"
-            name="purchasePrice"
-            type="number"
-            required
-            value={formData.purchasePrice || ""}
-            onChange={handleInputChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
-          />
-        </div>
-
-        {/* Sales Price */}
-        <div>
-          <label
-            htmlFor="salesPrice"
-            className="block text-base font-semibold mb-2 text-gray-700"
-          >
-            Sales Price <span className="text-red-500">*</span>
-          </label>
-          <input
-            id="salesPrice"
-            name="salesPrice"
-            type="number"
-            required
-            value={formData.salesPrice || ""}
-            onChange={handleInputChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
-          />
-        </div>
-
-        {/* Currency */}
-        <div>
-          <label
-            htmlFor="currency"
-            className="block text-base font-semibold mb-2 text-gray-700"
-          >
-            Currency <span className="text-red-500">*</span>
-          </label>
-          <select
-            id="currency"
-            name="currency"
-            required
-            value={formData.currency || ""}
-            onChange={handleInputChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
-          >
-            <option value="">Select Currency</option>
-            <option>INR</option>
-            <option>USD</option>
-          </select>
-        </div>
-
-        {/* GSM → OZ */}
-        <div>
-          <label
-            htmlFor="gsm"
-            className="block text-base font-semibold mb-2 text-gray-700"
-          >
-            GSM <span className="text-red-500">*</span>
-          </label>
-          <input
-            id="gsm"
-            name="gsm"
-            type="number"
-            required
-            value={formData.gsm || ""}
-            onChange={(e) => {
-              handleInputChange(e);
-              const v = parseFloat(e.target.value);
-              if (!isNaN(v)) {
-                setFormData((p) => ({ ...p, oz: (v * 0.0295).toFixed(2) }));
-              }
-            }}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
-          />
-        </div>
-        <div>
-          <label
-            htmlFor="oz"
-            className="block text-base font-semibold mb-2 text-gray-700"
-          >
-            OZ <span className="text-red-500">*</span>
-          </label>
-          <input
-            id="oz"
-            name="oz"
-            readOnly
-            required
-            value={formData.oz || ""}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
-          />
-        </div>
-
-        {/* Width CM → Inch */}
-        <div>
-          <label
-            htmlFor="cm"
-            className="block text-base font-semibold mb-2 text-gray-700"
-          >
-            Width (CM) <span className="text-red-500">*</span>
-          </label>
-          <input
-            id="cm"
-            name="cm"
-            type="number"
-            required
-            value={formData.cm || ""}
-            onChange={(e) => {
-              handleInputChange(e);
-              const v = parseFloat(e.target.value);
-              if (!isNaN(v)) {
-                setFormData((p) => ({
-                  ...p,
-                  inch: (v * 0.393701).toFixed(2),
-                }));
-              }
-            }}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
-          />
-        </div>
-        <div>
-          <label
-            htmlFor="inch"
-            className="block text-base font-semibold mb-2 text-gray-700"
-          >
-            Width (Inch) <span className="text-red-500">*</span>
-          </label>
-          <input
-            id="inch"
-            name="inch"
-            readOnly
-            required
-            value={formData.inch || ""}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
-          />
-        </div>
-
-        {/* Dynamic filters */}
-        {filters.map((f) => (
-          <div key={f.name}>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Product Name */}
+          <div>
             <label
-              htmlFor={f.name}
+              htmlFor="name"
               className="block text-base font-semibold mb-2 text-gray-700"
             >
-              {f.label} <span className="text-red-500">*</span>
+              Product Name <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="name"
+              name="name"
+              required
+              value={formData.name || ""}
+              onChange={handleInputChange}
+              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
+            />
+          </div>
+
+          {/* SKU */}
+          <div>
+            <label
+              htmlFor="sku"
+              className="block text-base font-semibold mb-2 text-gray-700"
+            >
+              SKU <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="sku"
+              name="sku"
+              required
+              value={formData.sku || ""}
+              onChange={handleInputChange}
+              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
+            />
+          </div>
+
+          {/* Slug */}
+          <div>
+            <label
+              htmlFor="slug"
+              className="block text-base font-semibold mb-2 text-gray-700"
+            >
+              Slug <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="slug"
+              name="slug"
+              required
+              value={formData.slug || ""}
+              onChange={handleInputChange}
+              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
+            />
+          </div>
+
+          {/* Product Identifier */}
+          <div>
+            <label
+              htmlFor="productIdentifier"
+              className="block text-base font-semibold mb-2 text-gray-700"
+            >
+              Product Identifier <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="productIdentifier"
+              name="productIdentifier"
+              required
+              value={formData.productIdentifier || ""}
+              onChange={handleInputChange}
+              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
+            />
+          </div>
+
+          {/* Location Code */}
+          <div>
+            <label
+              htmlFor="locationCode"
+              className="block text-base font-semibold mb-2 text-gray-700"
+            >
+              Location Code <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="locationCode"
+              name="locationCode"
+              required
+              maxLength={3}
+              value={formData.locationCode || ""}
+              onChange={handleInputChange}
+              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
+            />
+          </div>
+
+          {/* CSS */}
+          <div>
+            <label
+              htmlFor="css"
+              className="block text-base font-semibold mb-2 text-gray-700"
+            >
+              CSS <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="css"
+              name="css"
+              required
+              value={formData.css || ""}
+              onChange={handleInputChange}
+              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
+            />
+          </div>
+
+          {/* Quantity */}
+          <div>
+            <label
+              htmlFor="quantity"
+              className="block text-base font-semibold mb-2 text-gray-700"
+            >
+              Quantity <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="quantity"
+              name="quantity"
+              type="number"
+              required
+              value={formData.quantity || ""}
+              onChange={handleInputChange}
+              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
+            />
+          </div>
+
+          {/* Unit */}
+          <div>
+            <label
+              htmlFor="um"
+              className="block text-base font-semibold mb-2 text-gray-700"
+            >
+              Unit (UM) <span className="text-red-500">*</span>
             </label>
             <select
-              id={f.name}
-              name={f.name}
+              id="um"
+              name="um"
               required
-              value={formData[f.name] || ""}
+              value={formData.um || ""}
               onChange={handleInputChange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
+              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
             >
-              <option value="">Select {f.label}</option>
-              {f.options.map((o: any) => (
-                <option key={o._id} value={o._id}>
-                  {o.name}
-                </option>
-              ))}
+              <option value="">Select Unit</option>
+              <option value="meter">Meters</option>
+              <option value="yard">Yards</option>
+              <option value="kgs">kgs</option>
             </select>
-
-            {/* Show related products for Group Code */}
-            {f.name === "groupcodeId" && (
-              <>
-                <div className="text-xs text-blue-600 mt-1 mb-2">
-                  💡 Group Code helps organize related products. When selected,
-                  you&apos;ll see other products with the same group code below.
-                </div>
-                {formData[f.name] && (
-                  <RelatedProducts groupcodeId={formData[f.name]} />
-                )}
-              </>
-            )}
           </div>
-        ))}
-      </div>
 
-      {/* Uploads & previews */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {["image", "image1", "image2", "video"].map((key) => (
-          <div key={key}>
-            <label className="block text-base font-semibold mb-2 text-gray-700">
-              {key === "video" ? "Upload Video" : `Upload ${key}`}
+          {/* Purchase Price */}
+          <div>
+            <label
+              htmlFor="purchasePrice"
+              className="block text-base font-semibold mb-2 text-gray-700"
+            >
+              Purchase Price <span className="text-red-500">*</span>
             </label>
             <input
-              type="file"
-              name={key}
-              accept={key === "video" ? "video/*" : "image/*"}
-              onChange={(e) => handleFileChange(e, key)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg text-base bg-white shadow-sm"
+              id="purchasePrice"
+              name="purchasePrice"
+              type="number"
+              required
+              value={formData.purchasePrice || ""}
+              onChange={handleInputChange}
+              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
             />
-            {previews[key] &&
-              (key === "video" ? (
-                <video
-                  src={previews[key]}
-                  controls
-                  className="mt-2 w-full h-32 rounded border border-gray-200 bg-gray-50"
-                />
-              ) : (
-                <Image
-                  src={previews[key]}
-                  alt={key}
-                  width={320}
-                  height={128}
-                  unoptimized
-                  className="mt-2 w-full h-32 object-cover rounded border border-gray-200 bg-gray-50"
-                />
-              ))}
           </div>
-        ))}
-      </div>
 
-      {/* Product Flags (Popular, Top Rated, Product Offer) */}
-      <div className="flex flex-wrap gap-8 items-center mt-8">
-        {/* Popular Product */}
-        <div className="flex items-center gap-2 text-xs font-medium text-gray-600">
-          <span>Popular Product:</span>
-          <label className="flex items-center">
+          {/* Sales Price */}
+          <div>
+            <label
+              htmlFor="salesPrice"
+              className="block text-base font-semibold mb-2 text-gray-700"
+            >
+              Sales Price <span className="text-red-500">*</span>
+            </label>
             <input
-              type="checkbox"
-              name="isPopularYes"
-              checked={formData.isPopular === true}
-              onChange={() => setFormData((p) => ({ ...p, isPopular: true }))}
-              className="mr-1"
+              id="salesPrice"
+              name="salesPrice"
+              type="number"
+              required
+              value={formData.salesPrice || ""}
+              onChange={handleInputChange}
+              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
             />
-            Yes
-          </label>
-          <label className="flex items-center ml-2">
-            <input
-              type="checkbox"
-              name="isPopularNo"
-              checked={formData.isPopular === false}
-              onChange={() => setFormData((p) => ({ ...p, isPopular: false }))}
-              className="mr-1"
-            />
-            No
-          </label>
-        </div>
-        {/* Top Rated */}
-        <div className="flex items-center gap-2 text-xs font-medium text-gray-600">
-          <span>Top Rated:</span>
-          <label className="flex items-center">
-            <input
-              type="checkbox"
-              name="isTopRatedYes"
-              checked={formData.isTopRated === true}
-              onChange={() => setFormData((p) => ({ ...p, isTopRated: true }))}
-              className="mr-1"
-            />
-            Yes
-          </label>
-          <label className="flex items-center ml-2">
-            <input
-              type="checkbox"
-              name="isTopRatedNo"
-              checked={formData.isTopRated === false}
-              onChange={() => setFormData((p) => ({ ...p, isTopRated: false }))}
-              className="mr-1"
-            />
-            No
-          </label>
-        </div>
-        {/* Product Offer */}
-        <div className="flex items-center gap-2 text-xs font-medium text-gray-600">
-          <span>Product Offer:</span>
-          <label className="flex items-center">
-            <input
-              type="checkbox"
-              name="isProductOfferYes"
-              checked={formData.isProductOffer === true}
-              onChange={() =>
-                setFormData((p) => ({ ...p, isProductOffer: true }))
-              }
-              className="mr-1"
-            />
-            Yes
-          </label>
-          <label className="flex items-center ml-2">
-            <input
-              type="checkbox"
-              name="isProductOfferNo"
-              checked={formData.isProductOffer === false}
-              onChange={() =>
-                setFormData((p) => ({ ...p, isProductOffer: false }))
-              }
-              className="mr-1"
-            />
-            No
-          </label>
-        </div>
-      </div>
+          </div>
 
-      {/* Product Description at the bottom */}
-      <div className="mt-8">
-        <label
-          htmlFor="description"
-          className="block text-base font-semibold mb-2 text-gray-700"
-        >
-          Product Description
-        </label>
-        <textarea
-          id="description"
-          name="description"
-          value={formData.description || ""}
-          onChange={handleInputChange}
-          rows={4}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
-        />
-      </div>
+          {/* Currency */}
+          <div>
+            <label
+              htmlFor="currency"
+              className="block text-base font-semibold mb-2 text-gray-700"
+            >
+              Currency <span className="text-red-500">*</span>
+            </label>
+            <select
+              id="currency"
+              name="currency"
+              required
+              value={formData.currency || ""}
+              onChange={handleInputChange}
+              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
+            >
+              <option value="">Select Currency</option>
+              <option>INR</option>
+              <option>USD</option>
+            </select>
+          </div>
 
-      <div className="text-right mt-8">
-        <button
-          type="submit"
-          className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-lg text-lg font-semibold shadow-md transition"
-        >
-          Next → Metadata
-        </button>
-      </div>
-    </form>
+          {/* GSM → OZ */}
+          <div>
+            <label
+              htmlFor="gsm"
+              className="block text-base font-semibold mb-2 text-gray-700"
+            >
+              GSM <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="gsm"
+              name="gsm"
+              type="number"
+              required
+              value={formData.gsm || ""}
+              onChange={(e) => {
+                handleInputChange(e);
+                const v = parseFloat(e.target.value);
+                if (!isNaN(v)) {
+                  setFormData((p) => ({ ...p, oz: (v * 0.0295).toFixed(2) }));
+                }
+              }}
+              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="oz"
+              className="block text-base font-semibold mb-2 text-gray-700"
+            >
+              OZ <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="oz"
+              name="oz"
+              readOnly
+              required
+              value={formData.oz || ""}
+              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
+            />
+          </div>
+
+          {/* Width CM → Inch */}
+          <div>
+            <label
+              htmlFor="cm"
+              className="block text-base font-semibold mb-2 text-gray-700"
+            >
+              Width (CM) <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="cm"
+              name="cm"
+              type="number"
+              required
+              value={formData.cm || ""}
+              onChange={(e) => {
+                handleInputChange(e);
+                const v = parseFloat(e.target.value);
+                if (!isNaN(v)) {
+                  setFormData((p) => ({
+                    ...p,
+                    inch: (v * 0.393701).toFixed(2),
+                  }));
+                }
+              }}
+              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="inch"
+              className="block text-base font-semibold mb-2 text-gray-700"
+            >
+              Width (Inch) <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="inch"
+              name="inch"
+              readOnly
+              required
+              value={formData.inch || ""}
+              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
+            />
+          </div>
+
+          {/* Dynamic filters */}
+          {filters.map((f) => (
+            <div key={f.name}>
+              <label
+                htmlFor={f.name}
+                className="block text-base font-semibold mb-2 text-gray-700"
+              >
+                {f.label} <span className="text-red-500">*</span>
+              </label>
+              <select
+                id={f.name}
+                name={f.name}
+                required
+                value={formData[f.name] || ""}
+                onChange={handleInputChange}
+                className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
+              >
+                <option value="">Select {f.label}</option>
+                {f.options.map((o: any) => (
+                  <option key={o._id} value={o._id}>
+                    {o.name}
+                  </option>
+                ))}
+              </select>
+
+              {/* Show related products for Group Code */}
+              {f.name === "groupcodeId" && (
+                <>
+                  <div className="text-xs text-blue-600 mt-1 mb-2">
+                    💡 Group Code helps organize related products. When selected,
+                    you&apos;ll see other products with the same group code below.
+                  </div>
+                  {formData[f.name] && (
+                    <RelatedProducts groupcodeId={formData[f.name]} />
+                  )}
+                </>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Uploads & previews */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {["image", "image1", "image2", "video"].map((key) => (
+            <div key={key}>
+              <label className="block text-base font-semibold mb-2 text-gray-700">
+                {key === "video" ? "Upload Video" : `Upload ${key}`}
+              </label>
+              <input
+                type="file"
+                name={key}
+                accept={key === "video" ? "video/*" : "image/*"}
+                onChange={(e) => handleFileChange(e, key)}
+                className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6"
+              />
+              {previews[key] &&
+                (key === "video" ? (
+                  <video
+                    src={previews[key]}
+                    controls
+                    className="mt-2 w-full h-32 rounded border border-gray-200 bg-gray-50"
+                  />
+                ) : (
+                  <Image
+                    src={previews[key]}
+                    alt={key}
+                    width={320}
+                    height={128}
+                    unoptimized
+                    className="mt-2 w-full h-32 object-cover rounded border border-gray-200 bg-gray-50"
+                  />
+                ))}
+            </div>
+          ))}
+        </div>
+
+        {/* Product Flags (Popular, Top Rated, Product Offer) */}
+        <div className="flex flex-wrap gap-8 items-center mt-8">
+          {/* Popular Product */}
+          <div className="flex items-center gap-2 text-xs font-medium text-gray-600">
+            <span>Popular Product:</span>
+            <label className="text-xl font-bold mr-2">
+              <input
+                type="checkbox"
+                name="isPopularYes"
+                checked={formData.isPopular === true}
+                onChange={() => setFormData((p) => ({ ...p, isPopular: true }))}
+                className="w-6 h-6 mr-4"
+              />
+              Yes
+            </label>
+            <label className="text-xl font-bold mr-2">
+              <input
+                type="checkbox"
+                name="isPopularNo"
+                checked={formData.isPopular === false}
+                onChange={() => setFormData((p) => ({ ...p, isPopular: false }))}
+                className="w-6 h-6 mr-4"
+              />
+              No
+            </label>
+          </div>
+          {/* Top Rated */}
+          <div className="flex items-center gap-2 text-xs font-medium text-gray-600">
+            <span>Top Rated:</span>
+            <label className="text-xl font-bold mr-2">
+              <input
+                type="checkbox"
+                name="isTopRatedYes"
+                checked={formData.isTopRated === true}
+                onChange={() => setFormData((p) => ({ ...p, isTopRated: true }))}
+                className="w-6 h-6 mr-4"
+              />
+              Yes
+            </label>
+            <label className="text-xl font-bold mr-2">
+              <input
+                type="checkbox"
+                name="isTopRatedNo"
+                checked={formData.isTopRated === false}
+                onChange={() => setFormData((p) => ({ ...p, isTopRated: false }))}
+                className="w-6 h-6 mr-4"
+              />
+              No
+            </label>
+          </div>
+          {/* Product Offer */}
+          <div className="flex items-center gap-2 text-xs font-medium text-gray-600">
+            <span>Product Offer:</span>
+            <label className="text-xl font-bold mr-2">
+              <input
+                type="checkbox"
+                name="isProductOfferYes"
+                checked={formData.isProductOffer === true}
+                onChange={() =>
+                  setFormData((p) => ({ ...p, isProductOffer: true }))
+                }
+                className="w-6 h-6 mr-4"
+              />
+              Yes
+            </label>
+            <label className="text-xl font-bold mr-2">
+              <input
+                type="checkbox"
+                name="isProductOfferNo"
+                checked={formData.isProductOffer === false}
+                onChange={() =>
+                  setFormData((p) => ({ ...p, isProductOffer: false }))
+                }
+                className="w-6 h-6 mr-4"
+              />
+              No
+            </label>
+          </div>
+        </div>
+
+        {/* Product Description at the bottom */}
+        <div className="mt-8">
+          <label
+            htmlFor="description"
+            className="block text-base font-semibold mb-2 text-gray-700"
+          >
+            Product Description
+          </label>
+          <textarea
+            id="description"
+            name="description"
+            value={formData.description || ""}
+            onChange={handleInputChange}
+            rows={4}
+            className="input w-full h-24 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
+          />
+        </div>
+
+        <div className="text-right mt-8">
+          <button
+            type="submit"
+            className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-lg text-lg font-semibold shadow-md transition"
+          >
+            Next → Metadata
+          </button>
+        </div>
+      </form>
+    </div>
   );
 }
