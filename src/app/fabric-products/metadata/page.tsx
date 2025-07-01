@@ -33,7 +33,12 @@ export default function MetadataPage() {
       router.replace("/fabric-products/add");
       return;
     }
-    setBaseData(JSON.parse(raw));
+    const parsed = JSON.parse(raw);
+    // Ensure description_html is initialized from productdescription if missing
+    if (!parsed.description_html && parsed.productdescription) {
+      parsed.description_html = parsed.productdescription;
+    }
+    setBaseData(parsed);
   }, [router]);
 
   const handleMetadataSubmit = async (meta: Record<string, any>) => {
@@ -59,8 +64,6 @@ export default function MetadataPage() {
       }
     }
 
-    // Debug log for productdescription
-    console.log("[DEBUG] baseData.productdescription type/value:", typeof baseData.productdescription, baseData.productdescription);
     // Always use Add Product Form's productdescription for productdescription
     let productDescription = baseData.productdescription;
     if (Array.isArray(productDescription)) {
@@ -70,8 +73,6 @@ export default function MetadataPage() {
     }
     fd.append("productdescription", productDescription);
 
-    // Debug log for meta description
-    console.log("[DEBUG] meta.description_html type/value:", typeof meta.description_html, meta.description_html);
     // Always use Metadata Form's description_html for meta description
     let metaDescription = meta.description_html;
     if (Array.isArray(metaDescription)) {
@@ -109,7 +110,6 @@ export default function MetadataPage() {
       router.push("/fabric-products/view");
     } catch (err: any) {
       let message = "Failed to save product";
-      // Check for a specific duplicate key error message from the backend
       if (
         typeof err.data?.message === "string" &&
         err.data.message.includes("Duplicate key error")
@@ -131,7 +131,6 @@ export default function MetadataPage() {
     if (editId) {
       router.push(`/fabric-products/edit/${editId}`);
     } else {
-      // Save current form data back to localStorage before going back
       if (baseData) {
         localStorage.setItem('ADD_PRODUCT_FORM_DATA', JSON.stringify(baseData));
       }

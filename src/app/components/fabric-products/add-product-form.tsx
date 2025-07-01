@@ -156,7 +156,6 @@ export default function AddProductForm({ productId }: { productId?: string }) {
               const data = await response.json();
               return data;
             } catch (error) {
-             /*  console.error(`Error loading ${f.label}:`, error); */
               setFilterErrors((prev) => ({
                 ...prev,
                 [f.name]: `Failed to load ${f.label}`,
@@ -174,7 +173,6 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           })),
         );
       } catch (error) {
-       /*  console.error("Error loading filters:", error); */
       } finally {
         setIsLoadingFilters(false);
       }
@@ -227,7 +225,6 @@ export default function AddProductForm({ productId }: { productId?: string }) {
       } else if (typeof newFormData.productdescription !== "string") {
         newFormData.productdescription = String(newFormData.productdescription ?? "");
       }
-      console.log("[DEBUG] Saving productdescription to localStorage:", typeof newFormData.productdescription, newFormData.productdescription);
       localStorage.setItem('ADD_PRODUCT_FORM_DATA', JSON.stringify(newFormData));
     }
   };
@@ -350,7 +347,6 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     ["image", "image1", "image2", "video"].forEach((key) => {
       delete cleanedFormData[key];
     });
-    console.log("[DEBUG] Saving productdescription to cookie:", typeof cleanedFormData.productdescription, cleanedFormData.productdescription);
     Cookies.set("NEW_PRODUCT_BASE", JSON.stringify(cleanedFormData));
     // Clear localStorage when moving to metadata (form is complete)
     if (!isEdit) {
