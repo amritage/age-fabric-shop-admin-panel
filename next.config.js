@@ -14,7 +14,7 @@ const nextConfig = {
       "i.ibb.co",
       "res.cloudinary.com",
       "lh3.googleusercontent.com",
-      "newshopy-production.up.railway.app"
+      "fabric-shop-backend-production.up.railway.app"
     ],
     remotePatterns: [
       {
