@@ -97,7 +97,24 @@ export default function AddProductForm({ productId }: { productId?: string }) {
   const [previews, setPreviews] = useState<Record<string, string>>({});
   const [isLoadingFilters, setIsLoadingFilters] = useState(true);
   const [filterErrors, setFilterErrors] = useState<Record<string, string>>({});
+  const [hasRestoredData, setHasRestoredData] = useState(false);
   const dispatch = useDispatch();
+
+  // Load saved form data from localStorage on component mount
+  useEffect(() => {
+    if (!isEdit) {
+      const savedFormData = localStorage.getItem('ADD_PRODUCT_FORM_DATA');
+      if (savedFormData) {
+        try {
+          const parsedData = JSON.parse(savedFormData);
+          setFormData(parsedData);
+          setHasRestoredData(true);
+        } catch (error) {
+          console.error('Error parsing saved form data:', error);
+        }
+      }
+    }
+  }, [isEdit]);
 
   useEffect(() => {
     if (!BASE_URL) {
@@ -193,20 +210,29 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     >,
   ) => {
     const { name, value, type } = e.target;
-    setFormData((p) => ({ ...p, [name]: value }));
+    const newFormData = { ...formData, [name]: value };
+    setFormData(newFormData);
+    
+    // Save to localStorage (only for new products, not editing)
+    if (!isEdit) {
+      localStorage.setItem('ADD_PRODUCT_FORM_DATA', JSON.stringify(newFormData));
+    }
   };
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     field: string,
   ) => {
     const file = e.target.files?.[0] ?? null;
-    setFormData((p) => ({ ...p, [field]: file }));
+    const newFormData = { ...formData, [field]: file };
+    setFormData(newFormData);
+    
     if (file) {
       setPreviews((p) => ({
         ...p,
         [field]: URL.createObjectURL(file),
       }));
     }
+    
     // Dispatch to Redux global state
     dispatch(
       setProductMedia({
@@ -216,6 +242,14 @@ export default function AddProductForm({ productId }: { productId?: string }) {
         video: field === "video" ? file : formData.video,
       }),
     );
+    
+    // Save to localStorage (only for new products, not editing)
+    if (!isEdit) {
+      // Don't save file objects to localStorage, just save the field name
+      const localStorageData = { ...newFormData };
+      localStorageData[field] = file ? field : null; // Just mark that a file was selected
+      localStorage.setItem('ADD_PRODUCT_FORM_DATA', JSON.stringify(localStorageData));
+    }
   };
 
   // Next → Metadata
@@ -298,6 +332,12 @@ export default function AddProductForm({ productId }: { productId?: string }) {
       delete cleanedFormData[key];
     });
     Cookies.set("NEW_PRODUCT_BASE", JSON.stringify(cleanedFormData));
+    
+    // Clear localStorage when moving to metadata (form is complete)
+    if (!isEdit) {
+      localStorage.removeItem('ADD_PRODUCT_FORM_DATA');
+    }
+    
     router.push(
       isEdit
         ? `/fabric-products/metadata?editId=${editId}`
@@ -323,6 +363,26 @@ export default function AddProductForm({ productId }: { productId?: string }) {
               <span className="text-blue-800 text-sm">
                 Loading dropdown options...
               </span>
+            </div>
+          </div>
+        )}
+
+        {/* Data Restored Notification */}
+        {hasRestoredData && !isEdit && (
+          <div className="bg-green-50 border border-green-200 rounded-md p-4 mb-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <div className="text-green-600 mr-2">✓</div>
+                <span className="text-green-800 text-sm">
+                  Your previous form data has been restored from local storage.
+                </span>
+              </div>
+              <button
+                onClick={() => setHasRestoredData(false)}
+                className="text-green-600 hover:text-green-800 text-sm font-medium"
+              >
+                Dismiss
+              </button>
             </div>
           </div>
         )}
@@ -723,23 +783,35 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           <div className="flex items-center gap-2 text-xs font-medium text-gray-600">
             <span>Popular Product:</span>
             <label className="text-xl font-bold mr-2">
-              <input
-                type="checkbox"
-                name="isPopularYes"
-                checked={formData.isPopular === true}
-                onChange={() => setFormData((p) => ({ ...p, isPopular: true }))}
-                className="w-6 h-6 mr-4"
-              />
+                          <input
+              type="checkbox"
+              name="isPopularYes"
+              checked={formData.isPopular === true}
+              onChange={() => {
+                const newFormData = { ...formData, isPopular: true };
+                setFormData(newFormData);
+                if (!isEdit) {
+                  localStorage.setItem('ADD_PRODUCT_FORM_DATA', JSON.stringify(newFormData));
+                }
+              }}
+              className="w-6 h-6 mr-4"
+            />
               Yes
             </label>
             <label className="text-xl font-bold mr-2">
-              <input
-                type="checkbox"
-                name="isPopularNo"
-                checked={formData.isPopular === false}
-                onChange={() => setFormData((p) => ({ ...p, isPopular: false }))}
-                className="w-6 h-6 mr-4"
-              />
+                          <input
+              type="checkbox"
+              name="isPopularNo"
+              checked={formData.isPopular === false}
+              onChange={() => {
+                const newFormData = { ...formData, isPopular: false };
+                setFormData(newFormData);
+                if (!isEdit) {
+                  localStorage.setItem('ADD_PRODUCT_FORM_DATA', JSON.stringify(newFormData));
+                }
+              }}
+              className="w-6 h-6 mr-4"
+            />
               No
             </label>
           </div>
@@ -747,23 +819,35 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           <div className="flex items-center gap-2 text-xs font-medium text-gray-600">
             <span>Top Rated:</span>
             <label className="text-xl font-bold mr-2">
-              <input
-                type="checkbox"
-                name="isTopRatedYes"
-                checked={formData.isTopRated === true}
-                onChange={() => setFormData((p) => ({ ...p, isTopRated: true }))}
-                className="w-6 h-6 mr-4"
-              />
+                          <input
+              type="checkbox"
+              name="isTopRatedYes"
+              checked={formData.isTopRated === true}
+              onChange={() => {
+                const newFormData = { ...formData, isTopRated: true };
+                setFormData(newFormData);
+                if (!isEdit) {
+                  localStorage.setItem('ADD_PRODUCT_FORM_DATA', JSON.stringify(newFormData));
+                }
+              }}
+              className="w-6 h-6 mr-4"
+            />
               Yes
             </label>
             <label className="text-xl font-bold mr-2">
-              <input
-                type="checkbox"
-                name="isTopRatedNo"
-                checked={formData.isTopRated === false}
-                onChange={() => setFormData((p) => ({ ...p, isTopRated: false }))}
-                className="w-6 h-6 mr-4"
-              />
+                          <input
+              type="checkbox"
+              name="isTopRatedNo"
+              checked={formData.isTopRated === false}
+              onChange={() => {
+                const newFormData = { ...formData, isTopRated: false };
+                setFormData(newFormData);
+                if (!isEdit) {
+                  localStorage.setItem('ADD_PRODUCT_FORM_DATA', JSON.stringify(newFormData));
+                }
+              }}
+              className="w-6 h-6 mr-4"
+            />
               No
             </label>
           </div>
@@ -771,27 +855,35 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           <div className="flex items-center gap-2 text-xs font-medium text-gray-600">
             <span>Product Offer:</span>
             <label className="text-xl font-bold mr-2">
-              <input
-                type="checkbox"
-                name="isProductOfferYes"
-                checked={formData.isProductOffer === true}
-                onChange={() =>
-                  setFormData((p) => ({ ...p, isProductOffer: true }))
+                          <input
+              type="checkbox"
+              name="isProductOfferYes"
+              checked={formData.isProductOffer === true}
+              onChange={() => {
+                const newFormData = { ...formData, isProductOffer: true };
+                setFormData(newFormData);
+                if (!isEdit) {
+                  localStorage.setItem('ADD_PRODUCT_FORM_DATA', JSON.stringify(newFormData));
                 }
-                className="w-6 h-6 mr-4"
-              />
+              }}
+              className="w-6 h-6 mr-4"
+            />
               Yes
             </label>
             <label className="text-xl font-bold mr-2">
-              <input
-                type="checkbox"
-                name="isProductOfferNo"
-                checked={formData.isProductOffer === false}
-                onChange={() =>
-                  setFormData((p) => ({ ...p, isProductOffer: false }))
+                          <input
+              type="checkbox"
+              name="isProductOfferNo"
+              checked={formData.isProductOffer === false}
+              onChange={() => {
+                const newFormData = { ...formData, isProductOffer: false };
+                setFormData(newFormData);
+                if (!isEdit) {
+                  localStorage.setItem('ADD_PRODUCT_FORM_DATA', JSON.stringify(newFormData));
                 }
-                className="w-6 h-6 mr-4"
-              />
+              }}
+              className="w-6 h-6 mr-4"
+            />
               No
             </label>
           </div>
@@ -815,7 +907,19 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           />
         </div>
 
-        <div className="text-right mt-8">
+        <div className="flex justify-between mt-8">
+          {!isEdit && (
+            <button
+              type="button"
+              onClick={() => {
+                setFormData({});
+                localStorage.removeItem('ADD_PRODUCT_FORM_DATA');
+              }}
+              className="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg text-base font-semibold shadow-md transition"
+            >
+              Clear Form
+            </button>
+          )}
           <button
             type="submit"
             className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-lg text-lg font-semibold shadow-md transition"

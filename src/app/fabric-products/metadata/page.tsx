@@ -39,29 +39,44 @@ export default function MetadataPage() {
   const handleMetadataSubmit = async (meta: Record<string, any>) => {
     if (!baseData) return;
 
-    const fullData = { ...baseData, ...meta };
     // DO NOT submit the internal _id in the update payload
+    const fullData = { ...baseData, ...meta };
     if (fullData._id) {
       delete fullData._id;
     }
     const fd = new FormData();
 
-    // Append all text-based data
+    // Append all text-based data except description fields
     for (const key in fullData) {
-      if (fullData[key] != null && fullData[key] !== "") {
-        // Skip frontend-only keys that need remapping
-        if (["description", "isProductOffer", "isTopRated"].includes(key))
-          continue;
+      if (
+        fullData[key] != null &&
+        fullData[key] !== "" &&
+        key !== "description" && // skip, handled below
+        key !== "isProductOffer" &&
+        key !== "isTopRated"
+      ) {
         fd.append(key, fullData[key]);
       }
     }
-    // Map frontend fields to backend-required keys
-    // Ensure productdescription is a string, not an array
-    const productDescription = Array.isArray(fullData.description) 
-      ? fullData.description.join(' ') 
-      : (fullData.description || "");
+
+    // Always use Add Product Form's description for productdescription
+    let productDescription = baseData.description;
+    if (Array.isArray(productDescription)) {
+      productDescription = productDescription.join(" ");
+    } else if (typeof productDescription !== "string") {
+      productDescription = String(productDescription ?? "");
+    }
     fd.append("productdescription", productDescription);
-    fd.append("description", productDescription);
+
+    // Always use Metadata Form's description for meta description
+    let metaDescription = meta.description;
+    if (Array.isArray(metaDescription)) {
+      metaDescription = metaDescription.join(" ");
+    } else if (typeof metaDescription !== "string") {
+      metaDescription = String(metaDescription ?? "");
+    }
+    fd.append("description", metaDescription);
+
     fd.append("productoffer", fullData.isProductOffer ? "yes" : "no");
     fd.append("topratedproduct", fullData.isTopRated ? "yes" : "no");
 
@@ -80,6 +95,12 @@ export default function MetadataPage() {
 
       Cookies.remove("NEW_PRODUCT_BASE");
       dispatch(clearProductMedia()); // Clear Redux state after submission
+      
+      // Clear localStorage when product is successfully saved
+      if (!editId) {
+        localStorage.removeItem('ADD_PRODUCT_FORM_DATA');
+      }
+      
       notifySuccess("Product saved successfully!");
       router.push("/fabric-products/view");
     } catch (err: any) {
@@ -106,6 +127,10 @@ export default function MetadataPage() {
     if (editId) {
       router.push(`/fabric-products/edit/${editId}`);
     } else {
+      // Save current form data back to localStorage before going back
+      if (baseData) {
+        localStorage.setItem('ADD_PRODUCT_FORM_DATA', JSON.stringify(baseData));
+      }
       router.push("/fabric-products/add");
     }
   };
