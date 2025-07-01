@@ -13,9 +13,9 @@ const nextConfig = {
     domains: ["i.ibb.co", "res.cloudinary.com", "lh3.googleusercontent.com"],
     remotePatterns: [
       {
-        protocol: 'http',
-        hostname: 'localhost',
-        port: '7000',
+        protocol: 'https',
+        hostname:process.env.NEXT_PUBLIC_API_BASE_URL ,
+        // port: '443',
         pathname: '/uploadimage/**',
       },
     ],

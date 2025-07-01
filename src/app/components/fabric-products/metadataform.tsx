@@ -167,12 +167,12 @@ export default function MetadataForm({
       onSubmit={handleSubmit}
       className="bg-white p-6 max-w-4xl mx-auto space-y-8 rounded-xl border border-gray-200"
     >
-      <h2 className="text-2xl font-semibold text-center text-gray-800 mb-4 tracking-tight">
+      <h2 className="text-3xl font-bold text-center text-indigo-700 mb-6 tracking-tight drop-shadow-sm">
         Product Metadata
       </h2>
       {/* Product Name (required) */}
       <div>
-        <label className="block text-xs font-medium text-gray-600 mb-1">
+        <label className="block text-base font-semibold text-gray-700 mb-2">
           Product Name<span className="text-red-500">*</span>
         </label>
         <input
@@ -181,27 +181,27 @@ export default function MetadataForm({
           required
           value={meta.name}
           onChange={handleChange}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-400 focus:border-indigo-400 text-sm bg-white"
+          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
         />
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Charset */}
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
+          <label className="block text-base font-semibold text-gray-700 mb-2">
             Charset
           </label>
           <select
             name="charset"
             value={meta.charset}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-400 focus:border-indigo-400 text-sm bg-white"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
           >
             <option>UTF-8</option>
           </select>
         </div>
         {/* X-UA-Compatible */}
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
+          <label className="block text-base font-semibold text-gray-700 mb-2">
             X-UA-Compatible
           </label>
           <input
@@ -209,12 +209,12 @@ export default function MetadataForm({
             name="xUaCompatible"
             value={meta.xUaCompatible}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-400 focus:border-indigo-400 text-sm bg-white"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
           />
         </div>
         {/* Viewport */}
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
+          <label className="block text-base font-semibold text-gray-700 mb-2">
             Viewport
           </label>
           <input
@@ -222,12 +222,12 @@ export default function MetadataForm({
             name="viewport"
             value={meta.viewport}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-400 focus:border-indigo-400 text-sm bg-white"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
           />
         </div>
         {/* Title */}
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
+          <label className="block text-base font-semibold text-gray-700 mb-2">
             Title
           </label>
           <input
@@ -236,14 +236,14 @@ export default function MetadataForm({
             maxLength={60}
             value={meta.title}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-400 focus:border-indigo-400 text-sm bg-white"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
           />
         </div>
       </div>
       {/* Description & Keywords */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
+          <label className="block text-base font-semibold text-gray-700 mb-2">
             Description
           </label>
           <textarea
@@ -252,11 +252,11 @@ export default function MetadataForm({
             rows={2}
             value={meta.description}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-400 focus:border-indigo-400 text-sm bg-white"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
           />
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
+          <label className="block text-base font-semibold text-gray-700 mb-2">
             Keywords
           </label>
           <input
@@ -265,21 +265,21 @@ export default function MetadataForm({
             value={meta.keywords}
             onChange={handleChange}
             placeholder="comma-separated"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-400 focus:border-indigo-400 text-sm bg-white"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
           />
         </div>
       </div>
       {/* Robots, Content Language, Google Site Verification, msValidate */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
+          <label className="block text-base font-semibold text-gray-700 mb-2">
             Robots
           </label>
           <select
             name="robots"
             value={meta.robots}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-400 focus:border-indigo-400 text-sm bg-white"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
           >
             {[
               "index, follow",
@@ -292,7 +292,7 @@ export default function MetadataForm({
           </select>
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
+          <label className="block text-base font-semibold text-gray-700 mb-2">
             Content Language
           </label>
           <input
@@ -301,11 +301,11 @@ export default function MetadataForm({
             maxLength={10}
             value={meta.contentLanguage}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-400 focus:border-indigo-400 text-sm bg-white"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
           />
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
+          <label className="block text-base font-semibold text-gray-700 mb-2">
             Google Site Verification
           </label>
           <input
@@ -313,11 +313,11 @@ export default function MetadataForm({
             name="googleSiteVerification"
             value={meta.googleSiteVerification}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-400 focus:border-indigo-400 text-sm bg-white"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
           />
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
+          <label className="block text-base font-semibold text-gray-700 mb-2">
             msValidate
           </label>
           <input
@@ -325,14 +325,14 @@ export default function MetadataForm({
             name="msValidate"
             value={meta.msValidate}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-400 focus:border-indigo-400 text-sm bg-white"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
           />
         </div>
       </div>
       {/* Theme Color, Mobile Web App Capable, Apple Status Bar Style, Format Detection */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
+          <label className="block text-base font-semibold text-gray-700 mb-2">
             Theme Color
           </label>
           <input
@@ -351,19 +351,19 @@ export default function MetadataForm({
             onChange={handleChange}
             className="accent-indigo-500"
           />
-          <label className="text-xs font-medium text-gray-600">
+          <label className="text-base font-semibold text-gray-700">
             Mobile Web App Capable
           </label>
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
+          <label className="block text-base font-semibold text-gray-700 mb-2">
             Apple Status Bar Style
           </label>
           <select
             name="appleStatusBarStyle"
             value={meta.appleStatusBarStyle}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-400 focus:border-indigo-400 text-sm bg-white"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
           >
             {["default", "black", "black-translucent"].map((opt) => (
               <option key={opt}>{opt}</option>
@@ -371,14 +371,14 @@ export default function MetadataForm({
           </select>
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
+          <label className="block text-base font-semibold text-gray-700 mb-2">
             Format Detection
           </label>
           <select
             name="formatDetection"
             value={meta.formatDetection}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-400 focus:border-indigo-400 text-sm bg-white"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
           >
             {["telephone=no", "telephone=yes"].map((opt) => (
               <option key={opt}>{opt}</option>
@@ -387,9 +387,9 @@ export default function MetadataForm({
         </div>
       </div>
       {/* OpenGraph & Twitter */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
+          <label className="block text-base font-semibold text-gray-700 mb-2">
             OG Locale
           </label>
           <input
@@ -398,11 +398,11 @@ export default function MetadataForm({
             maxLength={10}
             value={meta.ogLocale}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-400 focus:border-indigo-400 text-sm bg-white"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
           />
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
+          <label className="block text-base font-semibold text-gray-700 mb-2">
             OG Title
           </label>
           <input
@@ -411,11 +411,11 @@ export default function MetadataForm({
             maxLength={60}
             value={meta.ogTitle}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-400 focus:border-indigo-400 text-sm bg-white"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
           />
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
+          <label className="block text-base font-semibold text-gray-700 mb-2">
             OG Description
           </label>
           <input
@@ -424,11 +424,11 @@ export default function MetadataForm({
             maxLength={160}
             value={meta.ogDescription}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-400 focus:border-indigo-400 text-sm bg-white"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
           />
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
+          <label className="block text-base font-semibold text-gray-700 mb-2">
             OG Type
           </label>
           <input
@@ -436,11 +436,11 @@ export default function MetadataForm({
             name="ogType"
             value={meta.ogType}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-400 focus:border-indigo-400 text-sm bg-white"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
           />
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
+          <label className="block text-base font-semibold text-gray-700 mb-2">
             OG URL
           </label>
           <input
@@ -449,11 +449,11 @@ export default function MetadataForm({
             maxLength={2048}
             value={meta.ogUrl}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-400 focus:border-indigo-400 text-sm bg-white"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
           />
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
+          <label className="block text-base font-semibold text-gray-700 mb-2">
             OG Site Name
           </label>
           <input
@@ -462,18 +462,18 @@ export default function MetadataForm({
             maxLength={100}
             value={meta.ogSiteName}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-400 focus:border-indigo-400 text-sm bg-white"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
           />
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
+          <label className="block text-base font-semibold text-gray-700 mb-2">
             Twitter Card
           </label>
           <select
             name="twitterCard"
             value={meta.twitterCard}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-400 focus:border-indigo-400 text-sm bg-white"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
           >
             {["summary", "summary_large_image", "app", "player"].map((opt) => (
               <option key={opt}>{opt}</option>
@@ -481,7 +481,7 @@ export default function MetadataForm({
           </select>
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
+          <label className="block text-base font-semibold text-gray-700 mb-2">
             Twitter Site
           </label>
           <input
@@ -490,11 +490,11 @@ export default function MetadataForm({
             maxLength={25}
             value={meta.twitterSite}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-400 focus:border-indigo-400 text-sm bg-white"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
           />
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
+          <label className="block text-base font-semibold text-gray-700 mb-2">
             Twitter Title
           </label>
           <input
@@ -503,11 +503,11 @@ export default function MetadataForm({
             maxLength={60}
             value={meta.twitterTitle}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-400 focus:border-indigo-400 text-sm bg-white"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
           />
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
+          <label className="block text-base font-semibold text-gray-700 mb-2">
             Twitter Description
           </label>
           <input
@@ -516,14 +516,14 @@ export default function MetadataForm({
             maxLength={160}
             value={meta.twitterDescription}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-400 focus:border-indigo-400 text-sm bg-white"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
           />
         </div>
       </div>
       {/* hreflang, x_default, Author Name */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
+          <label className="block text-base font-semibold text-gray-700 mb-2">
             hreflang
           </label>
           <input
@@ -532,11 +532,11 @@ export default function MetadataForm({
             maxLength={10}
             value={meta.hreflang}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-400 focus:border-indigo-400 text-sm bg-white"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
           />
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
+          <label className="block text-base font-semibold text-gray-700 mb-2">
             x_default
           </label>
           <input
@@ -545,11 +545,11 @@ export default function MetadataForm({
             maxLength={10}
             value={meta.x_default}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-400 focus:border-indigo-400 text-sm bg-white"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
           />
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
+          <label className="block text-base font-semibold text-gray-700 mb-2">
             Author Name
           </label>
           <input
@@ -558,14 +558,14 @@ export default function MetadataForm({
             maxLength={100}
             value={meta.author_name}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-400 focus:border-indigo-400 text-sm bg-white"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
           />
         </div>
       </div>
       {/* Pricing & codes */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
+          <label className="block text-base font-semibold text-gray-700 mb-2">
             Purchase Price
           </label>
           <input
@@ -573,11 +573,11 @@ export default function MetadataForm({
             name="purchasePrice"
             value={meta.purchasePrice}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-400 focus:border-indigo-400 text-sm bg-white"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
           />
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
+          <label className="block text-base font-semibold text-gray-700 mb-2">
             Sales Price
           </label>
           <input
@@ -585,13 +585,13 @@ export default function MetadataForm({
             name="salesPrice"
             value={meta.salesPrice}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-400 focus:border-indigo-400 text-sm bg-white"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
           />
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
+          <label className="block text-base font-semibold text-gray-700 mb-2">
             Location Code
           </label>
           <input
@@ -599,11 +599,11 @@ export default function MetadataForm({
             name="locationCode"
             value={meta.locationCode}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-400 focus:border-indigo-400 text-sm bg-white"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
           />
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
+          <label className="block text-base font-semibold text-gray-700 mb-2">
             Product Identifier
           </label>
           <input
@@ -611,22 +611,22 @@ export default function MetadataForm({
             name="productIdentifier"
             value={meta.productIdentifier}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-400 focus:border-indigo-400 text-sm bg-white"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-base bg-white shadow-sm"
           />
         </div>
       </div>
       {/* Buttons */}
-      <div className="flex justify-between pt-4 border-t">
+      <div className="flex justify-between pt-6 border-t mt-8">
         <button
           type="button"
           onClick={onBack}
-          className="px-6 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-md text-sm font-medium transition"
+          className="px-8 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg text-lg font-semibold shadow-md transition"
         >
           ← Previous
         </button>
         <button
           type="submit"
-          className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md text-sm font-medium transition"
+          className="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-lg font-semibold shadow-md transition"
         >
           Submit Product
         </button>
