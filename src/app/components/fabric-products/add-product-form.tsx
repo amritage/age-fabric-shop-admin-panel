@@ -341,11 +341,17 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     // Do NOT store images in localStorage
     // Only store non-file fields if needed
     const cleanedFormData = { ...formData };
-    // Always coerce productdescription to string before saving
+    // Always coerce productdescription to string before saving/submitting
     if (Array.isArray(cleanedFormData.productdescription)) {
       cleanedFormData.productdescription = cleanedFormData.productdescription.join(" ");
     } else if (typeof cleanedFormData.productdescription !== "string") {
       cleanedFormData.productdescription = String(cleanedFormData.productdescription ?? '');
+    }
+    // Always coerce description to string before saving/submitting
+    if (Array.isArray(cleanedFormData.description)) {
+      cleanedFormData.description = cleanedFormData.description.join(" ");
+    } else if (typeof cleanedFormData.description !== "string") {
+      cleanedFormData.description = String(cleanedFormData.description ?? '');
     }
     // Map isPopular to popularproduct for backend
     cleanedFormData.popularproduct = formData.isPopular === true ? "yes" : "no";
@@ -924,6 +930,24 @@ export default function AddProductForm({ productId }: { productId?: string }) {
             onChange={handleInputChange}
             rows={4}
             className="input w-full h-24 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
+          />
+        </div>
+        {/* Description field required for backend */}
+        <div className="mt-8">
+          <label
+            htmlFor="description"
+            className="block text-base font-semibold mb-2 text-gray-700"
+          >
+            Description <span className="text-red-500">*</span>
+          </label>
+          <textarea
+            id="description"
+            name="description"
+            required
+            value={formData.description || ""}
+            onChange={handleInputChange}
+            rows={2}
+            className="input w-full h-16 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
           />
         </div>
 
