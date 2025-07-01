@@ -184,15 +184,18 @@ export default function AddProductForm({ productId }: { productId?: string }) {
   // when productDetail arrives, seed form + previews
   useEffect(() => {
     if (!productDetail) return;
-    
-    // Handle the case where productdescription might be an array
+
+    // Always coerce productdescription to string for the form
     const processedProductDetail = { ...productDetail };
     if (Array.isArray(processedProductDetail.productdescription)) {
       processedProductDetail.description = processedProductDetail.productdescription.join(' ');
-    } else if (processedProductDetail.productdescription) {
+    } else if (typeof processedProductDetail.productdescription === "string") {
       processedProductDetail.description = processedProductDetail.productdescription;
+    } else if (processedProductDetail.productdescription != null) {
+      processedProductDetail.description = String(processedProductDetail.productdescription);
+    } else {
+      processedProductDetail.description = "";
     }
-    
     setFormData(processedProductDetail);
 
     ["image", "image1", "image2", "video"].forEach((key) => {
