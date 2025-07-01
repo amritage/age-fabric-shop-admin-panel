@@ -185,14 +185,10 @@ export default function AddProductForm({ productId }: { productId?: string }) {
   useEffect(() => {
     if (!productDetail) return;
 
-    // Always coerce productdescription to string for the form
+    // Always treat productdescription as a string for the form
     const processedProductDetail = { ...productDetail };
-    if (Array.isArray(processedProductDetail.productdescription)) {
-      processedProductDetail.description = processedProductDetail.productdescription.join(' ');
-    } else if (typeof processedProductDetail.productdescription === "string") {
+    if (typeof processedProductDetail.productdescription === "string") {
       processedProductDetail.description = processedProductDetail.productdescription;
-    } else if (processedProductDetail.productdescription != null) {
-      processedProductDetail.description = String(processedProductDetail.productdescription);
     } else {
       processedProductDetail.description = "";
     }
