@@ -111,8 +111,19 @@ export default function AddProductForm({ productId }: { productId?: string }) {
       setIsLoadingFilters(true);
       setFilterErrors({});
 
+      // Updated token extraction logic
+      const adminCookie = typeof window !== "undefined" ? Cookies.get("admin") : null;
+      let token = "";
+      if (adminCookie) {
+        try {
+          const adminObj = JSON.parse(adminCookie);
+          token = adminObj.accessToken;
+        } catch (e) {
+          token = "";
+        }
+      }
+
       try {
-        const token = typeof window !== "undefined" ? Cookies.get("admin") : null;
         const results = await Promise.all(
           filterConfig.map(async (f) => {
             const url = `${BASE_URL}${f.api}`;
