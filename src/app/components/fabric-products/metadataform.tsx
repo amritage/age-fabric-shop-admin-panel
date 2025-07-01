@@ -166,6 +166,13 @@ export default function MetadataForm({
       safeMeta.description_html = String(safeMeta.description_html ?? "");
     }
 
+    // --- Ensure productdescription is always a string ---
+    if (Array.isArray(safeMeta.productdescription)) {
+      safeMeta.productdescription = safeMeta.productdescription.join(" ");
+    } else if (typeof safeMeta.productdescription !== "string") {
+      safeMeta.productdescription = String(safeMeta.productdescription ?? "");
+    }
+
     // Call the parent onSubmit function
     await onSubmit(safeMeta);
   };
