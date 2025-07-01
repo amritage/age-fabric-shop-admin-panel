@@ -16,13 +16,15 @@ export default function EditContentPage() {
       </Wrapper>
     );
 
+  const contentId = Array.isArray(id) ? id[0] : id;
+
   return (
     <Wrapper>
       <div className="body-content px-8 py-8 bg-slate-100 min-h-screen">
         <Breadcrumb title="Edit Content" subtitle="" />
         <div className="mt-6 flex justify-center">
           <div className="w-full max-w-md bg-white rounded-md shadow p-8">
-            <EditContent id={id} onDone={() => router.push("/content")} />
+            <EditContent id={contentId} onDone={() => router.push("/content")} />
           </div>
         </div>
       </div>

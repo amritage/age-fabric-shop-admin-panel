@@ -8,8 +8,9 @@ import EditFinish from "@/app/components/finish/edit-finish";
 
 export default function EditFinishPage() {
   const { id } = useParams();
+  const idStr = Array.isArray(id) ? id[0] : id;
   const router = useRouter();
-  if (!id)
+  if (!idStr)
     return (
       <Wrapper>
         <p className="p-8 text-red-500">No finish selected.</p>
@@ -22,7 +23,7 @@ export default function EditFinishPage() {
         <Breadcrumb title="Edit Finish" subtitle="" />
         <div className="mt-6 flex justify-center">
           <div className="w-full max-w-md bg-white rounded-md shadow p-8">
-            <EditFinish id={id} />
+            <EditFinish id={idStr} />
           </div>
         </div>
       </div>

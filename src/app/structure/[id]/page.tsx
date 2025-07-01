@@ -8,8 +8,9 @@ import EditStructure from "@/app/components/structure/edit-structure";
 
 export default function EditStructurePage() {
   const { id } = useParams();
+  const idStr = Array.isArray(id) ? id[0] : id;
 
-  if (!id) {
+  if (!idStr) {
     return (
       <Wrapper>
         <div className="body-content px-8 py-8">
@@ -27,7 +28,7 @@ export default function EditStructurePage() {
         {/* Center the form in a card */}
         <div className="mt-6 flex justify-center">
           <div className="w-full max-w-md bg-white rounded-md shadow p-8">
-            <EditStructure id={id} onDone={function (): void {
+            <EditStructure id={idStr} onDone={function (): void {
               throw new Error("Function not implemented.");
             } } />
           </div>

@@ -7,8 +7,9 @@ import EditSubstructure from "@/app/components/substructure/edit-substructure";
 
 export default function EditSubstructurePage() {
   const { id } = useParams();
+  const idStr = Array.isArray(id) ? id[0] : id;
   const router = useRouter();
-  if (!id)
+  if (!idStr)
     return (
       <Wrapper>
         <p className="p-8 text-red-500">No substructure selected.</p>
@@ -21,7 +22,7 @@ export default function EditSubstructurePage() {
         <Breadcrumb title="Edit Substructure" subtitle="" />
         <div className="mt-6 flex justify-center">
           <div className="w-full max-w-md bg-white rounded-md shadow p-8">
-            <EditSubstructure id={id} />
+            <EditSubstructure id={idStr} />
           </div>
         </div>
       </div>

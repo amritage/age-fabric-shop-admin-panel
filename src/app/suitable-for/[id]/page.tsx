@@ -7,8 +7,9 @@ import EditSuitableFor from "@/app/components/suitablefor/edit-suitable";
 
 export default function EditSuitableForPage() {
   const { id } = useParams();
+  const idStr = Array.isArray(id) ? id[0] : id;
   const router = useRouter();
-  if (!id)
+  if (!idStr)
     return (
       <Wrapper>
         <p className="p-8 text-red-500">No item selected.</p>
@@ -21,7 +22,7 @@ export default function EditSuitableForPage() {
         <Breadcrumb title="Edit SuitableFor" subtitle="" />
         <div className="mt-6 flex justify-center">
           <div className="w-full max-w-md bg-white rounded-md shadow p-8">
-            <EditSuitableFor id={id} />
+            <EditSuitableFor id={idStr} />
           </div>
         </div>
       </div>

@@ -8,8 +8,9 @@ import EditDesign from "@/app/components/design/edit-design";
 
 export default function EditDesignPage() {
   const { id } = useParams();
+  const idStr = Array.isArray(id) ? id[0] : id;
   const router = useRouter();
-  if (!id)
+  if (!idStr)
     return (
       <Wrapper>
         <p className="p-8 text-red-500">No design selected.</p>
@@ -22,7 +23,7 @@ export default function EditDesignPage() {
         <Breadcrumb title="Edit Design" subtitle="" />
         <div className="mt-6 flex justify-center">
           <div className="w-full max-w-md bg-white rounded-md shadow p-8">
-            <EditDesign id={id} />
+            <EditDesign id={idStr} />
           </div>
         </div>
       </div>

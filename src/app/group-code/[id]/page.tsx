@@ -7,8 +7,9 @@ import EditGroupCode from "@/app/components/group-code/edit-group-code";
 
 export default function EditUniqueCodePage() {
   const { id } = useParams();
+  const idStr = Array.isArray(id) ? id[0] : id;
   const router = useRouter();
-  if (!id)
+  if (!idStr)
     return (
       <Wrapper>
         <p className="p-8 text-red-500">No item selected.</p>
@@ -21,7 +22,7 @@ export default function EditUniqueCodePage() {
         <Breadcrumb title="Edit UniqueCode" subtitle="" />
         <div className="mt-6 flex justify-center">
           <div className="w-full max-w-md bg-white rounded-md shadow p-8">
-            <EditGroupCode id={id} />
+            <EditGroupCode id={idStr} />
           </div>
         </div>
       </div>

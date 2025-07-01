@@ -13,7 +13,8 @@ import GlobalImgUpload from "./global-img-upload";
 
 export default function EditCategory() {
   const { id } = useParams();
-  const { data, isLoading: isFetching, isError: fetchError } = useGetNewCategoryQuery(id || "");
+  const categoryId = Array.isArray(id) ? id[0] : id || "";
+  const { data, isLoading: isFetching, isError: fetchError } = useGetNewCategoryQuery(categoryId);
   const [updateCategory, { isLoading: isSubmitting }] = useUpdateNewCategoryMutation();
 
   const {
@@ -50,7 +51,7 @@ export default function EditCategory() {
       const fd = new FormData();
       fd.append("name", vals.name);
       if (imageFile) fd.append("image", imageFile);
-      await updateCategory({ id: id!, changes: fd }).unwrap();
+      await updateCategory({ id: categoryId, changes: fd }).unwrap();
       // Optionally navigate back or show a toast here
     } catch (err: any) {
       setErrorMessage(err?.data?.message || "Failed to update category.");

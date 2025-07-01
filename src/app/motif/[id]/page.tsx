@@ -7,8 +7,9 @@ import EditMotif from "@/app/components/motif/edit-motif";
 
 export default function EditMotifPage() {
   const { id } = useParams();
+  const idStr = Array.isArray(id) ? id[0] : id;
   const router = useRouter();
-  if (!id)
+  if (!idStr)
     return (
       <Wrapper>
         <p className="p-8 text-red-500">No motif selected.</p>
@@ -21,7 +22,7 @@ export default function EditMotifPage() {
         <Breadcrumb title="Edit Motif" subtitle="" />
         <div className="mt-6 flex justify-center">
           <div className="w-full max-w-md bg-white rounded-md shadow p-8">
-            <EditMotif id={id} />
+            <EditMotif id={idStr} />
           </div>
         </div>
       </div>

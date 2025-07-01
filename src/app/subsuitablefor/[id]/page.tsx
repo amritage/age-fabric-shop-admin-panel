@@ -7,8 +7,9 @@ import EditSubSuitableFor from "@/app/components/subsuitablefor/edit-subsuitable
 
 export default function EditSubSuitableForPage() {
   const { id } = useParams();
+  const idStr = Array.isArray(id) ? id[0] : id;
   const router = useRouter();
-  if (!id)
+  if (!idStr)
     return (
       <Wrapper>
         <p className="p-8 text-red-500">No item selected.</p>
@@ -21,7 +22,7 @@ export default function EditSubSuitableForPage() {
         <Breadcrumb title="Edit Sub-SuitableFor" subtitle="" />
         <div className="mt-6 flex justify-center">
           <div className="w-full max-w-md bg-white rounded-md shadow p-8">
-            <EditSubSuitableFor id={id} />
+            <EditSubSuitableFor id={idStr} />
           </div>
         </div>
       </div>
