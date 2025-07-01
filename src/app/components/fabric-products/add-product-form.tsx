@@ -210,11 +210,23 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     >,
   ) => {
     const { name, value, type } = e.target;
-    const newFormData = { ...formData, [name]: value };
+    let newValue = value;
+    // Always coerce description to string
+    if (name === "description" && Array.isArray(value)) {
+      newValue = value.join(" ");
+    } else if (name === "description" && typeof value !== "string") {
+      newValue = String(value ?? "");
+    }
+    const newFormData = { ...formData, [name]: newValue };
     setFormData(newFormData);
-    
     // Save to localStorage (only for new products, not editing)
     if (!isEdit) {
+      if (Array.isArray(newFormData.description)) {
+        newFormData.description = newFormData.description.join(" ");
+      } else if (typeof newFormData.description !== "string") {
+        newFormData.description = String(newFormData.description ?? "");
+      }
+      console.log("[DEBUG] Saving description to localStorage:", typeof newFormData.description, newFormData.description);
       localStorage.setItem('ADD_PRODUCT_FORM_DATA', JSON.stringify(newFormData));
     }
   };
@@ -325,19 +337,24 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     // Do NOT store images in localStorage
     // Only store non-file fields if needed
     const cleanedFormData = { ...formData };
+    // Always coerce description to string before saving
+    if (Array.isArray(cleanedFormData.description)) {
+      cleanedFormData.description = cleanedFormData.description.join(" ");
+    } else if (typeof cleanedFormData.description !== "string") {
+      cleanedFormData.description = String(cleanedFormData.description ?? "");
+    }
     // Map isPopular to popularproduct for backend
     cleanedFormData.popularproduct = formData.isPopular === true ? "yes" : "no";
     delete cleanedFormData.isPopular;
     ["image", "image1", "image2", "video"].forEach((key) => {
       delete cleanedFormData[key];
     });
+    console.log("[DEBUG] Saving description to cookie:", typeof cleanedFormData.description, cleanedFormData.description);
     Cookies.set("NEW_PRODUCT_BASE", JSON.stringify(cleanedFormData));
-    
     // Clear localStorage when moving to metadata (form is complete)
     if (!isEdit) {
       localStorage.removeItem('ADD_PRODUCT_FORM_DATA');
     }
-    
     router.push(
       isEdit
         ? `/fabric-products/metadata?editId=${editId}`
