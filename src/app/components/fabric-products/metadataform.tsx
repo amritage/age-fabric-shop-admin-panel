@@ -22,7 +22,7 @@ interface MetadataFormProps {
     xUaCompatible?: string;
     viewport?: string;
     title?: string;
-    description?: string;
+    description_html?: string;
     keywords?: string;
     robots?: string;
     contentLanguage?: string;
@@ -69,7 +69,7 @@ export default function MetadataForm({
     xUaCompatible: initial.xUaCompatible || "IE=edge",
     viewport: initial.viewport || "width=device-width, initial-scale=1.0",
     title: initial.title || initial.name || "",
-    description: initial.description || "",
+    description_html: initial.description_html || "",
     keywords: initial.keywords || "",
     robots: initial.robots || "index, follow",
     contentLanguage: initial.contentLanguage || "en",
@@ -145,7 +145,7 @@ export default function MetadataForm({
       "locationCode",
       "productIdentifier",
       "title",
-      "description",
+      "description_html",
       "keywords",
       "ogTitle",
       "ogDescription",
@@ -158,12 +158,12 @@ export default function MetadataForm({
       return;
     }
 
-    // --- Ensure description is always a string ---
+    // --- Ensure description_html is always a string ---
     let safeMeta = { ...meta };
-    if (Array.isArray(safeMeta.description)) {
-      safeMeta.description = safeMeta.description.join(" ");
-    } else if (typeof safeMeta.description !== "string") {
-      safeMeta.description = String(safeMeta.description ?? "");
+    if (Array.isArray(safeMeta.description_html)) {
+      safeMeta.description_html = safeMeta.description_html.join(" ");
+    } else if (typeof safeMeta.description_html !== "string") {
+      safeMeta.description_html = String(safeMeta.description_html ?? "");
     }
 
     // Call the parent onSubmit function
@@ -249,17 +249,17 @@ export default function MetadataForm({
             />
           </div>
         </div>
-        {/* Description & Keywords */}
+        {/* Description HTML & Keywords */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
             <label className="block text-base font-semibold text-gray-700 mb-2">
-              Description
+              Description HTML
             </label>
             <textarea
-              name="description"
+              name="description_html"
               maxLength={160}
               rows={2}
-              value={meta.description}
+              value={meta.description_html}
               onChange={handleChange}
               className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 bg-white shadow-sm"
             />

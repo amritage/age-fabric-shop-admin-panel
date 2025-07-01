@@ -188,9 +188,9 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     // Always treat productdescription as a string for the form
     const processedProductDetail = { ...productDetail };
     if (typeof processedProductDetail.productdescription === "string") {
-      processedProductDetail.description = processedProductDetail.productdescription;
+      processedProductDetail.productdescription = processedProductDetail.productdescription;
     } else {
-      processedProductDetail.description = "";
+      processedProductDetail.productdescription = "";
     }
     setFormData(processedProductDetail);
 
@@ -210,8 +210,8 @@ export default function AddProductForm({ productId }: { productId?: string }) {
   ) => {
     const { name, value, type } = e.target;
     let newValue = value;
-    // Always coerce description to string
-    if (name === "description") {
+    // Always coerce productdescription to string
+    if (name === "productdescription") {
       if (Array.isArray(value)) {
         newValue = value.join(" ");
       } else if (typeof value !== "string") {
@@ -222,12 +222,12 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     setFormData(newFormData);
     // Save to localStorage (only for new products, not editing)
     if (!isEdit) {
-      if (Array.isArray(newFormData.description)) {
-        newFormData.description = newFormData.description.join(" ");
-      } else if (typeof newFormData.description !== "string") {
-        newFormData.description = String(newFormData.description ?? "");
+      if (Array.isArray(newFormData.productdescription)) {
+        newFormData.productdescription = newFormData.productdescription.join(" ");
+      } else if (typeof newFormData.productdescription !== "string") {
+        newFormData.productdescription = String(newFormData.productdescription ?? "");
       }
-      console.log("[DEBUG] Saving description to localStorage:", typeof newFormData.description, newFormData.description);
+      console.log("[DEBUG] Saving productdescription to localStorage:", typeof newFormData.productdescription, newFormData.productdescription);
       localStorage.setItem('ADD_PRODUCT_FORM_DATA', JSON.stringify(newFormData));
     }
   };
@@ -338,11 +338,11 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     // Do NOT store images in localStorage
     // Only store non-file fields if needed
     const cleanedFormData = { ...formData };
-    // Always coerce description to string before saving
-    if (Array.isArray(cleanedFormData.description)) {
-      cleanedFormData.description = cleanedFormData.description.join(" ");
-    } else if (typeof cleanedFormData.description !== "string") {
-      cleanedFormData.description = String(cleanedFormData.description ?? '');
+    // Always coerce productdescription to string before saving
+    if (Array.isArray(cleanedFormData.productdescription)) {
+      cleanedFormData.productdescription = cleanedFormData.productdescription.join(" ");
+    } else if (typeof cleanedFormData.productdescription !== "string") {
+      cleanedFormData.productdescription = String(cleanedFormData.productdescription ?? '');
     }
     // Map isPopular to popularproduct for backend
     cleanedFormData.popularproduct = formData.isPopular === true ? "yes" : "no";
@@ -350,7 +350,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     ["image", "image1", "image2", "video"].forEach((key) => {
       delete cleanedFormData[key];
     });
-    console.log("[DEBUG] Saving description to cookie:", typeof cleanedFormData.description, cleanedFormData.description);
+    console.log("[DEBUG] Saving productdescription to cookie:", typeof cleanedFormData.productdescription, cleanedFormData.productdescription);
     Cookies.set("NEW_PRODUCT_BASE", JSON.stringify(cleanedFormData));
     // Clear localStorage when moving to metadata (form is complete)
     if (!isEdit) {
@@ -910,15 +910,15 @@ export default function AddProductForm({ productId }: { productId?: string }) {
         {/* Product Description at the bottom */}
         <div className="mt-8">
           <label
-            htmlFor="description"
+            htmlFor="productdescription"
             className="block text-base font-semibold mb-2 text-gray-700"
           >
             Product Description
           </label>
           <textarea
-            id="description"
-            name="description"
-            value={formData.description || ""}
+            id="productdescription"
+            name="productdescription"
+            value={formData.productdescription || ""}
             onChange={handleInputChange}
             rows={4}
             className="input w-full h-24 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"

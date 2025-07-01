@@ -51,7 +51,7 @@ export default function MetadataPage() {
       if (
         fullData[key] != null &&
         fullData[key] !== "" &&
-        key !== "description" && // skip, handled below
+        key !== "description_html" && // skip, handled below
         key !== "isProductOffer" &&
         key !== "isTopRated"
       ) {
@@ -60,9 +60,9 @@ export default function MetadataPage() {
     }
 
     // Debug log for productdescription
-    console.log("[DEBUG] baseData.description type/value:", typeof baseData.description, baseData.description);
-    // Always use Add Product Form's description for productdescription
-    let productDescription = baseData.description;
+    console.log("[DEBUG] baseData.productdescription type/value:", typeof baseData.productdescription, baseData.productdescription);
+    // Always use Add Product Form's productdescription for productdescription
+    let productDescription = baseData.productdescription;
     if (Array.isArray(productDescription)) {
       productDescription = productDescription.join(" ");
     } else if (typeof productDescription !== "string") {
@@ -71,15 +71,15 @@ export default function MetadataPage() {
     fd.append("productdescription", productDescription);
 
     // Debug log for meta description
-    console.log("[DEBUG] meta.description type/value:", typeof meta.description, meta.description);
-    // Always use Metadata Form's description for meta description
-    let metaDescription = meta.description;
+    console.log("[DEBUG] meta.description_html type/value:", typeof meta.description_html, meta.description_html);
+    // Always use Metadata Form's description_html for meta description
+    let metaDescription = meta.description_html;
     if (Array.isArray(metaDescription)) {
       metaDescription = metaDescription.join(" ");
     } else if (typeof metaDescription !== "string") {
       metaDescription = String(metaDescription ?? "");
     }
-    fd.append("description", metaDescription);
+    fd.append("description_html", metaDescription);
 
     fd.append("productoffer", fullData.isProductOffer ? "yes" : "no");
     fd.append("topratedproduct", fullData.isTopRated ? "yes" : "no");
