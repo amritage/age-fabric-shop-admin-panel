@@ -30,7 +30,7 @@ export interface IProduct {
   viewport?: string;
   title?: string;
   description?: string;
-  productdescription?: string | string[]; // Backend might return this as array
+  productdescription?: string; // Backend might return this as array
   keywords?: string;
   robots?: string;
   contentLanguage?: string;
