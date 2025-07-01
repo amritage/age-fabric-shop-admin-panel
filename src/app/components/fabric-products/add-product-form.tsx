@@ -211,8 +211,8 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     const { name, value, type } = e.target;
     let newValue = value;
     // Always coerce description to string
-    if (name === "description" && Array.isArray(value)) {
-      newValue = value.join(" ");
+    if (name === "description" && typeof value === "string") {
+      newValue = value;
     } else if (name === "description" && typeof value !== "string") {
       newValue = String(value ?? "");
     }
