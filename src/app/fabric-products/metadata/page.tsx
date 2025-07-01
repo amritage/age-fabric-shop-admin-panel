@@ -59,6 +59,8 @@ export default function MetadataPage() {
       }
     }
 
+    // Debug log for productdescription
+    console.log("[DEBUG] baseData.description type/value:", typeof baseData.description, baseData.description);
     // Always use Add Product Form's description for productdescription
     let productDescription = baseData.description;
     if (Array.isArray(productDescription)) {
@@ -68,6 +70,8 @@ export default function MetadataPage() {
     }
     fd.append("productdescription", productDescription);
 
+    // Debug log for meta description
+    console.log("[DEBUG] meta.description type/value:", typeof meta.description, meta.description);
     // Always use Metadata Form's description for meta description
     let metaDescription = meta.description;
     if (Array.isArray(metaDescription)) {
