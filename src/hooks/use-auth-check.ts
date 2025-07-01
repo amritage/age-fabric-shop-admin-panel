@@ -1,9 +1,9 @@
 "use client";
-import Cookies from "js-cookie";
 import { useState, useEffect } from "react";
 import { RootState } from "./../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { userLoggedIn } from "@/redux/auth/authSlice";
+import { storage } from "@/utils/storage";
 
 export default function useAuthCheck() {
   const dispatch = useDispatch();
@@ -11,12 +11,12 @@ export default function useAuthCheck() {
   const [authChecked, setAuthChecked] = useState<boolean>(false);
 
   useEffect(() => {
-    const localAuth = Cookies.get("admin");
+    const localAuth = storage.getCookie("admin");
 
     if (localAuth) {
       let auth = null;
       try {
-        auth = JSON.parse(localAuth);
+        auth = localAuth;
       } catch (e) {
         auth = null;
       }

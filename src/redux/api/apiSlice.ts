@@ -1,5 +1,5 @@
-import Cookies from "js-cookie";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { storage } from "@/utils/storage";
 
 export const apiSlice = createApi({
   reducerPath: "api",
@@ -7,9 +7,9 @@ export const apiSlice = createApi({
     baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
     prepareHeaders: (headers) => {
       try {
-        const userInfo = Cookies.get("admin");
+        const userInfo = storage.getCookie("admin");
         if (userInfo) {
-          const { accessToken } = JSON.parse(userInfo);
+          const { accessToken } = userInfo;
           if (accessToken)
             headers.set("Authorization", `Bearer ${accessToken}`);
         }

@@ -1,4 +1,4 @@
-import Cookies from "js-cookie";
+import { storage } from "@/utils/storage";
 import { apiSlice } from "@/redux/api/apiSlice";
 import { userLoggedIn } from "./authSlice";
 import {
@@ -28,14 +28,14 @@ export const authApi = apiSlice.injectEndpoints({
         try {
           const result = await queryFulfilled;
           const { token, ...others } = result.data;
-          Cookies.set(
-            "admin",
-            JSON.stringify({
-              accessToken: token,
-              user: others,
-            }),
-            { expires: 0.5, secure: true, sameSite: "strict" },
-          );
+          storage.setCookie("admin", {
+            accessToken: token,
+            user: others,
+          }, { expires: 0.5, secure: true, sameSite: "strict" });
+          storage.setLocalStorage("admin", {
+            accessToken: token,
+            user: others,
+          });
 
           dispatch(
             userLoggedIn({
@@ -60,14 +60,14 @@ export const authApi = apiSlice.injectEndpoints({
         try {
           const result = await queryFulfilled;
           const { token, ...others } = result.data;
-          Cookies.set(
-            "admin",
-            JSON.stringify({
-              accessToken: token,
-              user: others,
-            }),
-            { expires: 0.5, secure: true, sameSite: "strict" },
-          );
+          storage.setCookie("admin", {
+            accessToken: token,
+            user: others,
+          }, { expires: 0.5, secure: true, sameSite: "strict" });
+          storage.setLocalStorage("admin", {
+            accessToken: token,
+            user: others,
+          });
 
           dispatch(
             userLoggedIn({
@@ -125,14 +125,14 @@ export const authApi = apiSlice.injectEndpoints({
         try {
           const result = await queryFulfilled;
           const { token, ...others } = result.data;
-          Cookies.set(
-            "admin",
-            JSON.stringify({
-              accessToken: token,
-              user: others,
-            }),
-            { expires: 0.5, secure: true, sameSite: "strict" },
-          );
+          storage.setCookie("admin", {
+            accessToken: token,
+            user: others,
+          }, { expires: 0.5, secure: true, sameSite: "strict" });
+          storage.setLocalStorage("admin", {
+            accessToken: token,
+            user: others,
+          });
 
           dispatch(
             userLoggedIn({

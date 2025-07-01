@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import Cookies from "js-cookie";
+import { storage } from "@/utils/storage";
 
 // user type
 type IUser = {
@@ -16,7 +16,7 @@ type IAuth = {
 };
 
 // Check if the cookie exists
-const cookieData = Cookies.get("admin");
+const cookieData = storage.getCookie("admin");
 let initialAuthState: {
   accessToken: string | undefined;
   user: IUser | undefined;
@@ -28,8 +28,7 @@ let initialAuthState: {
 // If the cookie exists, parse its value and set it as the initial state
 if (cookieData) {
   try {
-    const parsedData: { accessToken: string; user: IUser } =
-      JSON.parse(cookieData);
+    const parsedData: { accessToken: string; user: IUser } = cookieData;
     initialAuthState = {
       accessToken: parsedData.accessToken,
       user: parsedData.user,
@@ -46,23 +45,30 @@ const authSlice = createSlice({
     userLoggedIn: (state, { payload }: { payload: IAuth }) => {
       state.accessToken = payload.accessToken;
       state.user = payload.user;
-      Cookies.set(
-        "admin",
-        JSON.stringify({
-          accessToken: payload.accessToken,
-          user: payload.user,
-        }),
-        {
-          expires: 0.5,
-          secure: true,
-          sameSite: "strict",
-        },
-      );
+      
+      // Store in both cookie and localStorage for redundancy
+      storage.setCookie("admin", {
+        accessToken: payload.accessToken,
+        user: payload.user,
+      }, {
+        expires: 0.5,
+        secure: true,
+        sameSite: "strict",
+      });
+      
+      // Also store in localStorage as backup
+      storage.setLocalStorage("admin", {
+        accessToken: payload.accessToken,
+        user: payload.user,
+      });
     },
     userLoggedOut: (state) => {
       state.accessToken = undefined;
       state.user = undefined;
-      Cookies.remove("admin");
+      
+      // Remove from both cookie and localStorage
+      storage.removeCookie("admin");
+      storage.removeLocalStorage("admin");
     },
   },
 });
