@@ -211,10 +211,12 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     const { name, value, type } = e.target;
     let newValue = value;
     // Always coerce description to string
-    if (name === "description" && typeof value === "string") {
-      newValue = value;
-    } else if (name === "description" && typeof value !== "string") {
-      newValue = String(value ?? "");
+    if (name === "description") {
+      if (Array.isArray(value)) {
+        newValue = value.join(" ");
+      } else if (typeof value !== "string") {
+        newValue = String(value ?? "");
+      }
     }
     const newFormData = { ...formData, [name]: newValue };
     setFormData(newFormData);
@@ -340,7 +342,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     if (Array.isArray(cleanedFormData.description)) {
       cleanedFormData.description = cleanedFormData.description.join(" ");
     } else if (typeof cleanedFormData.description !== "string") {
-      cleanedFormData.description = String(cleanedFormData.description ?? "");
+      cleanedFormData.description = String(cleanedFormData.description ?? '');
     }
     // Map isPopular to popularproduct for backend
     cleanedFormData.popularproduct = formData.isPopular === true ? "yes" : "no";

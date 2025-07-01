@@ -158,8 +158,16 @@ export default function MetadataForm({
       return;
     }
 
+    // --- Ensure description is always a string ---
+    let safeMeta = { ...meta };
+    if (Array.isArray(safeMeta.description)) {
+      safeMeta.description = safeMeta.description.join(" ");
+    } else if (typeof safeMeta.description !== "string") {
+      safeMeta.description = String(safeMeta.description ?? "");
+    }
+
     // Call the parent onSubmit function
-    await onSubmit(meta);
+    await onSubmit(safeMeta);
   };
 
   return (
