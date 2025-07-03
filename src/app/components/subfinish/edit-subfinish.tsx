@@ -37,7 +37,12 @@ export default function EditSubFinish({ id }: { id: string }) {
   useEffect(() => {
     if (data) {
       setValue("name", data.data.name);
-      setValue("structureId", data.data.structureId);
+      // If structureId is an object, extract the _id
+      const structureId =
+        data.data.structureId && typeof data.data.structureId === "object"
+          ? (data.data.structureId as { _id: string })._id
+          : data.data.structureId || "";
+      setValue("structureId", structureId);
     }
   }, [data, setValue]);
 

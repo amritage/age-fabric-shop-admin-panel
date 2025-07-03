@@ -34,7 +34,12 @@ export default function EditSubSuitableFor({ id }: { id: string }) {
   useEffect(() => {
     if (data) {
       setValue("name", data.data.name);
-      setValue("suitableForId", data.data.suitableForId);
+      // If suitableForId is an object, extract the _id
+      const suitableForId =
+        data.data.suitableForId && typeof data.data.suitableForId === "object"
+          ? (data.data.suitableForId as { _id: string })._id
+          : data.data.suitableForId || "";
+      setValue("suitableForId", suitableForId);
     }
   }, [data, setValue]);
 
