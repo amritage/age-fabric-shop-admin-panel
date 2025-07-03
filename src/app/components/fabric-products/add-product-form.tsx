@@ -193,10 +193,22 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     processedProductDetail.productoffer = processedProductDetail.productoffer === "yes" ? "yes" : "no";
     processedProductDetail.popularproduct = processedProductDetail.popularproduct === "yes" ? "yes" : "no";
     processedProductDetail.topratedproduct = processedProductDetail.topratedproduct === "yes" ? "yes" : "no";
-    // Ensure sub-filters are string _id values
-    processedProductDetail.substructureId = processedProductDetail.substructureId ? String(processedProductDetail.substructureId) : "";
-    processedProductDetail.subfinishId = processedProductDetail.subfinishId ? String(processedProductDetail.subfinishId) : "";
-    processedProductDetail.subsuitableforId = processedProductDetail.subsuitableforId ? String(processedProductDetail.subsuitableforId) : "";
+    // Helper type guard
+    function isObjWithId(val: unknown): val is { _id: string } {
+      return val !== null && typeof val === "object" && "_id" in val && typeof (val as any)._id === "string";
+    }
+    processedProductDetail.substructureId =
+      isObjWithId(processedProductDetail.substructureId)
+        ? processedProductDetail.substructureId._id
+        : processedProductDetail.substructureId || "";
+    processedProductDetail.subfinishId =
+      isObjWithId(processedProductDetail.subfinishId)
+        ? processedProductDetail.subfinishId._id
+        : processedProductDetail.subfinishId || "";
+    processedProductDetail.subsuitableforId =
+      isObjWithId(processedProductDetail.subsuitableforId)
+        ? processedProductDetail.subsuitableforId._id
+        : processedProductDetail.subsuitableforId || "";
     setFormData(processedProductDetail);
     ["image", "image1", "image2", "video"].forEach((key) => {
       const url = (processedProductDetail as any)[key];
