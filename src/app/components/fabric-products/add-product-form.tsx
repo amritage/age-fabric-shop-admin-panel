@@ -218,39 +218,6 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     });
   }, [productDetail]);
 
-  // Ensure sub-filter select values are set after both productDetail and filters are loaded
-  useEffect(() => {
-    if (!isEdit) return;
-    if (!productDetail) return;
-    if (!filters.length) return; // Wait for filters to load
-
-    // Re-process sub-filter values to ensure they match loaded options
-    const processedProductDetail = { ...productDetail };
-    function isObjWithId(val: unknown): val is { _id: string } {
-      return val !== null && typeof val === "object" && "_id" in val && typeof (val as any)._id === "string";
-    }
-    if (processedProductDetail.substructureId !== undefined) {
-      processedProductDetail.substructureId =
-        isObjWithId(processedProductDetail.substructureId)
-          ? processedProductDetail.substructureId._id
-          : processedProductDetail.substructureId || "";
-    }
-    if (processedProductDetail.subfinishId !== undefined) {
-      processedProductDetail.subfinishId =
-        isObjWithId(processedProductDetail.subfinishId)
-          ? processedProductDetail.subfinishId._id
-          : processedProductDetail.subfinishId || "";
-    }
-    if (processedProductDetail.subsuitableforId !== undefined) {
-      processedProductDetail.subsuitableforId =
-        isObjWithId(processedProductDetail.subsuitableforId)
-          ? processedProductDetail.subsuitableforId._id
-          : processedProductDetail.subsuitableforId || "";
-    }
-
-    setFormData(processedProductDetail);
-  }, [isEdit, productDetail, filters]);
-
   // generic handlers
   const handleInputChange = (
     e: React.ChangeEvent<
