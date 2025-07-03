@@ -37,11 +37,11 @@ export default function SubFinishTable() {
               <tr key={sf._id}>
                 <td className="py-2">{sf.name}</td>
                 <td className="py-2">
-                  {sf.structureId == null
+                  {sf.finishId == null
                     ? "—"
-                    : typeof sf.structureId === "object"
-                      ? (sf.structureId as any).name
-                      : sf.structureId}
+                    : typeof sf.finishId === "object"
+                      ? (sf.finishId as any).name
+                      : sf.finishId}
                 </td>
                 <td className="py-2">
                   <SubFinishEditDelete
