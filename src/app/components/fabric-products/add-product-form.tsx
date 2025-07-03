@@ -103,7 +103,6 @@ export default function AddProductForm({ productId }: { productId?: string }) {
   // Add sub-filter options state
   const [substructureOptions, setSubstructureOptions] = useState<{ _id: string; name: string }[]>([]);
   const [subfinishOptions, setSubfinishOptions] = useState<{ _id: string; name: string }[]>([]);
-  const [subsuitableforOptions, setSubsuitableforOptions] = useState<{ _id: string; name: string }[]>([]);
 
   // Load saved form data from localStorage on component mount
   useEffect(() => {
@@ -182,11 +181,6 @@ export default function AddProductForm({ productId }: { productId?: string }) {
       .then(res => res.json())
       .then(data => setSubfinishOptions(data.data || []));
   }, []);
-  useEffect(() => {
-    fetch('/api/subsuitable/view')
-      .then(res => res.json())
-      .then(data => setSubsuitableforOptions(data.data || []));
-  }, []);
 
   // 2) hydrate formData ONLY after filters & productDetail are both ready
   useEffect(() => {
@@ -197,7 +191,6 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     }
     processed.substructureId = extractId(processed.substructureId);
     processed.subfinishId = extractId(processed.subfinishId);
-    processed.subsuitableforId = extractId(processed.subsuitableforId);
     setFormData(processed);
     ["image", "image1", "image2", "video"].forEach((key) => {
       const url = (processed as any)[key];
@@ -272,44 +265,6 @@ export default function AddProductForm({ productId }: { productId?: string }) {
         setFilterErrors(e => ({ ...e, ["subFinishId"]: `Failed to load subFinishId` }));
       });
   }, [formData.finishId]);
-
-  // Sub Suitable
-  useEffect(() => {
-    const parentId = formData.suitableforId;
-    if (!parentId) {
-      setFilters(fs =>
-        fs.filter(f => f.name !== "subSuitableId")
-      );
-      return;
-    }
-    // Extract token as before
-    const adminCookie = typeof window !== "undefined" ? Cookies.get("admin") : null;
-    let token = "";
-    if (adminCookie) {
-      try {
-        const adminObj = JSON.parse(adminCookie);
-        token = adminObj.accessToken;
-      } catch (e) {
-        token = "";
-      }
-    }
-    fetch(BASE_URL + "/api/subsuitable/view", { headers: { Authorization: `Bearer ${token}` } })
-      .then(r => r.json())
-      .then(j => {
-        const opts = (j.data || []).filter((item: any) => item.suitableforId === parentId);
-        setFilters(fs => {
-          // Remove any existing subSuitableId filter, then add the new one
-          const without = fs.filter(f => f.name !== "subSuitableId");
-          return [
-            ...without,
-            { name: "subSuitableId", label: "Sub Suitable For", options: opts }
-          ];
-        });
-      })
-      .catch(() => {
-        setFilterErrors(e => ({ ...e, ["subSuitableId"]: `Failed to load subSuitableId` }));
-      });
-  }, [formData.suitableforId]);
 
   // generic handlers
   const handleInputChange = (
