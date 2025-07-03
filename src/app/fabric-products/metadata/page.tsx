@@ -28,7 +28,8 @@ export default function MetadataPage() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const raw = Cookies.get("NEW_PRODUCT_BASE");
+    let raw = Cookies.get("NEW_PRODUCT_BASE");
+    if (Array.isArray(raw)) raw = raw[0];
     if (!raw) {
       router.replace("/fabric-products/add");
       return;
