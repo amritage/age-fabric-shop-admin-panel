@@ -107,6 +107,12 @@ export default function AddProductForm({ productId }: { productId?: string }) {
       if (savedFormData) {
         try {
           const parsedData = JSON.parse(savedFormData);
+          // Defensive: ensure productdescription is always a string
+          if (Array.isArray(parsedData.productdescription)) {
+            parsedData.productdescription = parsedData.productdescription.join(" ");
+          } else if (typeof parsedData.productdescription !== "string") {
+            parsedData.productdescription = String(parsedData.productdescription ?? "");
+          }
           setFormData(parsedData);
           setHasRestoredData(true);
         } catch (error) {
@@ -199,6 +205,9 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     >,
   ) => {
     const { name, value, type } = e.target;
+    if (name === "productdescription") {
+      console.log("Input value for productdescription:", value, typeof value, Array.isArray(value));
+    }
     let newValue = value;
     const newFormData = { ...formData, [name]: newValue };
     setFormData(newFormData);
@@ -336,6 +345,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     });
 
     // Ensure productdescription is always a string before saving/submitting
+    console.log("Before submit: productdescription =", cleanedFormData.productdescription, typeof cleanedFormData.productdescription, Array.isArray(cleanedFormData.productdescription));
     if (Array.isArray(cleanedFormData.productdescription)) {
       cleanedFormData.productdescription = cleanedFormData.productdescription.join(" ");
     } else if (typeof cleanedFormData.productdescription !== "string") {
