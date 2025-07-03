@@ -28,7 +28,6 @@ const sidebar_menu: Array<ISidebarMenus> = [
     subMenus: [
       { title: "Add Product", link: "/fabric-products/add" },
       { title: "View Product", link: "/fabric-products/view" },
-      { title: "Edit Product", link: "/fabric-products/edit" },
     ],
   },
   {

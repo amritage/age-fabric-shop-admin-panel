@@ -7,7 +7,7 @@ import {
   useGetProductByIdQuery,
   useGetProductsByGroupCodeQuery,
 } from "@/redux/newproduct/NewProductApi";
-import { filterConfig } from "@/utils/filterconfig";
+import { filterConfig, subFilterConfig } from "@/utils/filterconfig";
 import { useDispatch } from "react-redux";
 import { setProductMedia } from "@/redux/features/productImageSlice";
 import { IProduct } from "@/types/fabricproduct-type";
@@ -128,13 +128,11 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     }
   }, []);
 
-  // load all filter dropdowns from your backend
+  // 1) only fetch TOP-LEVELs on mount
   useEffect(() => {
     (async () => {
       setIsLoadingFilters(true);
-      setFilterErrors({});
-
-      // Updated token extraction logic
+      // Extract token as before
       const adminCookie = typeof window !== "undefined" ? Cookies.get("admin") : null;
       let token = "";
       if (adminCookie) {
@@ -145,57 +143,84 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           token = "";
         }
       }
-
       try {
         const results = await Promise.all(
-          filterConfig.map(async (f) => {
-            const url = `${BASE_URL}${f.api}`;
-            try {
-              const response = await fetch(url, {
-                headers: { Authorization: `Bearer ${token}` }
-              });
-              if (!response.ok) {
-                throw new Error(
-                  `HTTP ${response.status}: ${response.statusText}`,
-                );
-              }
-              const data = await response.json();
-              return data;
-            } catch (error) {
-              setFilterErrors((prev) => ({
-                ...prev,
-                [f.name]: `Failed to load ${f.label}`,
-              }));
-              return { data: [] };
-            }
-          }),
+          filterConfig.map(f =>
+            fetch(BASE_URL + f.api, { headers: { Authorization: `Bearer ${token}` } })
+              .then(r => r.json())
+              .then(j => j.data || [])
+          )
         );
-
         setFilters(
           filterConfig.map((f, i) => ({
-            name: f.name,
-            label: f.label,
-            options: results[i].data || [],
-          })),
+            name:    f.name,
+            label:   f.label,
+            options: results[i],
+          }))
         );
-      } catch (error) {
+      } catch {
+        // handle errors into filterErrors as before
       } finally {
         setIsLoadingFilters(false);
       }
     })();
   }, []);
 
-  // when productDetail arrives, seed form + previews
+  // 2) hydrate formData ONLY after filters & productDetail are both ready
   useEffect(() => {
-    if (!productDetail) return;
-    setFormData({ ...productDetail });
+    if (isLoadingFilters || !productDetail) return;
+    const pd: any = { ...productDetail };
+    // coerce all your IDs to strings so the <select value> matches
+    [...filterConfig, ...subFilterConfig].forEach(f => {
+      const v = pd[f.name];
+      pd[f.name] = v != null ? String(v) : "";
+    });
+    setFormData(pd);
+    // then set your image/video previews as before
     ["image", "image1", "image2", "video"].forEach((key) => {
-      const url = (productDetail as any)[key];
+      const url = (pd as any)[key];
       if (url) {
         setPreviews((p) => ({ ...p, [key]: url }));
       }
     });
-  }, [productDetail]);
+  }, [isLoadingFilters, productDetail]);
+
+  // 3) for each sub-filter, watch its parent and inject options
+  subFilterConfig.forEach(({ name, api, parentKey }) => {
+    useEffect(() => {
+      const parentId = formData[parentKey];
+      if (!parentId) {
+        // clear out if parent cleared
+        setFilters(fs =>
+          fs.map(f => f.name === name ? { ...f, options: [] } : f)
+        );
+        return;
+      }
+      // Extract token as before
+      const adminCookie = typeof window !== "undefined" ? Cookies.get("admin") : null;
+      let token = "";
+      if (adminCookie) {
+        try {
+          const adminObj = JSON.parse(adminCookie);
+          token = adminObj.accessToken;
+        } catch (e) {
+          token = "";
+        }
+      }
+      fetch(BASE_URL + api, { headers: { Authorization: `Bearer ${token}` } })
+        .then(r => r.json())
+        .then(j => {
+          // if the endpoint returns *all* subs, filter by parentKey:
+          const opts = (j.data || []).filter((item: any) => item[parentKey] === parentId);
+          setFilters(fs =>
+            fs.map(f => f.name === name ? { ...f, options: opts } : f)
+          );
+        })
+        .catch(() => {
+          setFilterErrors(e => ({ ...e, [name]: `Failed to load ${name}` }));
+        });
+    }, [formData[parentKey]]);
+  });
 
   // generic handlers
   const handleInputChange = (
