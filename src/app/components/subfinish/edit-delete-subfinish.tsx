@@ -18,11 +18,13 @@ export default function SubFinishEditDelete({ id, onDelete }: Props) {
   const handleDelete = async () => {
     const res = await Swal.fire({
       title: "Are you sure?",
-      text: `Delete this item?`,
+      text: `Delete this sub finish?`,
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Yes, delete!",
+      confirmButtonText: "Yes, delete it!",
       cancelButtonText: "Cancel",
+      confirmButtonColor: "#22c55e",
+      cancelButtonColor: "#ef4444",
     });
     if (res.isConfirmed) {
       try {

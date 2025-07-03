@@ -393,6 +393,11 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     );
   };
 
+  console.log("formData.substructureId", formData.substructureId);
+  console.log("formData.subfinishId", formData.subfinishId);
+  console.log("formData.subsuitableforId", formData.subsuitableforId);
+  console.log("filters", filters);
+
   return (
     <div className="w-full min-h-screen flex justify-center items-start py-8">
       <form
@@ -828,8 +833,8 @@ export default function AddProductForm({ productId }: { productId?: string }) {
         {/* Product Flags (Popular, Top Rated, Product Offer) */}
         <div className="flex flex-wrap gap-8 items-center mt-8">
           {/* Popular Product */}
-          <div className="flex items-center gap-2 text-xs font-medium text-gray-600">
-            <span>Popular Product:</span>
+          <div>
+            <span className="block font-bold text-gray-800 text-lg mb-2">Popular Product:</span>
             <label className="text-xl font-bold mr-2">
               <input
                 type="radio"
@@ -854,8 +859,8 @@ export default function AddProductForm({ productId }: { productId?: string }) {
             </label>
           </div>
           {/* Top Rated */}
-          <div className="flex items-center gap-2 text-xs font-medium text-gray-600">
-            <span>Top Rated:</span>
+          <div>
+            <span className="block font-bold text-gray-800 text-lg mb-2">Top Rated:</span>
             <label className="text-xl font-bold mr-2">
               <input
                 type="radio"
@@ -880,8 +885,8 @@ export default function AddProductForm({ productId }: { productId?: string }) {
             </label>
           </div>
           {/* Product Offer */}
-          <div className="flex items-center gap-2 text-xs font-medium text-gray-600">
-            <span>Product Offer:</span>
+          <div>
+            <span className="block font-bold text-gray-800 text-lg mb-2">Product Offer:</span>
             <label className="text-xl font-bold mr-2">
               <input
                 type="radio"

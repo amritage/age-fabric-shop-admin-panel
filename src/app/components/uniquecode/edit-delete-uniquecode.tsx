@@ -20,11 +20,13 @@ export default function UniqueCodeEditDelete({ id }: Props) {
   const handleDelete = async (id: string) => {
     const result = await Swal.fire({
       title: "Are you sure?",
-      text: `Delete this item?`,
+      text: `Delete this unique code?`,
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Yes, delete!",
+      confirmButtonText: "Yes, delete it!",
       cancelButtonText: "Cancel",
+      confirmButtonColor: "#22c55e",
+      cancelButtonColor: "#ef4444",
     });
     if (result.isConfirmed) {
       try {
@@ -56,7 +58,7 @@ export default function UniqueCodeEditDelete({ id }: Props) {
           onClick={() => handleDelete(id)}
           onMouseEnter={() => setShowDelete(true)}
           onMouseLeave={() => setShowDelete(false)}
-          className="w-8 h-8 flex items-center justify-center bg-white border border-gray text-slate-600 rounded-md hover:bg-danger hover:border-danger hover:text-white"
+          className="w-8 h-8 flex items-center justify-center bg-white border border-gray text-slate-600 rounded-md hover:bg-danger hover:text-white"
         >
           <Delete />
         </button>

@@ -20,11 +20,13 @@ export default function GroupCodeEditDelete({ id }: Props) {
   const handleDelete = async (id: string) => {
     const result = await Swal.fire({
       title: "Are you sure?",
-      text: `Delete this item?`,
+      text: `Delete this group code?`,
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Yes, delete!",
+      confirmButtonText: "Yes, delete it!",
       cancelButtonText: "Cancel",
+      confirmButtonColor: "#22c55e",
+      cancelButtonColor: "#ef4444",
     });
     if (result.isConfirmed) {
       try {

@@ -29,6 +29,8 @@ const MotifEditDelete: React.FC<Props> = ({ id }) => {
       showCancelButton: true,
       confirmButtonText: "Yes, delete it!",
       cancelButtonText: "Cancel",
+      confirmButtonColor: "#22c55e",
+      cancelButtonColor: "#ef4444",
     });
 
     if (result.isConfirmed) {

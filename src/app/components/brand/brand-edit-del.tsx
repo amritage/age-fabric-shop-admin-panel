@@ -24,12 +24,13 @@ const BrandEditDelete = ({ id }: IPropType) => {
   const handleDelete = async (id: string) => {
     Swal.fire({
       title: "Are you sure?",
-      text: `Delete this brand ?`,
+      text: `Delete this brand?`,
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#22c55e",
+      cancelButtonColor: "#ef4444",
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
@@ -59,7 +60,7 @@ const BrandEditDelete = ({ id }: IPropType) => {
           <button
             onMouseEnter={() => setShowEdit(true)}
             onMouseLeave={() => setShowEdit(false)}
-            className="w-10 h-10 leading-10 text-tiny bg-success text-white rounded-md hover:bg-green-600"
+            className="w-8 h-8 flex items-center justify-center bg-success text-white rounded-md hover:bg-green-600"
           >
             <Edit />
           </button>
@@ -71,7 +72,7 @@ const BrandEditDelete = ({ id }: IPropType) => {
           onClick={() => handleDelete(id)}
           onMouseEnter={() => setShowDelete(true)}
           onMouseLeave={() => setShowDelete(false)}
-          className="w-10 h-10 leading-[33px] text-tiny bg-white border border-gray text-slate-600 rounded-md hover:bg-danger hover:border-danger hover:text-white"
+          className="w-8 h-8 flex items-center justify-center bg-white border border-gray text-slate-600 rounded-md hover:bg-danger hover:text-white"
         >
           <Delete />
         </button>
