@@ -185,42 +185,104 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     });
   }, [isLoadingFilters, productDetail]);
 
-  // 3) for each sub-filter, watch its parent and inject options
-  subFilterConfig.forEach(({ name, api, parentKey }) => {
-    useEffect(() => {
-      const parentId = formData[parentKey];
-      if (!parentId) {
-        // clear out if parent cleared
+  // Sub Structure
+  useEffect(() => {
+    const parentId = formData.structureId;
+    if (!parentId) {
+      setFilters(fs =>
+        fs.map(f => f.name === "subStructureId" ? { ...f, options: [] } : f)
+      );
+      return;
+    }
+    // Extract token as before
+    const adminCookie = typeof window !== "undefined" ? Cookies.get("admin") : null;
+    let token = "";
+    if (adminCookie) {
+      try {
+        const adminObj = JSON.parse(adminCookie);
+        token = adminObj.accessToken;
+      } catch (e) {
+        token = "";
+      }
+    }
+    fetch(BASE_URL + "/api/substructure/view", { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.json())
+      .then(j => {
+        const opts = (j.data || []).filter((item: any) => item.structureId === parentId);
         setFilters(fs =>
-          fs.map(f => f.name === name ? { ...f, options: [] } : f)
+          fs.map(f => f.name === "subStructureId" ? { ...f, options: opts } : f)
         );
-        return;
+      })
+      .catch(() => {
+        setFilterErrors(e => ({ ...e, ["subStructureId"]: `Failed to load subStructureId` }));
+      });
+  }, [formData.structureId]);
+
+  // Sub Finish
+  useEffect(() => {
+    const parentId = formData.finishId;
+    if (!parentId) {
+      setFilters(fs =>
+        fs.map(f => f.name === "subFinishId" ? { ...f, options: [] } : f)
+      );
+      return;
+    }
+    // Extract token as before
+    const adminCookie = typeof window !== "undefined" ? Cookies.get("admin") : null;
+    let token = "";
+    if (adminCookie) {
+      try {
+        const adminObj = JSON.parse(adminCookie);
+        token = adminObj.accessToken;
+      } catch (e) {
+        token = "";
       }
-      // Extract token as before
-      const adminCookie = typeof window !== "undefined" ? Cookies.get("admin") : null;
-      let token = "";
-      if (adminCookie) {
-        try {
-          const adminObj = JSON.parse(adminCookie);
-          token = adminObj.accessToken;
-        } catch (e) {
-          token = "";
-        }
+    }
+    fetch(BASE_URL + "/api/subfinish/view", { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.json())
+      .then(j => {
+        const opts = (j.data || []).filter((item: any) => item.finishId === parentId);
+        setFilters(fs =>
+          fs.map(f => f.name === "subFinishId" ? { ...f, options: opts } : f)
+        );
+      })
+      .catch(() => {
+        setFilterErrors(e => ({ ...e, ["subFinishId"]: `Failed to load subFinishId` }));
+      });
+  }, [formData.finishId]);
+
+  // Sub Suitable
+  useEffect(() => {
+    const parentId = formData.suitableforId;
+    if (!parentId) {
+      setFilters(fs =>
+        fs.map(f => f.name === "subSuitableId" ? { ...f, options: [] } : f)
+      );
+      return;
+    }
+    // Extract token as before
+    const adminCookie = typeof window !== "undefined" ? Cookies.get("admin") : null;
+    let token = "";
+    if (adminCookie) {
+      try {
+        const adminObj = JSON.parse(adminCookie);
+        token = adminObj.accessToken;
+      } catch (e) {
+        token = "";
       }
-      fetch(BASE_URL + api, { headers: { Authorization: `Bearer ${token}` } })
-        .then(r => r.json())
-        .then(j => {
-          // if the endpoint returns *all* subs, filter by parentKey:
-          const opts = (j.data || []).filter((item: any) => item[parentKey] === parentId);
-          setFilters(fs =>
-            fs.map(f => f.name === name ? { ...f, options: opts } : f)
-          );
-        })
-        .catch(() => {
-          setFilterErrors(e => ({ ...e, [name]: `Failed to load ${name}` }));
-        });
-    }, [formData[parentKey]]);
-  });
+    }
+    fetch(BASE_URL + "/api/subsuitable/view", { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.json())
+      .then(j => {
+        const opts = (j.data || []).filter((item: any) => item.suitableforId === parentId);
+        setFilters(fs =>
+          fs.map(f => f.name === "subSuitableId" ? { ...f, options: opts } : f)
+        );
+      })
+      .catch(() => {
+        setFilterErrors(e => ({ ...e, ["subSuitableId"]: `Failed to load subSuitableId` }));
+      });
+  }, [formData.suitableforId]);
 
   // generic handlers
   const handleInputChange = (
