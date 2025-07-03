@@ -446,7 +446,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           <div>
             <label
               htmlFor="name"
-              className="block text-base font-semibold mb-2 text-gray-700"
+              className="block font-bold text-gray-800 text-lg mb-2"
             >
               Product Name <span className="text-red-500">*</span>
             </label>
@@ -456,7 +456,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
               required
               value={formData.name || ""}
               onChange={handleInputChange}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
             />
           </div>
 
@@ -464,7 +464,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           <div>
             <label
               htmlFor="sku"
-              className="block text-base font-semibold mb-2 text-gray-700"
+              className="block font-bold text-gray-800 text-lg mb-2"
             >
               SKU <span className="text-red-500">*</span>
             </label>
@@ -474,7 +474,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
               required
               value={formData.sku || ""}
               onChange={handleInputChange}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
             />
           </div>
 
@@ -482,7 +482,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           <div>
             <label
               htmlFor="slug"
-              className="block text-base font-semibold mb-2 text-gray-700"
+              className="block font-bold text-gray-800 text-lg mb-2"
             >
               Slug <span className="text-red-500">*</span>
             </label>
@@ -492,7 +492,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
               required
               value={formData.slug || ""}
               onChange={handleInputChange}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
             />
           </div>
 
@@ -500,7 +500,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           <div>
             <label
               htmlFor="productIdentifier"
-              className="block text-base font-semibold mb-2 text-gray-700"
+              className="block font-bold text-gray-800 text-lg mb-2"
             >
               Product Identifier <span className="text-red-500">*</span>
             </label>
@@ -510,7 +510,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
               required
               value={formData.productIdentifier || ""}
               onChange={handleInputChange}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
             />
           </div>
 
@@ -518,7 +518,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           <div>
             <label
               htmlFor="locationCode"
-              className="block text-base font-semibold mb-2 text-gray-700"
+              className="block font-bold text-gray-800 text-lg mb-2"
             >
               Location Code <span className="text-red-500">*</span>
             </label>
@@ -529,7 +529,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
               maxLength={3}
               value={formData.locationCode || ""}
               onChange={handleInputChange}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
             />
           </div>
 
@@ -537,7 +537,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           <div>
             <label
               htmlFor="css"
-              className="block text-base font-semibold mb-2 text-gray-700"
+              className="block font-bold text-gray-800 text-lg mb-2"
             >
               CSS <span className="text-red-500">*</span>
             </label>
@@ -547,7 +547,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
               required
               value={formData.css || ""}
               onChange={handleInputChange}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
             />
           </div>
 
@@ -555,7 +555,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           <div>
             <label
               htmlFor="quantity"
-              className="block text-base font-semibold mb-2 text-gray-700"
+              className="block font-bold text-gray-800 text-lg mb-2"
             >
               Quantity <span className="text-red-500">*</span>
             </label>
@@ -566,7 +566,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
               required
               value={formData.quantity || ""}
               onChange={handleInputChange}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
             />
           </div>
 
@@ -574,7 +574,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           <div>
             <label
               htmlFor="um"
-              className="block text-base font-semibold mb-2 text-gray-700"
+              className="block font-bold text-gray-800 text-lg mb-2"
             >
               Unit (UM) <span className="text-red-500">*</span>
             </label>
@@ -584,7 +584,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
               required
               value={formData.um || ""}
               onChange={handleInputChange}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
             >
               <option value="">Select Unit</option>
               <option value="meter">Meters</option>
@@ -597,7 +597,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           <div>
             <label
               htmlFor="purchasePrice"
-              className="block text-base font-semibold mb-2 text-gray-700"
+              className="block font-bold text-gray-800 text-lg mb-2"
             >
               Purchase Price <span className="text-red-500">*</span>
             </label>
@@ -608,7 +608,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
               required
               value={formData.purchasePrice || ""}
               onChange={handleInputChange}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
             />
           </div>
 
@@ -616,7 +616,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           <div>
             <label
               htmlFor="salesPrice"
-              className="block text-base font-semibold mb-2 text-gray-700"
+              className="block font-bold text-gray-800 text-lg mb-2"
             >
               Sales Price <span className="text-red-500">*</span>
             </label>
@@ -627,7 +627,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
               required
               value={formData.salesPrice || ""}
               onChange={handleInputChange}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
             />
           </div>
 
@@ -635,7 +635,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           <div>
             <label
               htmlFor="currency"
-              className="block text-base font-semibold mb-2 text-gray-700"
+              className="block font-bold text-gray-800 text-lg mb-2"
             >
               Currency <span className="text-red-500">*</span>
             </label>
@@ -645,7 +645,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
               required
               value={formData.currency || ""}
               onChange={handleInputChange}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
             >
               <option value="">Select Currency</option>
               <option>INR</option>
@@ -657,7 +657,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           <div>
             <label
               htmlFor="gsm"
-              className="block text-base font-semibold mb-2 text-gray-700"
+              className="block font-bold text-gray-800 text-lg mb-2"
             >
               GSM <span className="text-red-500">*</span>
             </label>
@@ -674,13 +674,13 @@ export default function AddProductForm({ productId }: { productId?: string }) {
                   setFormData((p) => ({ ...p, oz: (v * 0.0295).toFixed(2) }));
                 }
               }}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
             />
           </div>
           <div>
             <label
               htmlFor="oz"
-              className="block text-base font-semibold mb-2 text-gray-700"
+              className="block font-bold text-gray-800 text-lg mb-2"
             >
               OZ <span className="text-red-500">*</span>
             </label>
@@ -690,7 +690,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
               readOnly
               required
               value={formData.oz || ""}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
             />
           </div>
 
@@ -698,7 +698,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           <div>
             <label
               htmlFor="cm"
-              className="block text-base font-semibold mb-2 text-gray-700"
+              className="block font-bold text-gray-800 text-lg mb-2"
             >
               Width (CM) <span className="text-red-500">*</span>
             </label>
@@ -718,13 +718,13 @@ export default function AddProductForm({ productId }: { productId?: string }) {
                   }));
                 }
               }}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
             />
           </div>
           <div>
             <label
               htmlFor="inch"
-              className="block text-base font-semibold mb-2 text-gray-700"
+              className="block font-bold text-gray-800 text-lg mb-2"
             >
               Width (Inch) <span className="text-red-500">*</span>
             </label>
@@ -734,16 +734,16 @@ export default function AddProductForm({ productId }: { productId?: string }) {
               readOnly
               required
               value={formData.inch || ""}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
             />
           </div>
 
           {/* Dynamic filters */}
           {filters.map((f) => (
-            <div key={f.name}>
+            <div key={f.name} className="mb-6">
               <label
                 htmlFor={f.name}
-                className="block text-base font-semibold mb-2 text-gray-700"
+                className="block font-bold text-gray-800 text-lg mb-2"
               >
                 {f.label} <span className="text-red-500">*</span>
               </label>
@@ -753,7 +753,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
                 required
                 value={formData[f.name] || ""}
                 onChange={handleInputChange}
-                className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
               >
                 <option value="">Select {f.label}</option>
                 {f.options.map((o: any) => (
@@ -782,8 +782,8 @@ export default function AddProductForm({ productId }: { productId?: string }) {
         {/* Uploads & previews */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {["image", "image1", "image2", "video"].map((key) => (
-            <div key={key}>
-              <label className="block text-base font-semibold mb-2 text-gray-700">
+            <div key={key} className="mb-6">
+              <label className="block font-bold text-gray-800 text-lg mb-2">
                 {key === "video" ? "Upload Video" : `Upload ${key}`}
               </label>
               <input
@@ -791,7 +791,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
                 name={key}
                 accept={key === "video" ? "video/*" : "image/*"}
                 onChange={(e) => handleFileChange(e, key)}
-                className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6"
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
               />
               {previews[key] &&
                 (key === "video" ? (
@@ -826,7 +826,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
                 value="yes"
                 checked={formData.popularproduct === "yes"}
                 onChange={handleInputChange}
-                className="w-6 h-6 mr-4"
+                className="w-6 h-6 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-2"
               />
               Yes
             </label>
@@ -837,7 +837,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
                 value="no"
                 checked={formData.popularproduct === "no"}
                 onChange={handleInputChange}
-                className="w-6 h-6 mr-4"
+                className="w-6 h-6 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-2"
               />
               No
             </label>
@@ -852,7 +852,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
                 value="yes"
                 checked={formData.topratedproduct === "yes"}
                 onChange={handleInputChange}
-                className="w-6 h-6 mr-4"
+                className="w-6 h-6 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-2"
               />
               Yes
             </label>
@@ -863,7 +863,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
                 value="no"
                 checked={formData.topratedproduct === "no"}
                 onChange={handleInputChange}
-                className="w-6 h-6 mr-4"
+                className="w-6 h-6 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-2"
               />
               No
             </label>
@@ -878,7 +878,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
                 value="yes"
                 checked={formData.productoffer === "yes"}
                 onChange={handleInputChange}
-                className="w-6 h-6 mr-4"
+                className="w-6 h-6 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-2"
               />
               Yes
             </label>
@@ -889,7 +889,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
                 value="no"
                 checked={formData.productoffer === "no"}
                 onChange={handleInputChange}
-                className="w-6 h-6 mr-4"
+                className="w-6 h-6 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-2"
               />
               No
             </label>
@@ -925,14 +925,14 @@ export default function AddProductForm({ productId }: { productId?: string }) {
                 setFormData({});
                 localStorage.removeItem('ADD_PRODUCT_FORM_DATA');
               }}
-              className="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg text-base font-semibold shadow-md transition"
+              className="bg-gradient-to-r from-indigo-500 to-blue-500 hover:from-indigo-600 hover:to-blue-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-all text-lg"
             >
               Clear Form
             </button>
           )}
           <button
             type="submit"
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-lg text-lg font-semibold shadow-md transition"
+            className="bg-gradient-to-r from-indigo-500 to-blue-500 hover:from-indigo-600 hover:to-blue-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-all text-lg"
           >
             Next → Metadata
           </button>

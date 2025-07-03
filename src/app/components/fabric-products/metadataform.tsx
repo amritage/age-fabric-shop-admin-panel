@@ -195,452 +195,516 @@ export default function MetadataForm({
           Product Metadata
         </h2>
         {/* Product Name (required) */}
-        <div>
-          <label className="block text-base font-semibold text-gray-700 mb-2">
-            Product Name<span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            name="name"
-            required
-            value={meta.name}
-            onChange={handleChange}
-            className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 bg-white shadow-sm"
-          />
+        <div className="bg-gray-50 p-6 rounded-xl shadow mb-8 border border-gray-200">
+          <div>
+            <label className="block font-bold text-gray-800 text-lg mb-2">
+              Product Name<span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              name="name"
+              required
+              value={meta.name}
+              onChange={handleChange}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+            />
+          </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Charset */}
-          <div>
-            <label className="block text-base font-semibold text-gray-700 mb-2">
-              Charset
-            </label>
-            <select
-              name="charset"
-              value={meta.charset}
-              onChange={handleChange}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 bg-white shadow-sm"
-            >
-              <option>UTF-8</option>
-            </select>
+          <div className="bg-gray-50 p-6 rounded-xl shadow mb-8 border border-gray-200">
+            <div>
+              <label className="block font-bold text-gray-800 text-lg mb-2">
+                Charset
+              </label>
+              <select
+                name="charset"
+                value={meta.charset}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+              >
+                <option>UTF-8</option>
+              </select>
+            </div>
           </div>
           {/* X-UA-Compatible */}
-          <div>
-            <label className="block text-base font-semibold text-gray-700 mb-2">
-              X-UA-Compatible
-            </label>
-            <input
-              type="text"
-              name="xUaCompatible"
-              value={meta.xUaCompatible}
-              onChange={handleChange}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 bg-white shadow-sm"
-            />
+          <div className="bg-gray-50 p-6 rounded-xl shadow mb-8 border border-gray-200">
+            <div>
+              <label className="block font-bold text-gray-800 text-lg mb-2">
+                X-UA-Compatible
+              </label>
+              <input
+                type="text"
+                name="xUaCompatible"
+                value={meta.xUaCompatible}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+              />
+            </div>
           </div>
           {/* Viewport */}
-          <div>
-            <label className="block text-base font-semibold text-gray-700 mb-2">
-              Viewport
-            </label>
-            <input
-              type="text"
-              name="viewport"
-              value={meta.viewport}
-              onChange={handleChange}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 bg-white shadow-sm"
-            />
+          <div className="bg-gray-50 p-6 rounded-xl shadow mb-8 border border-gray-200">
+            <div>
+              <label className="block font-bold text-gray-800 text-lg mb-2">
+                Viewport
+              </label>
+              <input
+                type="text"
+                name="viewport"
+                value={meta.viewport}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+              />
+            </div>
           </div>
           {/* Title */}
-          <div>
-            <label className="block text-base font-semibold text-gray-700 mb-2">
-              Title
-            </label>
-            <input
-              type="text"
-              name="title"
-              maxLength={60}
-              value={meta.title}
-              onChange={handleChange}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 bg-white shadow-sm"
-            />
+          <div className="bg-gray-50 p-6 rounded-xl shadow mb-8 border border-gray-200">
+            <div>
+              <label className="block font-bold text-gray-800 text-lg mb-2">
+                Title
+              </label>
+              <input
+                type="text"
+                name="title"
+                maxLength={60}
+                value={meta.title}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+              />
+            </div>
           </div>
         </div>
         {/* Description & Keywords */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="mt-8">
-            <label
-              htmlFor="description"
-              className="block text-base font-semibold mb-2 text-gray-700"
-            >
-              Description <span className="text-red-500">*</span>
-            </label>
-            <textarea
-              id="description"
-              name="description"
-              required
-              value={meta.description || ""}
-              onChange={handleChange}
-              rows={4}
-              className="input w-full h-24 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
-            />
+          <div className="bg-gray-50 p-6 rounded-xl shadow mb-8 border border-gray-200">
+            <div className="mt-8">
+              <label
+                htmlFor="description"
+                className="block font-bold text-gray-800 text-lg mb-2"
+              >
+                Description <span className="text-red-500">*</span>
+              </label>
+              <textarea
+                id="description"
+                name="description"
+                required
+                value={meta.description || ""}
+                onChange={handleChange}
+                rows={4}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+              />
+            </div>
           </div>
-          <div>
-            <label className="block text-base font-semibold text-gray-700 mb-2">
-              Keywords
-            </label>
-            <input
-              type="text"
-              name="keywords"
-              value={meta.keywords}
-              onChange={handleChange}
-              placeholder="comma-separated"
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 bg-white shadow-sm"
-            />
+          <div className="bg-gray-50 p-6 rounded-xl shadow mb-8 border border-gray-200">
+            <div>
+              <label className="block font-bold text-gray-800 text-lg mb-2">
+                Keywords
+              </label>
+              <input
+                type="text"
+                name="keywords"
+                value={meta.keywords}
+                onChange={handleChange}
+                placeholder="comma-separated"
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+              />
+            </div>
           </div>
         </div>
         {/* Robots, Content Language, Google Site Verification, msValidate */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div>
-            <label className="block text-base font-semibold text-gray-700 mb-2">
-              Robots
-            </label>
-            <select
-              name="robots"
-              value={meta.robots}
-              onChange={handleChange}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 bg-white shadow-sm"
-            >
-              {[
-                "index, follow",
-                "noindex, nofollow",
-                "index, nofollow",
-                "noindex, follow",
-              ].map((r) => (
-                <option key={r}>{r}</option>
-              ))}
-            </select>
+          <div className="bg-gray-50 p-6 rounded-xl shadow mb-8 border border-gray-200">
+            <div>
+              <label className="block font-bold text-gray-800 text-lg mb-2">
+                Robots
+              </label>
+              <select
+                name="robots"
+                value={meta.robots}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+              >
+                {[
+                  "index, follow",
+                  "noindex, nofollow",
+                  "index, nofollow",
+                  "noindex, follow",
+                ].map((r) => (
+                  <option key={r}>{r}</option>
+                ))}
+              </select>
+            </div>
           </div>
-          <div>
-            <label className="block text-base font-semibold text-gray-700 mb-2">
-              Content Language
-            </label>
-            <input
-              type="text"
-              name="contentLanguage"
-              maxLength={10}
-              value={meta.contentLanguage}
-              onChange={handleChange}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 bg-white shadow-sm"
-            />
+          <div className="bg-gray-50 p-6 rounded-xl shadow mb-8 border border-gray-200">
+            <div>
+              <label className="block font-bold text-gray-800 text-lg mb-2">
+                Content Language
+              </label>
+              <input
+                type="text"
+                name="contentLanguage"
+                maxLength={10}
+                value={meta.contentLanguage}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+              />
+            </div>
           </div>
-          <div>
-            <label className="block text-base font-semibold text-gray-700 mb-2">
-              Google Site Verification
-            </label>
-            <input
-              type="text"
-              name="googleSiteVerification"
-              value={meta.googleSiteVerification}
-              onChange={handleChange}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 bg-white shadow-sm"
-            />
+          <div className="bg-gray-50 p-6 rounded-xl shadow mb-8 border border-gray-200">
+            <div>
+              <label className="block font-bold text-gray-800 text-lg mb-2">
+                Google Site Verification
+              </label>
+              <input
+                type="text"
+                name="googleSiteVerification"
+                value={meta.googleSiteVerification}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+              />
+            </div>
           </div>
-          <div>
-            <label className="block text-base font-semibold text-gray-700 mb-2">
-              msValidate
-            </label>
-            <input
-              type="text"
-              name="msValidate"
-              value={meta.msValidate}
-              onChange={handleChange}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 bg-white shadow-sm"
-            />
+          <div className="bg-gray-50 p-6 rounded-xl shadow mb-8 border border-gray-200">
+            <div>
+              <label className="block font-bold text-gray-800 text-lg mb-2">
+                msValidate
+              </label>
+              <input
+                type="text"
+                name="msValidate"
+                value={meta.msValidate}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+              />
+            </div>
           </div>
         </div>
         {/* Theme Color, Mobile Web App Capable, Apple Status Bar Style, Format Detection */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div>
-            <label className="block text-base font-semibold text-gray-700 mb-2">
-              Theme Color
-            </label>
-            <input
-              type="color"
-              name="themeColor"
-              value={meta.themeColor}
-              onChange={handleChange}
-              className="input h-8 w-20 border border-gray6 rounded-md bg-white"
-            />
+          <div className="bg-gray-50 p-6 rounded-xl shadow mb-8 border border-gray-200">
+            <div>
+              <label className="block font-bold text-gray-800 text-lg mb-2">
+                Theme Color
+              </label>
+              <input
+                type="color"
+                name="themeColor"
+                value={meta.themeColor}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+              />
+            </div>
           </div>
-          <div className="flex items-center space-x-2 mt-6">
-            <input
-              type="checkbox"
-              name="mobileWebAppCapable"
-              checked={meta.mobileWebAppCapable}
-              onChange={handleChange}
-              className="accent-indigo-500"
-            />
-            <label className="text-base font-semibold text-gray-700">
-              Mobile Web App Capable
-            </label>
+          <div className="bg-gray-50 p-6 rounded-xl shadow mb-8 border border-gray-200">
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                name="mobileWebAppCapable"
+                checked={meta.mobileWebAppCapable}
+                onChange={handleChange}
+                className="w-6 h-6 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-2"
+              />
+              <label className="font-bold text-gray-800 text-lg">
+                Mobile Web App Capable
+              </label>
+            </div>
           </div>
-          <div>
-            <label className="block text-base font-semibold text-gray-700 mb-2">
-              Apple Status Bar Style
-            </label>
-            <select
-              name="appleStatusBarStyle"
-              value={meta.appleStatusBarStyle}
-              onChange={handleChange}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 bg-white shadow-sm"
-            >
-              {["default", "black", "black-translucent"].map((opt) => (
-                <option key={opt}>{opt}</option>
-              ))}
-            </select>
+          <div className="bg-gray-50 p-6 rounded-xl shadow mb-8 border border-gray-200">
+            <div>
+              <label className="block font-bold text-gray-800 text-lg mb-2">
+                Apple Status Bar Style
+              </label>
+              <select
+                name="appleStatusBarStyle"
+                value={meta.appleStatusBarStyle}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+              >
+                {["default", "black", "black-translucent"].map((opt) => (
+                  <option key={opt}>{opt}</option>
+                ))}
+              </select>
+            </div>
           </div>
-          <div>
-            <label className="block text-base font-semibold text-gray-700 mb-2">
-              Format Detection
-            </label>
-            <select
-              name="formatDetection"
-              value={meta.formatDetection}
-              onChange={handleChange}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 bg-white shadow-sm"
-            >
-              {["telephone=no", "telephone=yes"].map((opt) => (
-                <option key={opt}>{opt}</option>
-              ))}
-            </select>
+          <div className="bg-gray-50 p-6 rounded-xl shadow mb-8 border border-gray-200">
+            <div>
+              <label className="block font-bold text-gray-800 text-lg mb-2">
+                Format Detection
+              </label>
+              <select
+                name="formatDetection"
+                value={meta.formatDetection}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+              >
+                {["telephone=no", "telephone=yes"].map((opt) => (
+                  <option key={opt}>{opt}</option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
         {/* OpenGraph & Twitter */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div>
-            <label className="block text-base font-semibold text-gray-700 mb-2">
-              OG Locale
-            </label>
-            <input
-              type="text"
-              name="ogLocale"
-              maxLength={10}
-              value={meta.ogLocale}
-              onChange={handleChange}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 bg-white shadow-sm"
-            />
+          <div className="bg-gray-50 p-6 rounded-xl shadow mb-8 border border-gray-200">
+            <div>
+              <label className="block font-bold text-gray-800 text-lg mb-2">
+                OG Locale
+              </label>
+              <input
+                type="text"
+                name="ogLocale"
+                maxLength={10}
+                value={meta.ogLocale}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+              />
+            </div>
           </div>
-          <div>
-            <label className="block text-base font-semibold text-gray-700 mb-2">
-              OG Title
-            </label>
-            <input
-              type="text"
-              name="ogTitle"
-              maxLength={60}
-              value={meta.ogTitle}
-              onChange={handleChange}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 bg-white shadow-sm"
-            />
+          <div className="bg-gray-50 p-6 rounded-xl shadow mb-8 border border-gray-200">
+            <div>
+              <label className="block font-bold text-gray-800 text-lg mb-2">
+                OG Title
+              </label>
+              <input
+                type="text"
+                name="ogTitle"
+                maxLength={60}
+                value={meta.ogTitle}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+              />
+            </div>
           </div>
-          <div>
-            <label className="block text-base font-semibold text-gray-700 mb-2">
-              OG Description
-            </label>
-            <input
-              type="text"
-              name="ogDescription"
-              maxLength={160}
-              value={meta.ogDescription}
-              onChange={handleChange}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 bg-white shadow-sm"
-            />
+          <div className="bg-gray-50 p-6 rounded-xl shadow mb-8 border border-gray-200">
+            <div>
+              <label className="block font-bold text-gray-800 text-lg mb-2">
+                OG Description
+              </label>
+              <input
+                type="text"
+                name="ogDescription"
+                maxLength={160}
+                value={meta.ogDescription}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+              />
+            </div>
           </div>
-          <div>
-            <label className="block text-base font-semibold text-gray-700 mb-2">
-              OG Type
-            </label>
-            <input
-              type="text"
-              name="ogType"
-              value={meta.ogType}
-              onChange={handleChange}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 bg-white shadow-sm"
-            />
+          <div className="bg-gray-50 p-6 rounded-xl shadow mb-8 border border-gray-200">
+            <div>
+              <label className="block font-bold text-gray-800 text-lg mb-2">
+                OG Type
+              </label>
+              <input
+                type="text"
+                name="ogType"
+                value={meta.ogType}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+              />
+            </div>
           </div>
-          <div>
-            <label className="block text-base font-semibold text-gray-700 mb-2">
-              OG URL
-            </label>
-            <input
-              type="text"
-              name="ogUrl"
-              maxLength={2048}
-              value={meta.ogUrl}
-              onChange={handleChange}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 bg-white shadow-sm"
-            />
+          <div className="bg-gray-50 p-6 rounded-xl shadow mb-8 border border-gray-200">
+            <div>
+              <label className="block font-bold text-gray-800 text-lg mb-2">
+                OG URL
+              </label>
+              <input
+                type="text"
+                name="ogUrl"
+                maxLength={2048}
+                value={meta.ogUrl}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+              />
+            </div>
           </div>
-          <div>
-            <label className="block text-base font-semibold text-gray-700 mb-2">
-              OG Site Name
-            </label>
-            <input
-              type="text"
-              name="ogSiteName"
-              maxLength={100}
-              value={meta.ogSiteName}
-              onChange={handleChange}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 bg-white shadow-sm"
-            />
+          <div className="bg-gray-50 p-6 rounded-xl shadow mb-8 border border-gray-200">
+            <div>
+              <label className="block font-bold text-gray-800 text-lg mb-2">
+                OG Site Name
+              </label>
+              <input
+                type="text"
+                name="ogSiteName"
+                maxLength={100}
+                value={meta.ogSiteName}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+              />
+            </div>
           </div>
-          <div>
-            <label className="block text-base font-semibold text-gray-700 mb-2">
-              Twitter Card
-            </label>
-            <select
-              name="twitterCard"
-              value={meta.twitterCard}
-              onChange={handleChange}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 bg-white shadow-sm"
-            >
-              {["summary", "summary_large_image", "app", "player"].map((opt) => (
-                <option key={opt}>{opt}</option>
-              ))}
-            </select>
+          <div className="bg-gray-50 p-6 rounded-xl shadow mb-8 border border-gray-200">
+            <div>
+              <label className="block font-bold text-gray-800 text-lg mb-2">
+                Twitter Card
+              </label>
+              <select
+                name="twitterCard"
+                value={meta.twitterCard}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+              >
+                {["summary", "summary_large_image", "app", "player"].map((opt) => (
+                  <option key={opt}>{opt}</option>
+                ))}
+              </select>
+            </div>
           </div>
-          <div>
-            <label className="block text-base font-semibold text-gray-700 mb-2">
-              Twitter Site
-            </label>
-            <input
-              type="text"
-              name="twitterSite"
-              maxLength={25}
-              value={meta.twitterSite}
-              onChange={handleChange}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 bg-white shadow-sm"
-            />
+          <div className="bg-gray-50 p-6 rounded-xl shadow mb-8 border border-gray-200">
+            <div>
+              <label className="block font-bold text-gray-800 text-lg mb-2">
+                Twitter Site
+              </label>
+              <input
+                type="text"
+                name="twitterSite"
+                maxLength={25}
+                value={meta.twitterSite}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+              />
+            </div>
           </div>
-          <div>
-            <label className="block text-base font-semibold text-gray-700 mb-2">
-              Twitter Title
-            </label>
-            <input
-              type="text"
-              name="twitterTitle"
-              maxLength={60}
-              value={meta.twitterTitle}
-              onChange={handleChange}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 bg-white shadow-sm"
-            />
+          <div className="bg-gray-50 p-6 rounded-xl shadow mb-8 border border-gray-200">
+            <div>
+              <label className="block font-bold text-gray-800 text-lg mb-2">
+                Twitter Title
+              </label>
+              <input
+                type="text"
+                name="twitterTitle"
+                maxLength={60}
+                value={meta.twitterTitle}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+              />
+            </div>
           </div>
-          <div>
-            <label className="block text-base font-semibold text-gray-700 mb-2">
-              Twitter Description
-            </label>
-            <input
-              type="text"
-              name="twitterDescription"
-              maxLength={160}
-              value={meta.twitterDescription}
-              onChange={handleChange}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 bg-white shadow-sm"
-            />
+          <div className="bg-gray-50 p-6 rounded-xl shadow mb-8 border border-gray-200">
+            <div>
+              <label className="block font-bold text-gray-800 text-lg mb-2">
+                Twitter Description
+              </label>
+              <input
+                type="text"
+                name="twitterDescription"
+                maxLength={160}
+                value={meta.twitterDescription}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+              />
+            </div>
           </div>
         </div>
         {/* hreflang, x_default, Author Name */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div>
-            <label className="block text-base font-semibold text-gray-700 mb-2">
-              hreflang
-            </label>
-            <input
-              type="text"
-              name="hreflang"
-              maxLength={10}
-              value={meta.hreflang}
-              onChange={handleChange}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 bg-white shadow-sm"
-            />
+          <div className="bg-gray-50 p-6 rounded-xl shadow mb-8 border border-gray-200">
+            <div>
+              <label className="block font-bold text-gray-800 text-lg mb-2">
+                hreflang
+              </label>
+              <input
+                type="text"
+                name="hreflang"
+                maxLength={10}
+                value={meta.hreflang}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+              />
+            </div>
           </div>
-          <div>
-            <label className="block text-base font-semibold text-gray-700 mb-2">
-              x_default
-            </label>
-            <input
-              type="text"
-              name="x_default"
-              maxLength={10}
-              value={meta.x_default}
-              onChange={handleChange}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 bg-white shadow-sm"
-            />
+          <div className="bg-gray-50 p-6 rounded-xl shadow mb-8 border border-gray-200">
+            <div>
+              <label className="block font-bold text-gray-800 text-lg mb-2">
+                x_default
+              </label>
+              <input
+                type="text"
+                name="x_default"
+                maxLength={10}
+                value={meta.x_default}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+              />
+            </div>
           </div>
-          <div>
-            <label className="block text-base font-semibold text-gray-700 mb-2">
-              Author Name
-            </label>
-            <input
-              type="text"
-              name="author_name"
-              maxLength={100}
-              value={meta.author_name}
-              onChange={handleChange}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 bg-white shadow-sm"
-            />
+          <div className="bg-gray-50 p-6 rounded-xl shadow mb-8 border border-gray-200">
+            <div>
+              <label className="block font-bold text-gray-800 text-lg mb-2">
+                Author Name
+              </label>
+              <input
+                type="text"
+                name="author_name"
+                maxLength={100}
+                value={meta.author_name}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+              />
+            </div>
           </div>
         </div>
         {/* Pricing & codes */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div>
-            <label className="block text-base font-semibold text-gray-700 mb-2">
-              Purchase Price
-            </label>
-            <input
-              type="number"
-              name="purchasePrice"
-              value={meta.purchasePrice}
-              onChange={handleChange}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 bg-white shadow-sm"
-            />
+          <div className="bg-gray-50 p-6 rounded-xl shadow mb-8 border border-gray-200">
+            <div>
+              <label className="block font-bold text-gray-800 text-lg mb-2">
+                Purchase Price
+              </label>
+              <input
+                type="number"
+                name="purchasePrice"
+                value={meta.purchasePrice}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+              />
+            </div>
           </div>
-          <div>
-            <label className="block text-base font-semibold text-gray-700 mb-2">
-              Sales Price
-            </label>
-            <input
-              type="number"
-              name="salesPrice"
-              value={meta.salesPrice}
-              onChange={handleChange}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 bg-white shadow-sm"
-            />
+          <div className="bg-gray-50 p-6 rounded-xl shadow mb-8 border border-gray-200">
+            <div>
+              <label className="block font-bold text-gray-800 text-lg mb-2">
+                Sales Price
+              </label>
+              <input
+                type="number"
+                name="salesPrice"
+                value={meta.salesPrice}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+              />
+            </div>
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div>
-            <label className="block text-base font-semibold text-gray-700 mb-2">
-              Location Code
-            </label>
-            <input
-              type="text"
-              name="locationCode"
-              value={meta.locationCode}
-              onChange={handleChange}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 bg-white shadow-sm"
-            />
+          <div className="bg-gray-50 p-6 rounded-xl shadow mb-8 border border-gray-200">
+            <div>
+              <label className="block font-bold text-gray-800 text-lg mb-2">
+                Location Code
+              </label>
+              <input
+                type="text"
+                name="locationCode"
+                value={meta.locationCode}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+              />
+            </div>
           </div>
-          <div>
-            <label className="block text-base font-semibold text-gray-700 mb-2">
-              Product Identifier
-            </label>
-            <input
-              type="text"
-              name="productIdentifier"
-              value={meta.productIdentifier}
-              onChange={handleChange}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 bg-white shadow-sm"
-            />
+          <div className="bg-gray-50 p-6 rounded-xl shadow mb-8 border border-gray-200">
+            <div>
+              <label className="block font-bold text-gray-800 text-lg mb-2">
+                Product Identifier
+              </label>
+              <input
+                type="text"
+                name="productIdentifier"
+                value={meta.productIdentifier}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+              />
+            </div>
           </div>
         </div>
         {/* Buttons */}
@@ -648,13 +712,13 @@ export default function MetadataForm({
           <button
             type="button"
             onClick={onBack}
-            className="px-8 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg text-lg font-semibold shadow-md transition"
+            className="bg-gradient-to-r from-indigo-500 to-blue-500 hover:from-indigo-600 hover:to-blue-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-all text-lg"
           >
             ← Previous
           </button>
           <button
             type="submit"
-            className="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-lg font-semibold shadow-md transition"
+            className="bg-gradient-to-r from-indigo-500 to-blue-500 hover:from-indigo-600 hover:to-blue-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-all text-lg"
           >
             Submit Product
           </button>
