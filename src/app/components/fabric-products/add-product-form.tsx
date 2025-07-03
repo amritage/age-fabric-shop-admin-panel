@@ -188,30 +188,9 @@ export default function AddProductForm({ productId }: { productId?: string }) {
   // when productDetail arrives, seed form + previews
   useEffect(() => {
     if (!productDetail) return;
-    const processedProductDetail = { ...productDetail };
-    // Ensure flags are always 'yes' or 'no'
-    processedProductDetail.productoffer = processedProductDetail.productoffer === "yes" ? "yes" : "no";
-    processedProductDetail.popularproduct = processedProductDetail.popularproduct === "yes" ? "yes" : "no";
-    processedProductDetail.topratedproduct = processedProductDetail.topratedproduct === "yes" ? "yes" : "no";
-    // Helper type guard
-    function isObjWithId(val: unknown): val is { _id: string } {
-      return val !== null && typeof val === "object" && "_id" in val && typeof (val as any)._id === "string";
-    }
-    processedProductDetail.substructureId =
-      isObjWithId(processedProductDetail.substructureId)
-        ? processedProductDetail.substructureId._id
-        : processedProductDetail.substructureId || "";
-    processedProductDetail.subfinishId =
-      isObjWithId(processedProductDetail.subfinishId)
-        ? processedProductDetail.subfinishId._id
-        : processedProductDetail.subfinishId || "";
-    processedProductDetail.subsuitableforId =
-      isObjWithId(processedProductDetail.subsuitableforId)
-        ? processedProductDetail.subsuitableforId._id
-        : processedProductDetail.subsuitableforId || "";
-    setFormData(processedProductDetail);
+    setFormData({ ...productDetail });
     ["image", "image1", "image2", "video"].forEach((key) => {
-      const url = (processedProductDetail as any)[key];
+      const url = (productDetail as any)[key];
       if (url) {
         setPreviews((p) => ({ ...p, [key]: url }));
       }
