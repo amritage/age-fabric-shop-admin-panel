@@ -191,6 +191,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     }
     processed.substructureId = extractId(processed.substructureId);
     processed.subfinishId = extractId(processed.subfinishId);
+    processed.subsuitableforId = extractId(processed.subsuitableforId);
     setFormData(processed);
     ["image", "image1", "image2", "video"].forEach((key) => {
       const url = (processed as any)[key];
@@ -265,6 +266,44 @@ export default function AddProductForm({ productId }: { productId?: string }) {
         setFilterErrors(e => ({ ...e, ["subFinishId"]: `Failed to load subFinishId` }));
       });
   }, [formData.finishId]);
+
+  // Sub Suitable
+  useEffect(() => {
+    const parentId = formData.suitableforId;
+    if (!parentId) {
+      setFilters(fs =>
+        fs.filter(f => f.name !== "subsuitableforId")
+      );
+      return;
+    }
+    // Extract token as before
+    const adminCookie = typeof window !== "undefined" ? Cookies.get("admin") : null;
+    let token = "";
+    if (adminCookie) {
+      try {
+        const adminObj = JSON.parse(adminCookie);
+        token = adminObj.accessToken;
+      } catch (e) {
+        token = "";
+      }
+    }
+    fetch(BASE_URL + "/api/subsuitable/view", { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.json())
+      .then(j => {
+        const opts = (j.data || []).filter((item: { suitableforId: string }) => item.suitableforId === parentId);
+        setFilters(fs => {
+          // Remove any existing subsuitableforId filter, then add the new one
+          const without = fs.filter(f => f.name !== "subsuitableforId");
+          return [
+            ...without,
+            { name: "subsuitableforId", label: "Sub Suitable For", options: opts }
+          ];
+        });
+      })
+      .catch(() => {
+        setFilterErrors(e => ({ ...e, ["subsuitableforId"]: `Failed to load subsuitableforId` }));
+      });
+  }, [formData.suitableforId]);
 
   // generic handlers
   const handleInputChange = (
