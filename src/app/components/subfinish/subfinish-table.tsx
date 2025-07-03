@@ -36,7 +36,13 @@ export default function SubFinishTable() {
             data.data.map((sf: ISubFinish) => (
               <tr key={sf._id}>
                 <td className="py-2">{sf.name}</td>
-                <td className="py-2">{sf.structureId}</td>
+                <td className="py-2">
+                  {sf.structureId == null
+                    ? "—"
+                    : typeof sf.structureId === "object"
+                      ? (sf.structureId as any).name
+                      : sf.structureId}
+                </td>
                 <td className="py-2">
                   <SubFinishEditDelete
                     id={sf._id}

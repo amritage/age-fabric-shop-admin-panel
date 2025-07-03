@@ -36,7 +36,13 @@ export default function SubSuitableForTable() {
             data.data.map((ssf: ISubSuitableFor) => (
               <tr key={ssf._id}>
                 <td className="py-2">{ssf.name}</td>
-                <td className="py-2">{ssf.suitableForId}</td>
+                <td className="py-2">
+                  {ssf.suitableForId == null
+                    ? "—"
+                    : typeof ssf.suitableForId === "object"
+                      ? (ssf.suitableForId as any).name
+                      : ssf.suitableForId}
+                </td>
                 <td className="py-2">
                   <SubSuitableForEditDelete
                     id={ssf._id}
