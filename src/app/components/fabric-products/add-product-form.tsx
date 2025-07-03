@@ -352,6 +352,15 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     //   cleanedFormData.productdescription = String(cleanedFormData.productdescription ?? "");
     // }
 
+    // Coerce productoffer, popularproduct, and topratedproduct to string before submit
+    ["productoffer", "popularproduct", "topratedproduct"].forEach(field => {
+      if (Array.isArray(cleanedFormData[field])) {
+        cleanedFormData[field] = cleanedFormData[field][0] || "";
+      } else if (typeof cleanedFormData[field] !== "string") {
+        cleanedFormData[field] = String(cleanedFormData[field] ?? "");
+      }
+    });
+
     Cookies.set("NEW_PRODUCT_BASE", JSON.stringify(cleanedFormData));
     // Clear localStorage when moving to metadata (form is complete)
     if (!isEdit) {
@@ -802,35 +811,25 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           <div className="flex items-center gap-2 text-xs font-medium text-gray-600">
             <span>Popular Product:</span>
             <label className="text-xl font-bold mr-2">
-                          <input
-              type="checkbox"
-              name="isPopularYes"
-              checked={formData.isPopular === true}
-              onChange={() => {
-                const newFormData = { ...formData, isPopular: true };
-                setFormData(newFormData);
-                if (!isEdit) {
-                  localStorage.setItem('ADD_PRODUCT_FORM_DATA', JSON.stringify(newFormData));
-                }
-              }}
-              className="w-6 h-6 mr-4"
-            />
+              <input
+                type="radio"
+                name="popularproduct"
+                value="yes"
+                checked={formData.popularproduct === "yes"}
+                onChange={handleInputChange}
+                className="w-6 h-6 mr-4"
+              />
               Yes
             </label>
             <label className="text-xl font-bold mr-2">
-                          <input
-              type="checkbox"
-              name="isPopularNo"
-              checked={formData.isPopular === false}
-              onChange={() => {
-                const newFormData = { ...formData, isPopular: false };
-                setFormData(newFormData);
-                if (!isEdit) {
-                  localStorage.setItem('ADD_PRODUCT_FORM_DATA', JSON.stringify(newFormData));
-                }
-              }}
-              className="w-6 h-6 mr-4"
-            />
+              <input
+                type="radio"
+                name="popularproduct"
+                value="no"
+                checked={formData.popularproduct === "no"}
+                onChange={handleInputChange}
+                className="w-6 h-6 mr-4"
+              />
               No
             </label>
           </div>
@@ -838,35 +837,25 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           <div className="flex items-center gap-2 text-xs font-medium text-gray-600">
             <span>Top Rated:</span>
             <label className="text-xl font-bold mr-2">
-                          <input
-              type="checkbox"
-              name="isTopRatedYes"
-              checked={formData.isTopRated === true}
-              onChange={() => {
-                const newFormData = { ...formData, isTopRated: true };
-                setFormData(newFormData);
-                if (!isEdit) {
-                  localStorage.setItem('ADD_PRODUCT_FORM_DATA', JSON.stringify(newFormData));
-                }
-              }}
-              className="w-6 h-6 mr-4"
-            />
+              <input
+                type="radio"
+                name="topratedproduct"
+                value="yes"
+                checked={formData.topratedproduct === "yes"}
+                onChange={handleInputChange}
+                className="w-6 h-6 mr-4"
+              />
               Yes
             </label>
             <label className="text-xl font-bold mr-2">
-                          <input
-              type="checkbox"
-              name="isTopRatedNo"
-              checked={formData.isTopRated === false}
-              onChange={() => {
-                const newFormData = { ...formData, isTopRated: false };
-                setFormData(newFormData);
-                if (!isEdit) {
-                  localStorage.setItem('ADD_PRODUCT_FORM_DATA', JSON.stringify(newFormData));
-                }
-              }}
-              className="w-6 h-6 mr-4"
-            />
+              <input
+                type="radio"
+                name="topratedproduct"
+                value="no"
+                checked={formData.topratedproduct === "no"}
+                onChange={handleInputChange}
+                className="w-6 h-6 mr-4"
+              />
               No
             </label>
           </div>
@@ -874,35 +863,25 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           <div className="flex items-center gap-2 text-xs font-medium text-gray-600">
             <span>Product Offer:</span>
             <label className="text-xl font-bold mr-2">
-                          <input
-              type="checkbox"
-              name="isProductOfferYes"
-              checked={formData.isProductOffer === true}
-              onChange={() => {
-                const newFormData = { ...formData, isProductOffer: true };
-                setFormData(newFormData);
-                if (!isEdit) {
-                  localStorage.setItem('ADD_PRODUCT_FORM_DATA', JSON.stringify(newFormData));
-                }
-              }}
-              className="w-6 h-6 mr-4"
-            />
+              <input
+                type="radio"
+                name="productoffer"
+                value="yes"
+                checked={formData.productoffer === "yes"}
+                onChange={handleInputChange}
+                className="w-6 h-6 mr-4"
+              />
               Yes
             </label>
             <label className="text-xl font-bold mr-2">
-                          <input
-              type="checkbox"
-              name="isProductOfferNo"
-              checked={formData.isProductOffer === false}
-              onChange={() => {
-                const newFormData = { ...formData, isProductOffer: false };
-                setFormData(newFormData);
-                if (!isEdit) {
-                  localStorage.setItem('ADD_PRODUCT_FORM_DATA', JSON.stringify(newFormData));
-                }
-              }}
-              className="w-6 h-6 mr-4"
-            />
+              <input
+                type="radio"
+                name="productoffer"
+                value="no"
+                checked={formData.productoffer === "no"}
+                onChange={handleInputChange}
+                className="w-6 h-6 mr-4"
+              />
               No
             </label>
           </div>
