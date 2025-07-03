@@ -100,6 +100,11 @@ export default function AddProductForm({ productId }: { productId?: string }) {
   const [hasRestoredData, setHasRestoredData] = useState(false);
   const dispatch = useDispatch();
 
+  // Add sub-filter options state
+  const [substructureOptions, setSubstructureOptions] = useState<{ _id: string; name: string }[]>([]);
+  const [subfinishOptions, setSubfinishOptions] = useState<{ _id: string; name: string }[]>([]);
+  const [subsuitableforOptions, setSubsuitableforOptions] = useState<{ _id: string; name: string }[]>([]);
+
   // Load saved form data from localStorage on component mount
   useEffect(() => {
     if (!isEdit) {
@@ -166,19 +171,40 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     })();
   }, []);
 
+  // Fetch sub-filter options on mount
+  useEffect(() => {
+    fetch('/api/substructure/view')
+      .then(res => res.json())
+      .then(data => setSubstructureOptions(data.data || []));
+  }, []);
+  useEffect(() => {
+    fetch('/api/subfinish/view')
+      .then(res => res.json())
+      .then(data => setSubfinishOptions(data.data || []));
+  }, []);
+  useEffect(() => {
+    fetch('/api/subsuitable/view')
+      .then(res => res.json())
+      .then(data => setSubsuitableforOptions(data.data || []));
+  }, []);
+
   // 2) hydrate formData ONLY after filters & productDetail are both ready
   useEffect(() => {
     if (isLoadingFilters || !productDetail) return;
-    const pd: any = { ...productDetail };
-    // coerce all your IDs to strings so the <select value> matches
-    [...filterConfig].forEach(f => {
-      const v = pd[f.name];
-      pd[f.name] = v != null ? String(v) : "";
-    });
-    setFormData(pd);
-    // then set your image/video previews as before
+    const processedProductDetail = { ...productDetail };
+
+    // Helper: extract _id if object, else use as is
+    function extractId(val: any) {
+      return val && typeof val === "object" && "_id" in val ? val._id : val || "";
+    }
+
+    processedProductDetail.substructureId = extractId(processedProductDetail.substructureId);
+    processedProductDetail.subfinishId = extractId(processedProductDetail.subfinishId);
+    processedProductDetail.subsuitableforId = extractId(processedProductDetail.subsuitableforId);
+
+    setFormData(processedProductDetail);
     ["image", "image1", "image2", "video"].forEach((key) => {
-      const url = (pd as any)[key];
+      const url = (processedProductDetail as any)[key];
       if (url) {
         setPreviews((p) => ({ ...p, [key]: url }));
       }
@@ -852,6 +878,64 @@ export default function AddProductForm({ productId }: { productId?: string }) {
               )}
             </div>
           ))}
+
+          {/* Sub Structure */}
+          <div className="mb-6">
+            <label className="block font-bold text-gray-800 text-lg mb-2">
+              Sub Structure
+            </label>
+            <select
+              name="substructureId"
+              value={formData.substructureId || ""}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm"
+            >
+              <option value="">Select Sub Structure</option>
+              {substructureOptions.map(option => (
+                <option key={option._id} value={option._id}>
+                  {option.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          {/* Sub Finish */}
+          <div className="mb-6">
+            <label className="block font-bold text-gray-800 text-lg mb-2">
+              Sub Finish
+            </label>
+            <select
+              name="subfinishId"
+              value={formData.subfinishId || ""}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm"
+            >
+              <option value="">Select Sub Finish</option>
+              {subfinishOptions.map(option => (
+                <option key={option._id} value={option._id}>
+                  {option.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          {/* Sub Suitable For */}
+          <div className="mb-6">
+            <label className="block font-bold text-gray-800 text-lg mb-2">
+              Sub Suitable For
+            </label>
+            <select
+              name="subsuitableforId"
+              value={formData.subsuitableforId || ""}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm"
+            >
+              <option value="">Select Sub Suitable For</option>
+              {subsuitableforOptions.map(option => (
+                <option key={option._id} value={option._id}>
+                  {option.name}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
         {/* Uploads & previews */}

@@ -13,7 +13,7 @@ import { ISubFinish } from "@/types/subfinish-type";
 
 type FormVals = {
   name: string;
-  structureId: string;
+  finishId: string;
 };
 
 export default function EditSubFinish({ id }: { id: string }) {
@@ -37,19 +37,19 @@ export default function EditSubFinish({ id }: { id: string }) {
   useEffect(() => {
     if (data) {
       setValue("name", data.data.name);
-      // If structureId is an object, extract the _id
-      const structureId =
-        data.data.structureId && typeof data.data.structureId === "object"
-          ? (data.data.structureId as { _id: string })._id
-          : data.data.structureId || "";
-      setValue("structureId", structureId);
+      // If finishId is an object, extract the _id
+      const finishId =
+        data.data.finishId && typeof data.data.finishId === "object"
+          ? (data.data.finishId as { _id: string })._id
+          : data.data.finishId || "";
+      setValue("finishId", finishId);
     }
   }, [data, setValue]);
 
   const onSubmit = async (vals: FormVals) => {
     await updateSF({
       id,
-      changes: { name: vals.name, structureId: vals.structureId },
+      changes: { name: vals.name, finishId: vals.finishId },
     }).unwrap();
     router.back();
   };
@@ -69,8 +69,8 @@ export default function EditSubFinish({ id }: { id: string }) {
           Parent Finish
         </label>
         <select
-          {...register("structureId", {
-            required: "Please select a parent structure",
+          {...register("finishId", {
+            required: "Please select a parent finish",
           })}
           className="input w-full h-[44px] rounded-md border border-gray6 px-6 text-base"
         >
@@ -81,9 +81,9 @@ export default function EditSubFinish({ id }: { id: string }) {
             </option>
           ))}
         </select>
-        {errors.structureId && (
+        {errors.finishId && (
           <p className="text-red-500 text-sm mt-1">
-            {errors.structureId.message}
+            {errors.finishId.message}
           </p>
         )}
       </div>
