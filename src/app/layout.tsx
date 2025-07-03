@@ -4,6 +4,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { Poppins } from "next/font/google";
 import { Providers } from "@/redux/provider";
 import "../../public/assets/css/custom.css";
+import "sweetalert2/dist/sweetalert2.min.css";
 
 export const metadata: Metadata = {
   title: "Shofy - eCommerce Admin Template",

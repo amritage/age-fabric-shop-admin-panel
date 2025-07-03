@@ -218,6 +218,39 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     });
   }, [productDetail]);
 
+  // Ensure sub-filter select values are set after both productDetail and filters are loaded
+  useEffect(() => {
+    if (!isEdit) return;
+    if (!productDetail) return;
+    if (!filters.length) return; // Wait for filters to load
+
+    // Re-process sub-filter values to ensure they match loaded options
+    const processedProductDetail = { ...productDetail };
+    function isObjWithId(val: unknown): val is { _id: string } {
+      return val !== null && typeof val === "object" && "_id" in val && typeof (val as any)._id === "string";
+    }
+    if (processedProductDetail.substructureId !== undefined) {
+      processedProductDetail.substructureId =
+        isObjWithId(processedProductDetail.substructureId)
+          ? processedProductDetail.substructureId._id
+          : processedProductDetail.substructureId || "";
+    }
+    if (processedProductDetail.subfinishId !== undefined) {
+      processedProductDetail.subfinishId =
+        isObjWithId(processedProductDetail.subfinishId)
+          ? processedProductDetail.subfinishId._id
+          : processedProductDetail.subfinishId || "";
+    }
+    if (processedProductDetail.subsuitableforId !== undefined) {
+      processedProductDetail.subsuitableforId =
+        isObjWithId(processedProductDetail.subsuitableforId)
+          ? processedProductDetail.subsuitableforId._id
+          : processedProductDetail.subsuitableforId || "";
+    }
+
+    setFormData(processedProductDetail);
+  }, [isEdit, productDetail, filters]);
+
   // generic handlers
   const handleInputChange = (
     e: React.ChangeEvent<
@@ -364,13 +397,6 @@ export default function AddProductForm({ productId }: { productId?: string }) {
       delete cleanedFormData[key];
     });
 
-    // Ensure productdescription is always a string before saving/submitting
-    // console.log("Before submit: productdescription =", cleanedFormData.productdescription, typeof cleanedFormData.productdescription, Array.isArray(cleanedFormData.productdescription));
-    // if (Array.isArray(cleanedFormData.productdescription)) {
-    //   cleanedFormData.productdescription = cleanedFormData.productdescription.join(" ");
-    // } else if (typeof cleanedFormData.productdescription !== "string") {
-    //   cleanedFormData.productdescription = String(cleanedFormData.productdescription ?? "");
-    // }
 
     // Coerce productoffer, popularproduct, and topratedproduct to string before submit
     ["productoffer", "popularproduct", "topratedproduct"].forEach(field => {
@@ -782,7 +808,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
               {/* Show related products for Group Code */}
               {f.name === "groupcodeId" && (
                 <>
-                  <div className="text-xs text-blue-600 mt-1 mb-2">
+                  <div className="text-md text-blue-600 mt-1 mb-2">
                     💡 Group Code helps organize related products. When selected,
                     you&apos;ll see other products with the same group code below.
                   </div>
