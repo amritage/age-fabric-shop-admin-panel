@@ -107,12 +107,6 @@ export default function AddProductForm({ productId }: { productId?: string }) {
       if (savedFormData) {
         try {
           const parsedData = JSON.parse(savedFormData);
-          // Defensive: ensure productdescription is always a string
-          if (Array.isArray(parsedData.productdescription)) {
-            parsedData.productdescription = parsedData.productdescription.join(" ");
-          } else if (typeof parsedData.productdescription !== "string") {
-            parsedData.productdescription = String(parsedData.productdescription ?? "");
-          }
           setFormData(parsedData);
           setHasRestoredData(true);
         } catch (error) {
@@ -188,16 +182,8 @@ export default function AddProductForm({ productId }: { productId?: string }) {
   // when productDetail arrives, seed form + previews
   useEffect(() => {
     if (!productDetail) return;
-
-    // Always treat productdescription as a string for the form
     const processedProductDetail = { ...productDetail };
-    if (typeof processedProductDetail.productdescription === "string") {
-      processedProductDetail.productdescription = processedProductDetail.productdescription;
-    } else {
-      processedProductDetail.productdescription = "";
-    }
     setFormData(processedProductDetail);
-
     ["image", "image1", "image2", "video"].forEach((key) => {
       const url = (processedProductDetail as any)[key];
       if (url) {
@@ -214,23 +200,10 @@ export default function AddProductForm({ productId }: { productId?: string }) {
   ) => {
     const { name, value, type } = e.target;
     let newValue = value;
-    // Always coerce productdescription to string
-    if (name === "productdescription") {
-      if (Array.isArray(value)) {
-        newValue = value.join(" ");
-      } else if (typeof value !== "string") {
-        newValue = String(value ?? "");
-      }
-    }
     const newFormData = { ...formData, [name]: newValue };
     setFormData(newFormData);
     // Save to localStorage (only for new products, not editing)
     if (!isEdit) {
-      if (Array.isArray(newFormData.productdescription)) {
-        newFormData.productdescription = newFormData.productdescription.join(" ");
-      } else if (typeof newFormData.productdescription !== "string") {
-        newFormData.productdescription = String(newFormData.productdescription ?? "");
-      }
       localStorage.setItem('ADD_PRODUCT_FORM_DATA', JSON.stringify(newFormData));
     }
   };
@@ -341,25 +314,12 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     // Do NOT store images in localStorage
     // Only store non-file fields if needed
     const cleanedFormData = { ...formData };
-    // Always coerce productdescription to string before saving/submitting
-    if (Array.isArray(cleanedFormData.productdescription)) {
-      cleanedFormData.productdescription = cleanedFormData.productdescription.join(" ");
-    } else if (typeof cleanedFormData.productdescription !== "string") {
-      cleanedFormData.productdescription = String(cleanedFormData.productdescription ?? '');
-    }
-    // Always coerce description to string before saving/submitting
-    if (Array.isArray(cleanedFormData.description)) {
-      cleanedFormData.description = cleanedFormData.description.join(" ");
-    } else if (typeof cleanedFormData.description !== "string") {
-      cleanedFormData.description = String(cleanedFormData.description ?? '');
-    }
     // Map isPopular to popularproduct for backend
     cleanedFormData.popularproduct = formData.isPopular === true ? "yes" : "no";
     delete cleanedFormData.isPopular;
     ["image", "image1", "image2", "video"].forEach((key) => {
       delete cleanedFormData[key];
     });
-    console.log("Submitting productdescription:", cleanedFormData.productdescription, typeof cleanedFormData.productdescription);
     Cookies.set("NEW_PRODUCT_BASE", JSON.stringify(cleanedFormData));
     // Clear localStorage when moving to metadata (form is complete)
     if (!isEdit) {
@@ -914,42 +874,6 @@ export default function AddProductForm({ productId }: { productId?: string }) {
               No
             </label>
           </div>
-        </div>
-
-        {/* Product Description at the bottom */}
-        <div className="mt-8">
-          <label
-            htmlFor="productdescription"
-            className="block text-base font-semibold mb-2 text-gray-700"
-          >
-            Product Description
-          </label>
-          <textarea
-            id="productdescription"
-            name="productdescription"
-            value={formData.productdescription || ""}
-            onChange={handleInputChange}
-            rows={4}
-            className="input w-full h-24 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
-          />
-        </div>
-        {/* Description field required for backend */}
-        <div className="mt-8">
-          <label
-            htmlFor="description"
-            className="block text-base font-semibold mb-2 text-gray-700"
-          >
-            Description <span className="text-red-500">*</span>
-          </label>
-          <textarea
-            id="description"
-            name="description"
-            required
-            value={formData.description || ""}
-            onChange={handleInputChange}
-            rows={2}
-            className="input w-full h-16 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
-          />
         </div>
 
         <div className="flex justify-between mt-8">
