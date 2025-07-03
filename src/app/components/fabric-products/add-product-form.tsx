@@ -191,20 +191,16 @@ export default function AddProductForm({ productId }: { productId?: string }) {
   // 2) hydrate formData ONLY after filters & productDetail are both ready
   useEffect(() => {
     if (isLoadingFilters || !productDetail) return;
-    const processedProductDetail = { ...productDetail };
-
-    // Helper: extract _id if object, else use as is
+    const processed = { ...productDetail };
     function extractId(val: any) {
       return val && typeof val === "object" && "_id" in val ? val._id : val || "";
     }
-
-    processedProductDetail.substructureId = extractId(processedProductDetail.substructureId);
-    processedProductDetail.subfinishId = extractId(processedProductDetail.subfinishId);
-    processedProductDetail.subsuitableforId = extractId(processedProductDetail.subsuitableforId);
-
-    setFormData(processedProductDetail);
+    processed.substructureId = extractId(processed.substructureId);
+    processed.subfinishId = extractId(processed.subfinishId);
+    processed.subsuitableforId = extractId(processed.subsuitableforId);
+    setFormData(processed);
     ["image", "image1", "image2", "video"].forEach((key) => {
-      const url = (processedProductDetail as any)[key];
+      const url = (processed as any)[key];
       if (url) {
         setPreviews((p) => ({ ...p, [key]: url }));
       }
@@ -477,12 +473,6 @@ export default function AddProductForm({ productId }: { productId?: string }) {
         : `/fabric-products/metadata`,
     );
   };
-
-  console.log("formData.substructureId", formData.substructureId);
-  console.log("formData.subfinishId", formData.subfinishId);
-  console.log("formData.subsuitableforId", formData.subsuitableforId);
-  console.log("filters", filters);
-
   return (
     <div className="w-full min-h-screen flex justify-center items-start py-8">
       <form
