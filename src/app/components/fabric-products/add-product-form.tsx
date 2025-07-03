@@ -189,6 +189,15 @@ export default function AddProductForm({ productId }: { productId?: string }) {
   useEffect(() => {
     if (!productDetail) return;
     const processedProductDetail = { ...productDetail };
+    // Ensure flags are always 'yes' or 'no'
+    processedProductDetail.productoffer = processedProductDetail.productoffer === "yes" ? "yes" : "no";
+    processedProductDetail.popularproduct = processedProductDetail.popularproduct === "yes" ? "yes" : "no";
+    processedProductDetail.topratedproduct = processedProductDetail.topratedproduct === "yes" ? "yes" : "no";
+    // If you have sub-filter fields, ensure they are string _id values
+    // Example:
+    // processedProductDetail.subfinishId = processedProductDetail.subfinishId ? String(processedProductDetail.subfinishId) : "";
+    // processedProductDetail.substructureId = processedProductDetail.substructureId ? String(processedProductDetail.substructureId) : "";
+    // processedProductDetail.subsuitableforId = processedProductDetail.subsuitableforId ? String(processedProductDetail.subsuitableforId) : "";
     setFormData(processedProductDetail);
     ["image", "image1", "image2", "video"].forEach((key) => {
       const url = (processedProductDetail as any)[key];

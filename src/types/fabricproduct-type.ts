@@ -64,6 +64,9 @@ export interface IProduct {
   productIdentifier: string;
   published_at?: string;
   updated_at?: string;
+  productoffer?: string;
+  popularproduct?: string;
+  topratedproduct?: string;
 }
 
 export interface IProductFormData {

@@ -55,7 +55,9 @@ export default function MetadataPage() {
         fullData[key] !== "" &&
         key !== "description_html" && // skip, handled below
         key !== "isProductOffer" &&
-        key !== "isTopRated"
+        key !== "isTopRated" &&
+        key !== "productoffer" && // exclude from loop
+        key !== "topratedproduct" // exclude from loop
       ) {
         fd.append(key, fullData[key]);
       }
