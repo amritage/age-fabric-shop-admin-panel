@@ -311,9 +311,23 @@ export default function AddProductForm({ productId }: { productId?: string }) {
       return;
     }
 
-    // Do NOT store images in localStorage
-    // Only store non-file fields if needed
+    // In goNext, ensure all backend string fields are coerced to string and number fields to number
     const cleanedFormData = { ...formData };
+    const stringFields = [
+      "name", "productdescription", "popularproduct", "productoffer", "topratedproduct",
+      "newCategoryId", "structureId", "contentId", "um", "currency", "finishId", "designId",
+      "colorId", "css", "motifsizeId", "suitableforId", "vendorId", "groupcodeId", "charset",
+      "title", "description", "keywords", "ogTitle", "ogDescription", "ogUrl", "sku", "slug",
+      "locationCode", "productIdentifier"
+    ];
+    stringFields.forEach(field => {
+      cleanedFormData[field] = String(cleanedFormData[field] ?? "");
+    });
+    const numberFields = ["gsm", "oz", "cm", "inch", "quantity", "purchasePrice", "salesPrice"];
+    numberFields.forEach(field => {
+      cleanedFormData[field] = Number(cleanedFormData[field]);
+    });
+
     // Map isPopular to popularproduct for backend
     cleanedFormData.popularproduct = formData.isPopular === true ? "yes" : "no";
     delete cleanedFormData.isPopular;
@@ -874,6 +888,25 @@ export default function AddProductForm({ productId }: { productId?: string }) {
               No
             </label>
           </div>
+        </div>
+
+        {/* Product Description field */}
+        <div className="mt-8">
+          <label
+            htmlFor="productdescription"
+            className="block text-base font-semibold mb-2 text-gray-700"
+          >
+            Product Description <span className="text-red-500">*</span>
+          </label>
+          <textarea
+            id="productdescription"
+            name="productdescription"
+            required
+            value={formData.productdescription || ""}
+            onChange={handleInputChange}
+            rows={4}
+            className="input w-full h-24 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
+          />
         </div>
 
         <div className="flex justify-between mt-8">

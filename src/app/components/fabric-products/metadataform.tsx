@@ -22,7 +22,7 @@ interface MetadataFormProps {
     xUaCompatible?: string;
     viewport?: string;
     title?: string;
-    description_html?: string;
+    description?: string;
     keywords?: string;
     robots?: string;
     contentLanguage?: string;
@@ -69,7 +69,7 @@ export default function MetadataForm({
     xUaCompatible: initial.xUaCompatible || "IE=edge",
     viewport: initial.viewport || "width=device-width, initial-scale=1.0",
     title: initial.title || initial.name || "",
-    description_html: initial.description_html || "",
+    description: initial.description || "",
     keywords: initial.keywords || "",
     robots: initial.robots || "index, follow",
     contentLanguage: initial.contentLanguage || "en",
@@ -145,7 +145,7 @@ export default function MetadataForm({
       "locationCode",
       "productIdentifier",
       "title",
-      "description_html",
+      "description",
       "keywords",
       "ogTitle",
       "ogDescription",
@@ -158,23 +158,31 @@ export default function MetadataForm({
       return;
     }
 
-    // --- Ensure description_html is always a string ---
-    let safeMeta = { ...meta };
-    if (Array.isArray(safeMeta.description_html)) {
-      safeMeta.description_html = safeMeta.description_html.join(" ");
-    } else if (typeof safeMeta.description_html !== "string") {
-      safeMeta.description_html = String(safeMeta.description_html ?? "");
+    // --- Ensure description is always a string ---
+    if (Array.isArray(meta.description)) {
+      meta.description = meta.description.join(" ");
+    } else if (typeof meta.description !== "string") {
+      meta.description = String(meta.description ?? "");
     }
 
-    // --- Ensure productdescription is always a string ---
-    if (Array.isArray(safeMeta.productdescription)) {
-      safeMeta.productdescription = safeMeta.productdescription.join(" ");
-    } else if (typeof safeMeta.productdescription !== "string") {
-      safeMeta.productdescription = String(safeMeta.productdescription ?? "");
-    }
+    // In handleSubmit, ensure all backend string fields are coerced to string and number fields to number
+    const stringFields = [
+      "name", "productdescription", "popularproduct", "productoffer", "topratedproduct",
+      "newCategoryId", "structureId", "contentId", "um", "currency", "finishId", "designId",
+      "colorId", "css", "motifsizeId", "suitableforId", "vendorId", "groupcodeId", "charset",
+      "title", "description", "keywords", "ogTitle", "ogDescription", "ogUrl", "sku", "slug",
+      "locationCode", "productIdentifier"
+    ];
+    stringFields.forEach(field => {
+      meta[field] = String(meta[field] ?? "");
+    });
+    const numberFields = ["gsm", "oz", "cm", "inch", "quantity", "purchasePrice", "salesPrice"];
+    numberFields.forEach(field => {
+      meta[field] = Number(meta[field]);
+    });
 
     // Call the parent onSubmit function
-    await onSubmit(safeMeta);
+    await onSubmit(meta);
   };
 
   return (
@@ -256,19 +264,23 @@ export default function MetadataForm({
             />
           </div>
         </div>
-        {/* Description HTML & Keywords */}
+        {/* Description & Keywords */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div>
-            <label className="block text-base font-semibold text-gray-700 mb-2">
-              Description HTML
+          <div className="mt-8">
+            <label
+              htmlFor="description"
+              className="block text-base font-semibold mb-2 text-gray-700"
+            >
+              Description <span className="text-red-500">*</span>
             </label>
             <textarea
-              name="description_html"
-              maxLength={160}
-              rows={2}
-              value={meta.description_html}
+              id="description"
+              name="description"
+              required
+              value={meta.description || ""}
               onChange={handleChange}
-              className="input w-full h-8 px-2 py-1 text-sm rounded-md border border-gray6 bg-white shadow-sm"
+              rows={4}
+              className="input w-full h-24 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
             />
           </div>
           <div>
