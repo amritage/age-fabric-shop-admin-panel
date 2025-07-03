@@ -334,6 +334,14 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     ["image", "image1", "image2", "video"].forEach((key) => {
       delete cleanedFormData[key];
     });
+
+    // Ensure productdescription is always a string before saving/submitting
+    if (Array.isArray(cleanedFormData.productdescription)) {
+      cleanedFormData.productdescription = cleanedFormData.productdescription.join(" ");
+    } else if (typeof cleanedFormData.productdescription !== "string") {
+      cleanedFormData.productdescription = String(cleanedFormData.productdescription ?? "");
+    }
+
     Cookies.set("NEW_PRODUCT_BASE", JSON.stringify(cleanedFormData));
     // Clear localStorage when moving to metadata (form is complete)
     if (!isEdit) {
