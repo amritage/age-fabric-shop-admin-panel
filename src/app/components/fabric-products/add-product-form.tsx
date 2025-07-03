@@ -266,6 +266,39 @@ export default function AddProductForm({ productId }: { productId?: string }) {
       });
   }, [formData.finishId]);
 
+  // Sub Suitable For
+  useEffect(() => {
+    const parentId = formData.suitableforId;
+    if (!parentId) {
+      setFilters(fs =>
+        fs.map(f => f.name === "subsuitableforId" ? { ...f, options: [] } : f)
+      );
+      return;
+    }
+    // Extract token as before
+    const adminCookie = typeof window !== "undefined" ? Cookies.get("admin") : null;
+    let token = "";
+    if (adminCookie) {
+      try {
+        const adminObj = JSON.parse(adminCookie);
+        token = adminObj.accessToken;
+      } catch (e) {
+        token = "";
+      }
+    }
+    fetch(BASE_URL + "/api/subsuitable/view", { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.json())
+      .then(j => {
+        const opts = (j.data || []).filter((item: any) => item.suitableforId === parentId);
+        setFilters(fs =>
+          fs.map(f => f.name === "subsuitableforId" ? { ...f, options: opts } : f)
+        );
+      })
+      .catch(() => {
+        setFilterErrors(e => ({ ...e, ["subsuitableforId"]: `Failed to load subsuitableforId` }));
+      });
+  }, [formData.suitableforId]);
+
   // generic handlers
   const handleInputChange = (
     e: React.ChangeEvent<
