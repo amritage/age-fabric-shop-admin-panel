@@ -18,13 +18,13 @@ export const filterConfig = [
   { name: "vendorId", label: "Vendor", api: `/api/vendor/view` },
   { name: "groupcodeId", label: "Group Code", api: `/api/groupcode/view` },
   {
-    name: "subStructureId",
+    name: "substructureId",
     label: "Sub Structure",
     api: `/api/substructure/view`,
   },
-  { name: "subFinishId", label: "Sub Finish", api: `/api/subfinish/view` },
+  { name: "subfinishId", label: "Sub Finish", api: `/api/subfinish/view` },
   {
-    name: "subSuitableId",
+    name: "subsuitableId",
     label: "Sub Suitable For",
     api: `/api/subsuitable/view`,
   },
