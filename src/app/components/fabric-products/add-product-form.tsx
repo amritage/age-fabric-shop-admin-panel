@@ -205,9 +205,9 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     >,
   ) => {
     const { name, value, type } = e.target;
-    if (name === "productdescription") {
-      console.log("Input value for productdescription:", value, typeof value, Array.isArray(value));
-    }
+    // if (name === "productdescription") {
+    //   console.log("Input value for productdescription:", value, typeof value, Array.isArray(value));
+    // }
     let newValue = value;
     const newFormData = { ...formData, [name]: newValue };
     setFormData(newFormData);
@@ -345,12 +345,12 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     });
 
     // Ensure productdescription is always a string before saving/submitting
-    console.log("Before submit: productdescription =", cleanedFormData.productdescription, typeof cleanedFormData.productdescription, Array.isArray(cleanedFormData.productdescription));
-    if (Array.isArray(cleanedFormData.productdescription)) {
-      cleanedFormData.productdescription = cleanedFormData.productdescription.join(" ");
-    } else if (typeof cleanedFormData.productdescription !== "string") {
-      cleanedFormData.productdescription = String(cleanedFormData.productdescription ?? "");
-    }
+    // console.log("Before submit: productdescription =", cleanedFormData.productdescription, typeof cleanedFormData.productdescription, Array.isArray(cleanedFormData.productdescription));
+    // if (Array.isArray(cleanedFormData.productdescription)) {
+    //   cleanedFormData.productdescription = cleanedFormData.productdescription.join(" ");
+    // } else if (typeof cleanedFormData.productdescription !== "string") {
+    //   cleanedFormData.productdescription = String(cleanedFormData.productdescription ?? "");
+    // }
 
     Cookies.set("NEW_PRODUCT_BASE", JSON.stringify(cleanedFormData));
     // Clear localStorage when moving to metadata (form is complete)
@@ -909,6 +909,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
         </div>
 
         {/* Product Description field */}
+        {/*
         <div className="mt-8">
           <label
             htmlFor="productdescription"
@@ -926,6 +927,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
             className="input w-full h-24 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
           />
         </div>
+        */}
 
         <div className="flex justify-between mt-8">
           {!isEdit && (
