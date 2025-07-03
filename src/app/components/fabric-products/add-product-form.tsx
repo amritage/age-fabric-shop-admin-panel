@@ -278,7 +278,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     const parentId = formData.suitableforId;
     if (!parentId) {
       setFilters(fs =>
-        fs.map(f => f.name === "subSuitableId" ? { ...f, options: [] } : f)
+        fs.filter(f => f.name !== "subSuitableId")
       );
       return;
     }
@@ -297,9 +297,14 @@ export default function AddProductForm({ productId }: { productId?: string }) {
       .then(r => r.json())
       .then(j => {
         const opts = (j.data || []).filter((item: any) => item.suitableforId === parentId);
-        setFilters(fs =>
-          fs.map(f => f.name === "subSuitableId" ? { ...f, options: opts } : f)
-        );
+        setFilters(fs => {
+          // Remove any existing subSuitableId filter, then add the new one
+          const without = fs.filter(f => f.name !== "subSuitableId");
+          return [
+            ...without,
+            { name: "subSuitableId", label: "Sub Suitable For", options: opts }
+          ];
+        });
       })
       .catch(() => {
         setFilterErrors(e => ({ ...e, ["subSuitableId"]: `Failed to load subSuitableId` }));
@@ -868,64 +873,6 @@ export default function AddProductForm({ productId }: { productId?: string }) {
               )}
             </div>
           ))}
-
-          {/* Sub Structure */}
-          <div className="mb-6">
-            <label className="block font-bold text-gray-800 text-lg mb-2">
-              Sub Structure
-            </label>
-            <select
-              name="substructureId"
-              value={formData.substructureId || ""}
-              onChange={handleInputChange}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm"
-            >
-              <option value="">Select Sub Structure</option>
-              {substructureOptions.map(option => (
-                <option key={option._id} value={option._id}>
-                  {option.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          {/* Sub Finish */}
-          <div className="mb-6">
-            <label className="block font-bold text-gray-800 text-lg mb-2">
-              Sub Finish
-            </label>
-            <select
-              name="subfinishId"
-              value={formData.subfinishId || ""}
-              onChange={handleInputChange}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm"
-            >
-              <option value="">Select Sub Finish</option>
-              {subfinishOptions.map(option => (
-                <option key={option._id} value={option._id}>
-                  {option.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          {/* Sub Suitable For */}
-          <div className="mb-6">
-            <label className="block font-bold text-gray-800 text-lg mb-2">
-              Sub Suitable For
-            </label>
-            <select
-              name="subsuitableforId"
-              value={formData.subsuitableforId || ""}
-              onChange={handleInputChange}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm"
-            >
-              <option value="">Select Sub Suitable For</option>
-              {subsuitableforOptions.map(option => (
-                <option key={option._id} value={option._id}>
-                  {option.name}
-                </option>
-              ))}
-            </select>
-          </div>
         </div>
 
         {/* Uploads & previews */}
@@ -1044,27 +991,6 @@ export default function AddProductForm({ productId }: { productId?: string }) {
             </label>
           </div>
         </div>
-
-        {/* Product Description field */}
-        {/*
-        <div className="mt-8">
-          <label
-            htmlFor="productdescription"
-            className="block text-base font-semibold mb-2 text-gray-700"
-          >
-            Product Description <span className="text-red-500">*</span>
-          </label>
-          <textarea
-            id="productdescription"
-            name="productdescription"
-            required
-            value={formData.productdescription || ""}
-            onChange={handleInputChange}
-            rows={4}
-            className="input w-full h-24 px-2 py-1 text-sm rounded-md border border-gray6 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
-          />
-        </div>
-        */}
 
         <div className="flex justify-between mt-8">
           {!isEdit && (
