@@ -186,7 +186,7 @@ export default function MetadataForm({
   };
 
   return (
-    <div className="w-full min-h-screen bg-sky-100 flex justify-center items-start py-8">
+    <div className="w-full min-h-screen flex justify-center items-start py-8">
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-7xl bg-white rounded-xl shadow-md p-8 space-y-8 border border-gray-200"

@@ -67,6 +67,9 @@ export interface IProduct {
   productoffer?: string;
   popularproduct?: string;
   topratedproduct?: string;
+  substructureId?: string;
+  subfinishId?: string;
+  subsuitableforId?: string;
 }
 
 export interface IProductFormData {

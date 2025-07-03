@@ -193,11 +193,10 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     processedProductDetail.productoffer = processedProductDetail.productoffer === "yes" ? "yes" : "no";
     processedProductDetail.popularproduct = processedProductDetail.popularproduct === "yes" ? "yes" : "no";
     processedProductDetail.topratedproduct = processedProductDetail.topratedproduct === "yes" ? "yes" : "no";
-    // If you have sub-filter fields, ensure they are string _id values
-    // Example:
-    // processedProductDetail.subfinishId = processedProductDetail.subfinishId ? String(processedProductDetail.subfinishId) : "";
-    // processedProductDetail.substructureId = processedProductDetail.substructureId ? String(processedProductDetail.substructureId) : "";
-    // processedProductDetail.subsuitableforId = processedProductDetail.subsuitableforId ? String(processedProductDetail.subsuitableforId) : "";
+    // Ensure sub-filters are string _id values
+    processedProductDetail.substructureId = processedProductDetail.substructureId ? String(processedProductDetail.substructureId) : "";
+    processedProductDetail.subfinishId = processedProductDetail.subfinishId ? String(processedProductDetail.subfinishId) : "";
+    processedProductDetail.subsuitableforId = processedProductDetail.subsuitableforId ? String(processedProductDetail.subsuitableforId) : "";
     setFormData(processedProductDetail);
     ["image", "image1", "image2", "video"].forEach((key) => {
       const url = (processedProductDetail as any)[key];
@@ -383,7 +382,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
   };
 
   return (
-    <div className="w-full min-h-screen bg-sky-100 flex justify-center items-start py-8">
+    <div className="w-full min-h-screen flex justify-center items-start py-8">
       <form
         onSubmit={goNext}
         className="w-full max-w-7xl bg-white rounded-xl shadow-md p-8 space-y-8"
