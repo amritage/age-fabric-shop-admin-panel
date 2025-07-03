@@ -266,7 +266,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
       });
   }, [formData.finishId]);
 
-  // Add this useEffect after the subfinish useEffect
+  // Sub Suitable For
   useEffect(() => {
     const parentId = formData.suitableforId;
     if (!parentId) {
