@@ -191,7 +191,6 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     }
     processed.substructureId = extractId(processed.substructureId);
     processed.subfinishId = extractId(processed.subfinishId);
-    processed.subsuitableforId = extractId(processed.subsuitableforId);
     setFormData(processed);
     ["image", "image1", "image2", "video"].forEach((key) => {
       const url = (processed as any)[key];
@@ -267,12 +266,12 @@ export default function AddProductForm({ productId }: { productId?: string }) {
       });
   }, [formData.finishId]);
 
-  // Sub Suitable
+  // Add this useEffect after the subfinish useEffect
   useEffect(() => {
     const parentId = formData.suitableforId;
     if (!parentId) {
       setFilters(fs =>
-        fs.filter(f => f.name !== "subsuitableforId")
+        fs.map(f => f.name === "subsuitableforId" ? { ...f, options: [] } : f)
       );
       return;
     }
@@ -290,15 +289,10 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     fetch(BASE_URL + "/api/subsuitable/view", { headers: { Authorization: `Bearer ${token}` } })
       .then(r => r.json())
       .then(j => {
-        const opts = (j.data || []).filter((item: { suitableforId: string }) => item.suitableforId === parentId);
-        setFilters(fs => {
-          // Remove any existing subsuitableforId filter, then add the new one
-          const without = fs.filter(f => f.name !== "subsuitableforId");
-          return [
-            ...without,
-            { name: "subsuitableforId", label: "Sub Suitable For", options: opts }
-          ];
-        });
+        const opts = (j.data || []).filter((item: any) => item.suitableforId === parentId);
+        setFilters(fs =>
+          fs.map(f => f.name === "subsuitableforId" ? { ...f, options: opts } : f)
+        );
       })
       .catch(() => {
         setFilterErrors(e => ({ ...e, ["subsuitableforId"]: `Failed to load subsuitableforId` }));
