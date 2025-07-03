@@ -187,24 +187,36 @@ export default function AddProductForm({ productId }: { productId?: string }) {
 
   // when productDetail arrives, seed form + previews
   useEffect(() => {
-    if (!productDetail || isLoadingFilters) return;
-    const pd = { ...productDetail };
-    // Coerce sub-filter IDs to strings for select compatibility
-    pd.subfinishId = pd.subfinishId ? String(pd.subfinishId) : "";
-    pd.substructureId = pd.substructureId ? String(pd.substructureId) : "";
-    pd.subsuitableforId = pd.subsuitableforId ? String(pd.subsuitableforId) : "";
+    if (!productDetail) return;
+    const processedProductDetail = { ...productDetail };
     // Ensure flags are always 'yes' or 'no'
-    pd.productoffer = pd.productoffer === "yes" ? "yes" : "no";
-    pd.popularproduct = pd.popularproduct === "yes" ? "yes" : "no";
-    pd.topratedproduct = pd.topratedproduct === "yes" ? "yes" : "no";
-    setFormData(pd);
+    processedProductDetail.productoffer = processedProductDetail.productoffer === "yes" ? "yes" : "no";
+    processedProductDetail.popularproduct = processedProductDetail.popularproduct === "yes" ? "yes" : "no";
+    processedProductDetail.topratedproduct = processedProductDetail.topratedproduct === "yes" ? "yes" : "no";
+    // Helper type guard
+    function isObjWithId(val: unknown): val is { _id: string } {
+      return val !== null && typeof val === "object" && "_id" in val && typeof (val as any)._id === "string";
+    }
+    processedProductDetail.substructureId =
+      isObjWithId(processedProductDetail.substructureId)
+        ? processedProductDetail.substructureId._id
+        : processedProductDetail.substructureId || "";
+    processedProductDetail.subfinishId =
+      isObjWithId(processedProductDetail.subfinishId)
+        ? processedProductDetail.subfinishId._id
+        : processedProductDetail.subfinishId || "";
+    processedProductDetail.subsuitableforId =
+      isObjWithId(processedProductDetail.subsuitableforId)
+        ? processedProductDetail.subsuitableforId._id
+        : processedProductDetail.subsuitableforId || "";
+    setFormData(processedProductDetail);
     ["image", "image1", "image2", "video"].forEach((key) => {
-      const url = (pd as any)[key];
+      const url = (processedProductDetail as any)[key];
       if (url) {
         setPreviews((p) => ({ ...p, [key]: url }));
       }
     });
-  }, [productDetail, isLoadingFilters]);
+  }, [productDetail]);
 
   // generic handlers
   const handleInputChange = (
