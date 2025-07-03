@@ -7,7 +7,7 @@ import {
   useGetProductByIdQuery,
   useGetProductsByGroupCodeQuery,
 } from "@/redux/newproduct/NewProductApi";
-import { filterConfig, subFilterConfig } from "@/utils/filterconfig";
+import { filterConfig } from "@/utils/filterconfig";
 import { useDispatch } from "react-redux";
 import { setProductMedia } from "@/redux/features/productImageSlice";
 import { IProduct } from "@/types/fabricproduct-type";
@@ -171,7 +171,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     if (isLoadingFilters || !productDetail) return;
     const pd: any = { ...productDetail };
     // coerce all your IDs to strings so the <select value> matches
-    [...filterConfig, ...subFilterConfig].forEach(f => {
+    [...filterConfig].forEach(f => {
       const v = pd[f.name];
       pd[f.name] = v != null ? String(v) : "";
     });
