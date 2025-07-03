@@ -24,7 +24,7 @@ export const filterConfig = [
   },
   { name: "subfinishId", label: "Sub Finish", api: `/api/subfinish/view` },
   {
-    name: "subsuitableId",
+    name: "subsuitableforId",
     label: "Sub Suitable For",
     api: `/api/subsuitable/view`,
   },
