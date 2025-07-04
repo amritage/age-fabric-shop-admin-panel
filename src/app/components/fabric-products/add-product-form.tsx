@@ -7,7 +7,7 @@ import {
   useGetProductByIdQuery,
   useGetProductsByGroupCodeQuery,
 } from "@/redux/newproduct/NewProductApi";
-import { filterConfig, subFilterConfig } from "@/utils/filterconfig";
+import { filterConfig } from "@/utils/filterconfig";
 import { useDispatch } from "react-redux";
 import { setProductMedia } from "@/redux/features/productImageSlice";
 import { IProduct } from "@/types/fabricproduct-type";
@@ -91,7 +91,9 @@ export default function AddProductForm({ productId }: { productId?: string }) {
   });
 
   const [formData, setFormData] = useState<Record<string, any>>({});
-  const [filters, setFilters] = useState<{ [key: string]: any[] }>({});
+  const [filters, setFilters] = useState<
+    { name: string; label: string; options: any[] }[]
+  >([]);
   const [previews, setPreviews] = useState<Record<string, string>>({});
   const [isLoadingFilters, setIsLoadingFilters] = useState(true);
   const [filterErrors, setFilterErrors] = useState<Record<string, string>>({});
@@ -131,75 +133,178 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     }
   }, []);
 
-  // Load all main filter options
+  // 1) only fetch TOP-LEVELs on mount
   useEffect(() => {
-    setIsLoadingFilters(true);
-    const cookie = Cookies.get("admin");
-    let token = "";
-    if (cookie) {
+    (async () => {
+      setIsLoadingFilters(true);
+      // Extract token as before
+      const adminCookie = typeof window !== "undefined" ? Cookies.get("admin") : null;
+      let token = "";
+      if (adminCookie) {
+        try {
+          const adminObj = JSON.parse(adminCookie);
+          token = adminObj.accessToken;
+        } catch (e) {
+          token = "";
+        }
+      }
       try {
-        token = JSON.parse(cookie).accessToken;
-      } catch {}
-    }
-    Promise.all(
-      filterConfig.map((cfg) =>
-        fetch(BASE_URL + cfg.api, { headers: { Authorization: `Bearer ${token}` } })
-          .then((r) => r.json())
-          .then((j) => j.data || [])
-      )
-    ).then((results) => {
-      const newFilters: { [key: string]: any[] } = {};
-      filterConfig.forEach((cfg, i) => {
-        newFilters[cfg.name] = results[i];
-      });
-      setFilters(newFilters);
-      setIsLoadingFilters(false);
-    });
+        const results = await Promise.all(
+          filterConfig.map(f =>
+            fetch(BASE_URL + f.api, { headers: { Authorization: `Bearer ${token}` } })
+              .then(r => r.json())
+              .then(j => j.data || [])
+          )
+        );
+        setFilters(
+          filterConfig.map((f, i) => ({
+            name:    f.name,
+            label:   f.label,
+            options: results[i],
+          }))
+        );
+      } catch {
+        // handle errors into filterErrors as before
+      } finally {
+        setIsLoadingFilters(false);
+      }
+    })();
   }, []);
 
-  // Load sub-filter options when parent changes
+  // Fetch sub-filter options on mount
   useEffect(() => {
-    const cookie = Cookies.get("admin");
-    let token = "";
-    if (cookie) {
-      try {
-        token = JSON.parse(cookie).accessToken;
-      } catch {}
-    }
-    subFilterConfig.forEach((sub) => {
-      const parentValue = formData[sub.parentKey];
-      if (!parentValue) {
-        setFilters((prev) => ({ ...prev, [sub.name]: [] }));
-        return;
-      }
-      fetch(BASE_URL + sub.api, { headers: { Authorization: `Bearer ${token}` } })
-        .then((r) => r.json())
-        .then((j) => {
-          const opts = (j.data || []).filter((item: any) => {
-            const itemVal = item[sub.parentKey]?._id || item[sub.parentKey];
-            return String(itemVal) === String(parentValue);
-          });
-          setFilters((prev) => ({ ...prev, [sub.name]: opts }));
-        });
-    });
-  }, [formData.structureId, formData.finishId, formData.suitableforId]);
+    fetch('https://adorable-gentleness-production.up.railway.app/api/substructure/view')
+      .then(res => res.json())
+      .then(data => setSubstructureOptions(data.data || []));
+  }, []);
+  useEffect(() => {
+    fetch('https://adorable-gentleness-production.up.railway.app/api/subfinish/view')
+      .then(res => res.json())
+      .then(data => setSubfinishOptions(data.data || []));
+  }, []);
+  useEffect(() => {
+    fetch('https://adorable-gentleness-production.up.railway.app/api/subsuitable/view')
+      .then(res => res.json())
+      .then(data => setSubsuitableforOptions(data.data || []));
+  }, []);
 
-  // Hydrate formData for edit
+  // 2) hydrate formData ONLY after filters & productDetail are both ready
   useEffect(() => {
-    if (!isEdit || !productDetail) return;
-    const data: Record<string, any> = { ...productDetail };
-    const extract = (v: any) => (v && v._id ? v._id : v || "");
-    [...filterConfig, ...subFilterConfig].forEach(({ name }) => {
-      data[name] = extract(data[name]);
-    });
-    setFormData(data);
+    if (isLoadingFilters || !productDetail) return;
+    const processed = { ...productDetail };
+    function extractId(val: any) {
+      return val && typeof val === "object" && "_id" in val ? val._id : val || "";
+    }
+    processed.substructureId = extractId(processed.substructureId);
+    processed.subfinishId = extractId(processed.subfinishId);
+    processed.subsuitableforId = extractId(processed.subsuitableforId);
+    setFormData(processed);
     ["image", "image1", "image2", "video"].forEach((key) => {
-      const url = (data as any)[key];
+      const url = (processed as any)[key];
       if (url) {
         setPreviews((p) => ({ ...p, [key]: url }));
       }
     });
-  }, [isEdit, productDetail]);
+  }, [isLoadingFilters, productDetail]);
+
+  // Sub Structure
+  useEffect(() => {
+    const parentId = formData.structureId;
+    if (!parentId) {
+      setFilters(fs =>
+        fs.map(f => f.name === "subStructureId" ? { ...f, options: [] } : f)
+      );
+      return;
+    }
+    // Extract token as before
+    const adminCookie = typeof window !== "undefined" ? Cookies.get("admin") : null;
+    let token = "";
+    if (adminCookie) {
+      try {
+        const adminObj = JSON.parse(adminCookie);
+        token = adminObj.accessToken;
+      } catch (e) {
+        token = "";
+      }
+    }
+    fetch(BASE_URL + "/api/substructure/view", { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.json())
+      .then(j => {
+        const opts = (j.data || []).filter((item: any) => item.structureId === parentId);
+        setFilters(fs =>
+          fs.map(f => f.name === "subStructureId" ? { ...f, options: opts } : f)
+        );
+      })
+      .catch(() => {
+        setFilterErrors(e => ({ ...e, ["subStructureId"]: `Failed to load subStructureId` }));
+      });
+  }, [formData.structureId]);
+
+  // Sub Finish
+  useEffect(() => {
+    const parentId = formData.finishId;
+    if (!parentId) {
+      setFilters(fs =>
+        fs.map(f => f.name === "subFinishId" ? { ...f, options: [] } : f)
+      );
+      return;
+    }
+    // Extract token as before
+    const adminCookie = typeof window !== "undefined" ? Cookies.get("admin") : null;
+    let token = "";
+    if (adminCookie) {
+      try {
+        const adminObj = JSON.parse(adminCookie);
+        token = adminObj.accessToken;
+      } catch (e) {
+        token = "";
+      }
+    }
+    fetch(BASE_URL + "/api/subfinish/view", { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.json())
+      .then(j => {
+        const opts = (j.data || []).filter((item: any) => item.finishId === parentId);
+        setFilters(fs =>
+          fs.map(f => f.name === "subFinishId" ? { ...f, options: opts } : f)
+        );
+      })
+      .catch(() => {
+        setFilterErrors(e => ({ ...e, ["subFinishId"]: `Failed to load subFinishId` }));
+      });
+  }, [formData.finishId]);
+
+  // Sub Suitable
+  useEffect(() => {
+    const parentId = formData.suitableforId;
+    if (!parentId) {
+      setFilters(fs =>
+        fs.map(f => f.name === "subSuitableId" ? { ...f, options: [] } : f)
+      );
+      return;
+    }
+    // Extract token as before
+    const adminCookie = typeof window !== "undefined" ? Cookies.get("admin") : null;
+    let token = "";
+    if (adminCookie) {
+      try {
+        const adminObj = JSON.parse(adminCookie);
+        token = adminObj.accessToken;
+      } catch (e) {
+        token = "";
+      }
+    }
+    fetch(BASE_URL + "/api/subsuitable/view", { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.json())
+      .then(j => {
+        const opts = (j.data || []).filter((item: any) => item.suitableforId === parentId);
+        setFilters(fs =>
+          fs.map(f => f.name === "subSuitableId" ? { ...f, options: opts } : f)
+        );
+      })
+      .catch(() => {
+        setFilterErrors(e => ({ ...e, ["subSuitableId"]: `Failed to load subSuitableId` }));
+      });
+  }, [formData.suitableforId]);
 
   // generic handlers
   const handleInputChange = (
@@ -725,7 +830,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           </div>
 
           {/* Dynamic filters */}
-          {filterConfig.map((f) => (
+          {filters.map((f) => (
             <div key={f.name} className="mb-6">
               <label
                 htmlFor={f.name}
@@ -742,7 +847,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
               >
                 <option value="">Select {f.label}</option>
-                {filters[f.name]?.map((o: any) => (
+                {f.options.map((o: any) => (
                   <option key={o._id} value={o._id}>
                     {o.name}
                   </option>
