@@ -197,7 +197,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     }
     processed.substructureId = extractId(processed.substructureId);
     processed.subfinishId = extractId(processed.subfinishId);
-    processed.subsuitableforId = extractId(processed.subsuitableforId);
+    processed.subsuitableId = extractId(processed.subsuitableId);
     setFormData(processed);
     ["image", "image1", "image2", "video"].forEach((key) => {
       const url = (processed as any)[key];
@@ -275,7 +275,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
 
   // Sub Suitable
   useEffect(() => {
-    const parentId = formData.suitableforId;
+    const parentId = formData.suitableId;
     if (!parentId) {
       setFilters(fs =>
         fs.map(f => f.name === "subSuitableId" ? { ...f, options: [] } : f)
@@ -296,7 +296,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     fetch(BASE_URL + "/api/subsuitable/view", { headers: { Authorization: `Bearer ${token}` } })
       .then(r => r.json())
       .then(j => {
-        const opts = (j.data || []).filter((item: any) => item.suitableforId === parentId);
+        const opts = (j.data || []).filter((item: any) => item.suitableId === parentId);
         setFilters(fs =>
           fs.map(f => f.name === "subSuitableId" ? { ...f, options: opts } : f)
         );
@@ -304,7 +304,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
       .catch(() => {
         setFilterErrors(e => ({ ...e, ["subSuitableId"]: `Failed to load subSuitableId` }));
       });
-  }, [formData.suitableforId]);
+  }, [formData.suitableId]);
 
   // generic handlers
   const handleInputChange = (
@@ -362,6 +362,13 @@ export default function AddProductForm({ productId }: { productId?: string }) {
   const goNext = (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Ensure productdescription is a string before submitting
+    if (Array.isArray(formData.productdescription)) {
+      formData.productdescription = formData.productdescription.join(" ");
+    } else if (typeof formData.productdescription !== "string") {
+      formData.productdescription = String(formData.productdescription ?? "");
+    }
+
     // Validate required fields with more detailed checking
     const requiredFields = [
       { name: "name", label: "Product Name" },
@@ -382,7 +389,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
       { name: "colorId", label: "Color" },
       { name: "css", label: "CSS" },
       { name: "motifsizeId", label: "Motif Size" },
-      { name: "suitableforId", label: "Suitable For" },
+      { name: "suitableId", label: "Suitable For" },
       { name: "vendorId", label: "Vendor" },
       { name: "groupcodeId", label: "Group Code" },
       { name: "purchasePrice", label: "Purchase Price" },
@@ -433,7 +440,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     const stringFields = [
       "name", "productdescription", "popularproduct", "productoffer", "topratedproduct",
       "newCategoryId", "structureId", "contentId", "um", "currency", "finishId", "designId",
-      "colorId", "css", "motifsizeId", "suitableforId", "vendorId", "groupcodeId", "charset",
+      "colorId", "css", "motifsizeId", "suitableId", "vendorId", "groupcodeId", "charset",
       "title", "description", "keywords", "ogTitle", "ogDescription", "ogUrl", "sku", "slug",
       "locationCode", "productIdentifier"
     ];
@@ -913,8 +920,8 @@ export default function AddProductForm({ productId }: { productId?: string }) {
               Sub Suitable For
             </label>
             <select
-              name="subsuitableforId"
-              value={formData.subsuitableforId || ""}
+              name="subsuitableId"
+              value={formData.subsuitableId || ""}
               onChange={handleInputChange}
               className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm"
             >
