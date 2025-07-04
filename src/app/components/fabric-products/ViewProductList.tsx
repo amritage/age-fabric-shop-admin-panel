@@ -119,6 +119,36 @@ export default function ViewProductTable() {
   const columns: TableColumn<IProduct>[] = useMemo(
     () => [
       {
+        name: "Image",
+        selector: (r) => r.image || "—",
+        cell: (row) =>
+          row.image ? (
+            <img
+              src={row.image}
+              alt={row.name}
+              style={{ width: 60, height: 60, objectFit: "cover", borderRadius: 6 }}
+            />
+          ) : (
+            <span>—</span>
+          ),
+        maxWidth: "80px",
+      },
+      {
+        name: "Video",
+        selector: (r) => r.video || "—",
+        cell: (row) =>
+          row.video ? (
+            <video
+              src={row.video}
+              controls
+              style={{ width: 90, height: 60, objectFit: "cover", borderRadius: 6 }}
+            />
+          ) : (
+            <span>—</span>
+          ),
+        maxWidth: "100px",
+      },
+      {
         name: "Name",
         selector: (r) => r.name,
         sortable: true,
