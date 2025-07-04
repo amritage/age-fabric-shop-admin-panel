@@ -62,7 +62,8 @@ exports.deleteSubfinish = async (req, res) => {
 
 // GET ONE by ID
 exports.getSubfinishById = async (req, res) => {
-  const id = req.params.id.trim();
+  const id =
+    typeof req.params.id === 'string' ? req.params.id.trim() : req.params.id;
   try {
     const item = await Subfinish.findById(id).populate('finishId', 'name');
     if (!item) {

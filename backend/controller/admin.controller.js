@@ -9,6 +9,8 @@ const { generateToken } = require('../utils/token');
 const { sendEmail } = require('../config/email');
 const { secret } = require('../config/secret');
 
+const saltRounds = 10;
+
 // register
 const registerAdmin = async (req, res, next) => {
   try {
@@ -22,7 +24,7 @@ const registerAdmin = async (req, res, next) => {
         name: req.body.name,
         email: req.body.email,
         role: req.body.role,
-        password: bcrypt.hashSync(req.body.password),
+        password: bcrypt.hashSync(req.body.password, saltRounds),
       });
       const staff = await newStaff.save();
       const token = generateToken(staff);
@@ -32,7 +34,7 @@ const registerAdmin = async (req, res, next) => {
         name: staff.name,
         email: staff.email,
         role: staff.role,
-        joiningData: Date.now(),
+        joiningDate: Date.now(),
       });
     }
   } catch (err) {
@@ -98,7 +100,7 @@ const forgetPassword = async (req, res, next) => {
       };
       admin.confirmationToken = token;
       const date = new Date();
-      date.setDate(date.getDate() + 1);
+      date.setMinutes(date.getMinutes() + 10);
       admin.confirmationTokenExpires = date;
       await admin.save({ validateBeforeSave: false });
       const message = 'Please check your email to reset password!';
@@ -121,7 +123,7 @@ const confirmAdminForgetPass = async (req, res, next) => {
       });
     }
 
-    const expired = new Date() > new Date(user.confirmationTokenExpires);
+    const expired = new Date() > new Date(admin.confirmationTokenExpires);
 
     if (expired) {
       return res.status(401).json({
@@ -129,7 +131,7 @@ const confirmAdminForgetPass = async (req, res, next) => {
         message: 'Token expired',
       });
     } else {
-      const newPassword = bcrypt.hashSync(password);
+      const newPassword = bcrypt.hashSync(password, saltRounds);
       await Admin.updateOne(
         { confirmationToken: token },
         { $set: { password: newPassword } },
@@ -161,7 +163,7 @@ const changePassword = async (req, res, next) => {
     if (!bcrypt.compareSync(oldPass, admin.password)) {
       return res.status(401).json({ message: 'Incorrect current password' });
     } else {
-      const hashedPassword = bcrypt.hashSync(newPass);
+      const hashedPassword = bcrypt.hashSync(newPass, saltRounds);
       await Admin.updateOne({ email: email }, { password: hashedPassword });
       res.status(200).json({ message: 'Password changed successfully' });
     }
@@ -182,7 +184,7 @@ const resetPassword = async (req, res) => {
           message: 'Token expired, please try again!',
         });
       } else {
-        staff.password = bcrypt.hashSync(req.body.newPassword);
+        staff.password = bcrypt.hashSync(req.body.newPassword, saltRounds);
         staff.save();
         res.send({
           message: 'Your password change successful, you can login now!',
@@ -203,7 +205,7 @@ const addStaff = async (req, res, next) => {
       const newStaff = new Admin({
         name: req.body.name,
         email: req.body.email,
-        password: bcrypt.hashSync(req.body.password),
+        password: bcrypt.hashSync(req.body.password, saltRounds),
         phone: req.body.phone,
         joiningDate: req.body.joiningDate,
         role: req.body.role,
@@ -244,17 +246,23 @@ const getStaffById = async (req, res, next) => {
 // updateStaff
 const updateStaff = async (req, res) => {
   try {
+    // Only allow if the requesting admin is the same as the target or has privileged role
+    if (req.user.role !== 'SuperAdmin' && req.user._id !== req.params.id) {
+      return res
+        .status(403)
+        .json({ message: 'Not authorized to update this staff.' });
+    }
     const admin = await Admin.findOne({ _id: req.params.id });
     if (admin) {
       admin.name = req.body.name;
       admin.email = req.body.email;
       admin.phone = req.body.phone;
       admin.role = req.body.role;
-      admin.joiningData = req.body.joiningDate;
+      admin.joiningDate = req.body.joiningDate;
       admin.image = req.body.image;
       admin.password =
         req.body.password !== undefined
-          ? bcrypt.hashSync(req.body.password)
+          ? bcrypt.hashSync(req.body.password, saltRounds)
           : admin.password;
       const updatedAdmin = await admin.save();
       const token = generateToken(updatedAdmin);
@@ -281,6 +289,12 @@ const updateStaff = async (req, res) => {
 // deleteStaff
 const deleteStaff = async (req, res, next) => {
   try {
+    // Only allow if the requesting admin is the same as the target or has privileged role
+    if (req.user.role !== 'SuperAdmin' && req.user._id !== req.params.id) {
+      return res
+        .status(403)
+        .json({ message: 'Not authorized to delete this staff.' });
+    }
     await Admin.findByIdAndDelete(req.params.id);
     res.status(200).json({
       message: 'Admin Deleted Successfully',

@@ -42,14 +42,13 @@ const adminSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: false,
-      default: bcrypt.hashSync('12345678'),
+      required: true,
     },
     role: {
       type: String,
       required: true,
       default: 'Admin',
-      enum: ['Admin', 'Super Admin', 'Manager', 'CEO'],
+      enum: ['Admin', 'SuperAdmin', 'Manager', 'CEO'],
     },
     joiningDate: {
       type: Date,
@@ -68,7 +67,7 @@ adminSchema.methods.generateConfirmationToken = function () {
   const token = crypto.randomBytes(32).toString('hex');
   this.confirmationToken = token;
   const date = new Date();
-  date.setDate(date.getDate() + 1);
+  date.setMinutes(date.getMinutes() + 10);
   this.confirmationTokenExpires = date;
   return token;
 };

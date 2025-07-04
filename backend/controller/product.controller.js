@@ -4,7 +4,6 @@ const Product = require('../model/Products');
 
 // add product
 exports.addProduct = async (req, res, next) => {
-  console.log('product--->', req.body);
   try {
     const firstItem = {
       color: {
@@ -19,8 +18,6 @@ exports.addProduct = async (req, res, next) => {
       imageURLs: imageURLs,
     });
 
-    console.log('product-result', result);
-
     res.status(200).json({
       success: true,
       status: 'success',
@@ -28,7 +25,6 @@ exports.addProduct = async (req, res, next) => {
       data: result,
     });
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };
@@ -68,7 +64,6 @@ module.exports.getProductsByType = async (req, res, next) => {
       data: result,
     });
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };

@@ -3,7 +3,7 @@ const nodemailer = require('nodemailer');
 const { secret } = require('./secret');
 
 // sendEmail
-module.exports.sendEmail = (body, res, message) => {
+module.exports.sendEmail = async (body, res, message) => {
   const transporter = nodemailer.createTransport({
     host: secret.email_host,
     service: secret.email_service, //comment this line if you use custom server/domain
@@ -20,21 +20,18 @@ module.exports.sendEmail = (body, res, message) => {
       res.status(403).send({
         message: `Error happen when verify ${err.message}`,
       });
-      console.log(err.message);
-    } else {
-      console.log('Server is ready to take our messages');
+      return; // Stop if verification fails
     }
-  });
+    // Only send mail if verify succeeds
+    const sendEmail = async (mailData, res, message) => {
+      try {
+        await transporter.sendMail(mailData);
+        res.status(200).send({ message });
+      } catch (error) {
+        res.status(500).send({ error: error.message });
+      }
+    };
 
-  transporter.sendMail(body, (err, data) => {
-    if (err) {
-      res.status(403).send({
-        message: `Error happen when sending email ${err.message}`,
-      });
-    } else {
-      res.send({
-        message: message,
-      });
-    }
+    sendEmail(body, res, message);
   });
 };

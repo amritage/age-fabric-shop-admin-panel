@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 require('dotenv').config();
 
 const connectDB = require('./config/db');
@@ -53,10 +54,10 @@ const importData = async () => {
     await Admin.deleteMany();
     await Admin.insertMany(adminData);
 
-    console.log('data inserted successfully!');
+    await mongoose.connection.close();
     process.exit();
   } catch (error) {
-    console.log('error', error);
+    console.error('Seeding failed:', error);
     process.exit(1);
   }
 };

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 // internal
-const uploader = require('../middleware/uploder');
+const uploader = require('../middleware/uploader');
 const { cloudinaryController } = require('../controller/cloudinary.controller');
 const multer = require('multer');
 

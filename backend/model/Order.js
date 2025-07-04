@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Counter = require('./Counter');
 
 const orderSchema = new mongoose.Schema(
   {
@@ -82,6 +83,7 @@ const orderSchema = new mongoose.Schema(
       type: String,
       enum: ['pending', 'processing', 'delivered', 'cancel'],
       lowercase: true,
+      default: 'pending',
     },
   },
   {
@@ -93,20 +95,13 @@ const orderSchema = new mongoose.Schema(
 orderSchema.pre('save', async function (next) {
   const order = this;
   if (!order.invoice) {
-    // check if the order already has an invoice number
     try {
-      // find the highest invoice number in the orders collection
-      const highestInvoice = await mongoose
-        .model('Order')
-        .find({})
-        .sort({ invoice: 'desc' })
-        .limit(1)
-        .select({ invoice: 1 });
-      // if there are no orders in the collection, start at 1000
-      const startingInvoice =
-        highestInvoice.length === 0 ? 1000 : highestInvoice[0].invoice + 1;
-      // set the invoice number for the new order
-      order.invoice = startingInvoice;
+      const counter = await Counter.findOneAndUpdate(
+        { name: 'invoice' },
+        { $inc: { seq: 1 } },
+        { new: true, upsert: true },
+      );
+      order.invoice = counter.seq;
       next();
     } catch (error) {
       next(error);

@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
+const verifyToken = require('../middleware/verifyToken');
 // internal
 const productController = require('../controller/product.controller');
 
 // add a product
-router.post('/add', productController.addProduct);
+router.post('/add', verifyToken, productController.addProduct);
 // add all product
 router.post('/add-all', productController.addAllProducts);
 // get all products

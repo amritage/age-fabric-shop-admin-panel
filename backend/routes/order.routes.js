@@ -6,6 +6,7 @@ const {
   updateOrderStatus,
   getSingleOrder,
 } = require('../controller/order.controller');
+const verifyToken = require('../middleware/verifyToken');
 
 // router
 const router = express.Router();

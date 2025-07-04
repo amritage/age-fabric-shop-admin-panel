@@ -7,7 +7,7 @@ const users = [
     role: 'user',
     name: 'Paul R. Bruns',
     status: 'active',
-    password: bcrypt.hashSync('123456'),
+    password: bcrypt.hashSync('123456', 10),
     reviews: [
       '6461c46a9154b65448da799f',
       '6461c5b99154b65448da7a38',
@@ -23,7 +23,7 @@ const users = [
     role: 'user',
     name: 'Linda',
     status: 'active',
-    password: bcrypt.hashSync('123456'),
+    password: bcrypt.hashSync('123456', 10),
     reviews: [
       '6461f6098a8552beef539317',
       '64620cef8a8552beef5394ba',
@@ -34,11 +34,10 @@ const users = [
   {
     _id: '6465ac4d3322f9425ac8f444',
     email: 'james@gmail.com',
-    password: '223366',
     role: 'user',
     name: 'James J. Allen',
     status: 'active',
-    password: bcrypt.hashSync('223355'),
+    password: bcrypt.hashSync('223355', 10),
     reviews: [
       '646851914edd5c5271092b1d',
       '646851be4edd5c5271092be3',

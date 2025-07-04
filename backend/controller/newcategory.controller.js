@@ -1,34 +1,38 @@
 const NewCategoryModel = require('../model/newcategorydata');
+const { cloudinaryServices } = require('../services/cloudinary.service');
 
-// Utility to generate full image URL
-const getImageUrl = (filename) => {
-  const BASE_URL = process.env.BASE_URL || 'http://localhost:';
-  const PORT = process.env.PORT || '7000';
-  return `${BASE_URL}${PORT}/uploadimage/${filename}`;
-};
+function stripCloudinaryVersion(url) {
+  return url ? url.replace(/\/v\d+\//, '/') : url;
+}
+
+async function uploadToCloudinary(file) {
+  if (!file) return null;
+  const result = await cloudinaryServices.cloudinaryImageUpload(
+    file.buffer,
+    file.originalname,
+    'category',
+  );
+  return stripCloudinaryVersion(result.secure_url);
+}
 
 // POST /api/newcategory/addcategory
 exports.addCategory = async (req, res) => {
-  console.log('>>> req.body:', req.body);
-  console.log('>>> req.files:', req.files);
-
-  if (!req.files || !req.files.image) {
-    return res.status(400).json({ error: 'No file received' });
+  let imageUrl = null;
+  if (req.files && req.files.image) {
+    imageUrl = await uploadToCloudinary(req.files.image[0]);
+  } else if (req.body.image) {
+    imageUrl = stripCloudinaryVersion(req.body.image);
   }
 
   try {
-    const imageUrl = getImageUrl(req.files.image[0].filename);
-
     const newCat = new NewCategoryModel({
       name: req.body.name,
       image: imageUrl,
     });
 
     const saved = await newCat.save();
-    console.log('Category Data is Stored Successfully');
     res.json(saved);
   } catch (error) {
-    console.error('Data is not Stored', error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -39,22 +43,19 @@ exports.viewCategories = async (req, res) => {
     const list = await NewCategoryModel.find();
     res.status(200).json({ status: 1, message: 'success', data: list });
   } catch (error) {
-    console.error('Error fetching categories', error);
     res.status(500).json({ error: error.message });
   }
 };
 
 // PUT /api/newcategory/update/:categoryid
 exports.updateCategory = async (req, res) => {
-  console.log('>>> req.body:', req.body);
-  console.log('>>> req.files:', req.files);
-
   const id = req.params.categoryid.trim();
   const updateData = { name: req.body.name };
 
-  // If a new image was uploaded, include it with full URL
   if (req.files && req.files.image) {
-    updateData.image = getImageUrl(req.files.image[0].filename);
+    updateData.image = await uploadToCloudinary(req.files.image[0]);
+  } else if (req.body.image) {
+    updateData.image = stripCloudinaryVersion(req.body.image);
   }
 
   try {
@@ -68,10 +69,8 @@ exports.updateCategory = async (req, res) => {
       return res.status(404).json({ error: 'Category not found' });
     }
 
-    console.log('Category Data is Updated Successfully');
     res.status(200).json(updated);
   } catch (error) {
-    console.error('Error updating category', error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -83,7 +82,6 @@ exports.deleteCategory = async (req, res) => {
     await NewCategoryModel.findByIdAndDelete(id);
     res.status(200).json({ msg: 'deleted successfully', status: 1 });
   } catch (error) {
-    console.error('Error deleting category', error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -98,7 +96,6 @@ exports.getCategoryById = async (req, res) => {
     }
     res.status(200).json({ status: 1, data: category });
   } catch (error) {
-    console.error('Error fetching category by ID:', error);
     res.status(500).json({ status: 0, error: error.message });
   }
 };

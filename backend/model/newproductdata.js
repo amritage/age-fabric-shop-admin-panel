@@ -11,16 +11,25 @@ function maxKeywordsString(val) {
 const NewProductSchema = new Schema(
   {
     name: { type: String, required: true, trim: true, unique: true },
-    productdescription:{type: String,required:true},
-    
-    popularproduct:{type: String,required:true},   // new added
-    productoffer:{type: String,required:true},
-    topratedproduct:{type: String,required:true},
-    
+    productdescription: { type: String, required: false },
+
+    popularproduct: { type: String, required: true }, // new added
+    productoffer: { type: String, required: true },
+    topratedproduct: { type: String, required: true },
+
     newCategoryId: {
       type: Schema.Types.ObjectId,
       ref: 'newcategorydata',
       required: true,
+      validate: {
+        validator: async function (value) {
+          const exists = await mongoose
+            .model('newcategorydata')
+            .exists({ _id: value });
+          return exists !== null;
+        },
+        message: 'Invalid newCategoryId: No matching newcategorydata found',
+      },
     },
     image: { type: String, trim: true },
     image1: { type: String, trim: true },
@@ -31,11 +40,44 @@ const NewProductSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'StructureData',
       required: true,
+      validate: {
+        validator: async function (value) {
+          const exists = await mongoose
+            .model('StructureData')
+            .exists({ _id: value });
+          return exists !== null;
+        },
+        message: 'Invalid structureId: No matching StructureData found',
+      },
+    },
+    substructureId: {
+      type: Schema.Types.ObjectId,
+      ref: 'SubstructureData',
+      required: false,
+      validate: {
+        validator: async function (value) {
+          if (!value) return true;
+          const exists = await mongoose
+            .model('SubstructureData')
+            .exists({ _id: value });
+          return exists !== null;
+        },
+        message: 'Invalid substructureId: No matching SubstructureData found',
+      },
     },
     contentId: {
       type: Schema.Types.ObjectId,
       ref: 'ContentData',
       required: true,
+      validate: {
+        validator: async function (value) {
+          const exists = await mongoose
+            .model('ContentData')
+            .exists({ _id: value });
+          return exists !== null;
+        },
+        message: 'Invalid contentId: No matching ContentData found',
+      },
     },
     gsm: { type: Number, required: true },
     oz: { type: Number, required: true },
@@ -49,33 +91,130 @@ const NewProductSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'FinishData',
       required: true,
+      validate: {
+        validator: async function (value) {
+          const exists = await mongoose
+            .model('FinishData')
+            .exists({ _id: value });
+          return exists !== null;
+        },
+        message: 'Invalid finishId: No matching FinishData found',
+      },
+    },
+    subfinishId: {
+      type: Schema.Types.ObjectId,
+      ref: 'SubfinishData',
+      required: false,
+      validate: {
+        validator: async function (value) {
+          if (!value) return true;
+          const exists = await mongoose
+            .model('SubfinishData')
+            .exists({ _id: value });
+          return exists !== null;
+        },
+        message: 'Invalid subfinishId: No matching SubfinishData found',
+      },
     },
     designId: {
       type: Schema.Types.ObjectId,
       ref: 'DesignData',
       required: true,
+      validate: {
+        validator: async function (value) {
+          const exists = await mongoose
+            .model('DesignData')
+            .exists({ _id: value });
+          return exists !== null;
+        },
+        message: 'Invalid designId: No matching DesignData found',
+      },
     },
-    colorId: { type: Schema.Types.ObjectId, ref: 'ColorData', required: true },
+    colorId: {
+      type: Schema.Types.ObjectId,
+      ref: 'ColorData',
+      required: true,
+      validate: {
+        validator: async function (value) {
+          const exists = await mongoose
+            .model('ColorData')
+            .exists({ _id: value });
+          return exists !== null;
+        },
+        message: 'Invalid colorId: No matching ColorData found',
+      },
+    },
     css: { type: String, required: true, trim: true },
     motifsizeId: {
       type: Schema.Types.ObjectId,
       ref: 'MotifsizeData',
       required: true,
+      validate: {
+        validator: async function (value) {
+          const exists = await mongoose
+            .model('MotifsizeData')
+            .exists({ _id: value });
+          return exists !== null;
+        },
+        message: 'Invalid motifsizeId: No matching MotifsizeData found',
+      },
     },
     suitableforId: {
       type: Schema.Types.ObjectId,
       ref: 'SuitableforData',
       required: true,
+      validate: {
+        validator: async function (value) {
+          const exists = await mongoose
+            .model('SuitableforData')
+            .exists({ _id: value });
+          return exists !== null;
+        },
+        message: 'Invalid suitableforId: No matching SuitableforData found',
+      },
+    },
+    subsuitableId: {
+      type: Schema.Types.ObjectId,
+      ref: 'SubsuitableData',
+      required: false,
+      validate: {
+        validator: async function (value) {
+          if (!value) return true;
+          const exists = await mongoose
+            .model('SubsuitableData')
+            .exists({ _id: value });
+          return exists !== null;
+        },
+        message: 'Invalid subsuitableId: No matching SubsuitableData found',
+      },
     },
     vendorId: {
       type: Schema.Types.ObjectId,
       ref: 'VendorData',
       required: true,
+      validate: {
+        validator: async function (value) {
+          const exists = await mongoose
+            .model('VendorData')
+            .exists({ _id: value });
+          return exists !== null;
+        },
+        message: 'Invalid vendorId: No matching VendorData found',
+      },
     },
     groupcodeId: {
       type: Schema.Types.ObjectId,
       ref: 'GroupCode',
       required: true,
+      validate: {
+        validator: async function (value) {
+          const exists = await mongoose
+            .model('GroupCode')
+            .exists({ _id: value });
+          return exists !== null;
+        },
+        message: 'Invalid groupcodeId: No matching GroupCode found',
+      },
     },
 
     charset: {
@@ -97,7 +236,7 @@ const NewProductSchema = new Schema(
       default: 'width=device-width, initial-scale=1.0',
     },
     title: { type: String, required: true, trim: true, maxlength: 60 },
-    description: { type: String, required: true, trim: true, maxlength: 160 },
+    description: { type: String, required: true, trim: false, maxlength: 160 },
     keywords: {
       type: String,
       required: true,

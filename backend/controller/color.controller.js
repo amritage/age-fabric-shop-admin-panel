@@ -64,7 +64,8 @@ exports.updateColor = async (req, res) => {
 
 // DELETE by ID
 exports.deleteColor = async (req, res) => {
-  const id = req.params.id.trim();
+  const id =
+    typeof req.params.id === 'string' ? req.params.id.trim() : req.params.id;
   try {
     const deleted = await Color.findByIdAndDelete(id);
     if (!deleted) return res.status(404).json({ error: 'Not found' });

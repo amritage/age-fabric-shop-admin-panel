@@ -12,6 +12,7 @@ exports.signup = async (req, res, next) => {
     const user = await User.findOne({ email: req.body.email });
     if (user) {
       res.send({ status: 'failed', message: 'Email already exists' });
+      return;
     } else {
       const saved_user = await User.create(req.body);
       const token = saved_user.generateConfirmationToken();
@@ -21,7 +22,6 @@ exports.signup = async (req, res, next) => {
       const mailData = {
         from: secret.email_user,
         to: `${req.body.email}`,
-        subject: 'Email Activation',
         subject: 'Verify Your Email',
         html: `<h2>Hello ${req.body.name}</h2>
         <p>Verify your email address to complete the signup and login into your <strong>shofy</strong> account.</p>
@@ -187,7 +187,7 @@ exports.forgetPassword = async (req, res, next) => {
       };
       user.confirmationToken = token;
       const date = new Date();
-      date.setDate(date.getDate() + 1);
+      date.setMinutes(date.getMinutes() + 10);
       user.confirmationTokenExpires = date;
       await user.save({ validateBeforeSave: false });
       const message = 'Please check your email to reset password!';
@@ -219,7 +219,8 @@ exports.confirmForgetPassword = async (req, res, next) => {
         error: 'Token expired',
       });
     } else {
-      const newPassword = bcrypt.hashSync(password);
+      const saltRounds = 10;
+      const newPassword = bcrypt.hashSync(password, saltRounds);
       await User.updateOne(
         { confirmationToken: token },
         { $set: { password: newPassword } },
@@ -250,14 +251,16 @@ exports.changePassword = async (req, res, next) => {
       return res.status(404).json({ message: 'User not found' });
     }
     if (googleSignIn) {
-      const hashedPassword = bcrypt.hashSync(newPassword);
+      const saltRounds = 10;
+      const hashedPassword = bcrypt.hashSync(newPassword, saltRounds);
       await User.updateOne({ email: email }, { password: hashedPassword });
       return res.status(200).json({ message: 'Password changed successfully' });
     }
     if (!bcrypt.compareSync(password, user?.password)) {
       return res.status(401).json({ message: 'Incorrect current password' });
     } else {
-      const hashedPassword = bcrypt.hashSync(newPassword);
+      const saltRounds = 10;
+      const hashedPassword = bcrypt.hashSync(newPassword, saltRounds);
       await User.updateOne({ email: email }, { password: hashedPassword });
       res.status(200).json({ message: 'Password changed successfully' });
     }
@@ -296,8 +299,11 @@ exports.updateUser = async (req, res, next) => {
 // signUpWithProvider
 exports.signUpWithProvider = async (req, res, next) => {
   try {
-    const user = jwt.decode(req.params.token);
-    const isAdded = await User.findOne({ email: user.email });
+    const payload = jwt.verify(
+      req.params.token,
+      process.env.JWT_SECRET_FOR_VERIFY,
+    );
+    const isAdded = await User.findOne({ email: payload.email });
     if (isAdded) {
       const token = generateToken(isAdded);
       res.status(200).send({
@@ -317,14 +323,12 @@ exports.signUpWithProvider = async (req, res, next) => {
       });
     } else {
       const newUser = new User({
-        name: user.name,
-        email: user.email,
-        imageURL: user.picture,
+        name: payload.name,
+        email: payload.email,
+        imageURL: payload.picture,
         status: 'active',
       });
-
       const signUpUser = await newUser.save();
-      // console.log(signUpUser)
       const token = generateToken(signUpUser);
       res.status(200).send({
         status: 'success',

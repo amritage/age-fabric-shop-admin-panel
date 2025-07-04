@@ -26,7 +26,8 @@ exports.viewFinishes = async (req, res) => {
 
 // UPDATE by ID
 exports.updateFinish = async (req, res) => {
-  const id = req.params.id.trim();
+  const id =
+    typeof req.params.id === 'string' ? req.params.id.trim() : req.params.id;
   try {
     const updated = await Finish.findByIdAndUpdate(
       id,
@@ -43,7 +44,8 @@ exports.updateFinish = async (req, res) => {
 
 // DELETE by ID
 exports.deleteFinish = async (req, res) => {
-  const id = req.params.id.trim();
+  const id =
+    typeof req.params.id === 'string' ? req.params.id.trim() : req.params.id;
   try {
     const deleted = await Finish.findByIdAndDelete(id);
     if (!deleted) return res.status(404).json({ error: 'Not found' });
@@ -56,7 +58,8 @@ exports.deleteFinish = async (req, res) => {
 
 // GET ONE by ID
 exports.getFinishById = async (req, res) => {
-  const id = req.params.id.trim();
+  const id =
+    typeof req.params.id === 'string' ? req.params.id.trim() : req.params.id;
   try {
     const finish = await Finish.findById(id);
     if (!finish) {

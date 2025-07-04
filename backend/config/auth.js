@@ -2,6 +2,7 @@ require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const Admin = require('../model/Admin');
 const { secret } = require('./secret');
+const { tokenForVerify } = require('../utils/token');
 
 const signInToken = (user) => {
   return jwt.sign(
@@ -17,19 +18,6 @@ const signInToken = (user) => {
     {
       expiresIn: '2d',
     },
-  );
-};
-
-const tokenForVerify = (user) => {
-  return jwt.sign(
-    {
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      password: user.password,
-    },
-    secret.jwt_secret_for_verify,
-    { expiresIn: '10m' },
   );
 };
 

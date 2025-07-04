@@ -10,8 +10,8 @@ exports.addReview = async (req, res, next) => {
   try {
     // Check if the user has already left a review for this product
     const existingReview = await Review.findOne({
-      user: userId,
-      product: productId,
+      userId: userId,
+      productId: productId,
     });
 
     if (existingReview) {
@@ -20,7 +20,7 @@ exports.addReview = async (req, res, next) => {
         .json({ message: 'You have already left a review for this product.' });
     }
     const checkPurchase = await Order.findOne({
-      user: new mongoose.Types.ObjectId(userId),
+      userId: new mongoose.Types.ObjectId(userId),
       'cart._id': { $in: [productId] },
     });
     if (!checkPurchase) {
@@ -31,7 +31,6 @@ exports.addReview = async (req, res, next) => {
 
     // Create the new review
     const review = await Review.create(req.body);
-    // console.log('review-->',review)
 
     // Add the review to the product's reviews array
     const product = await Products.findById(productId);
@@ -45,7 +44,6 @@ exports.addReview = async (req, res, next) => {
 
     return res.status(201).json({ message: 'Review added successfully.' });
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };
@@ -60,7 +58,6 @@ exports.deleteReviews = async (req, res, next) => {
     }
     res.json({ message: 'All reviews deleted for the product' });
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };

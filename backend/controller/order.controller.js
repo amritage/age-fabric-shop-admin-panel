@@ -18,7 +18,6 @@ exports.paymentIntent = async (req, res, next) => {
       clientSecret: paymentIntent.client_secret,
     });
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };
@@ -33,7 +32,6 @@ exports.addOrder = async (req, res, next) => {
       order: orderItems,
     });
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };
@@ -46,22 +44,22 @@ exports.getOrders = async (req, res, next) => {
       data: orderItems,
     });
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };
 // get Orders
 exports.getSingleOrder = async (req, res, next) => {
   try {
-    const orderItem = await Order.findById(req.params.id).populate('user');
+    const id =
+      typeof req.params.id === 'string' ? req.params.id.trim() : req.params.id;
+    const orderItem = await Order.findById(id).populate('user');
     res.status(200).json(orderItem);
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };
 
-exports.updateOrderStatus = async (req, res) => {
+exports.updateOrderStatus = async (req, res, next) => {
   const newStatus = req.body.status;
   try {
     await Order.updateOne(
@@ -80,7 +78,6 @@ exports.updateOrderStatus = async (req, res) => {
       message: 'Status updated successfully',
     });
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };

@@ -121,7 +121,12 @@ const productsSchema = mongoose.Schema(
       type: String,
       required: false,
     },
-    additionalInformation: [{}],
+    additionalInformation: [
+      {
+        key: { type: String },
+        value: { type: String },
+      },
+    ],
     tags: [String],
     sizes: [String],
     offerDate: {

@@ -23,7 +23,6 @@ exports.tokenForVerify = (user) => {
       _id: user._id,
       name: user.name,
       email: user.email,
-      password: user.password,
     },
     secret.jwt_secret_for_verify,
     { expiresIn: '10m' },

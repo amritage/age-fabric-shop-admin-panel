@@ -18,11 +18,8 @@ dayjs.extend(isSameOrAfter);
 module.exports.getOrderByUser = async (req, res, next) => {
   // console.log(req.user)
   try {
-    const { page, limit } = req.query;
-
-    const pages = Number(page) || 1;
-    const limits = Number(limit) || 8;
-    const skip = (pages - 1) * limits;
+    const { page = 1, limit = 10 } = req.query;
+    const skip = (page - 1) * limit;
 
     const totalDoc = await Order.countDocuments({ user: req.user._id });
 
@@ -85,7 +82,10 @@ module.exports.getOrderByUser = async (req, res, next) => {
     // today order amount
 
     // query for orders
-    const orders = await Order.find({ user: req.user._id }).sort({ _id: -1 });
+    const orders = await Order.find({ user: req.user._id })
+      .sort({ _id: -1 })
+      .skip(skip)
+      .limit(Number(limit));
 
     res.send({
       orders,
@@ -120,74 +120,96 @@ exports.getDashboardAmount = async (req, res, next) => {
   try {
     const todayStart = dayjs().startOf('day');
     const todayEnd = dayjs().endOf('day');
-
     const yesterdayStart = dayjs().subtract(1, 'day').startOf('day');
     const yesterdayEnd = dayjs().subtract(1, 'day').endOf('day');
-
     const monthStart = dayjs().startOf('month');
     const monthEnd = dayjs().endOf('month');
 
-    const todayOrders = await Order.find({
-      createdAt: { $gte: todayStart.toDate(), $lte: todayEnd.toDate() },
-    });
-
-    let todayCashPaymentAmount = 0;
-    let todayCardPaymentAmount = 0;
-
-    todayOrders.forEach((order) => {
-      if (order.paymentMethod === 'COD') {
-        todayCashPaymentAmount += order.totalAmount;
-      } else if (order.paymentMethod === 'Card') {
-        todayCardPaymentAmount += order.totalAmount;
-      }
-    });
-
-    const yesterdayOrders = await Order.find({
-      createdAt: { $gte: yesterdayStart.toDate(), $lte: yesterdayEnd.toDate() },
-    });
-
-    let yesterDayCashPaymentAmount = 0;
-    let yesterDayCardPaymentAmount = 0;
-
-    yesterdayOrders.forEach((order) => {
-      if (order.paymentMethod === 'COD') {
-        yesterDayCashPaymentAmount += order.totalAmount;
-      } else if (order.paymentMethod === 'Card') {
-        yesterDayCardPaymentAmount += order.totalAmount;
-      }
-    });
-
-    const monthlyOrders = await Order.find({
-      createdAt: { $gte: monthStart.toDate(), $lte: monthEnd.toDate() },
-    });
-
-    const totalOrders = await Order.find();
-    const todayOrderAmount = todayOrders.reduce(
-      (total, order) => total + order.totalAmount,
-      0,
-    );
-    const yesterdayOrderAmount = yesterdayOrders.reduce(
-      (total, order) => total + order.totalAmount,
-      0,
-    );
-
-    const monthlyOrderAmount = monthlyOrders.reduce((total, order) => {
-      return total + order.totalAmount;
-    }, 0);
-    const totalOrderAmount = totalOrders.reduce(
-      (total, order) => total + order.totalAmount,
-      0,
-    );
+    // Use aggregation for order amounts
+    const [todayStats] = await Order.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: todayStart.toDate(), $lte: todayEnd.toDate() },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: '$totalAmount' },
+          card: {
+            $sum: {
+              $cond: [{ $eq: ['$paymentMethod', 'Card'] }, '$totalAmount', 0],
+            },
+          },
+          cash: {
+            $sum: {
+              $cond: [{ $eq: ['$paymentMethod', 'COD'] }, '$totalAmount', 0],
+            },
+          },
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+    const [yesterdayStats] = await Order.aggregate([
+      {
+        $match: {
+          createdAt: {
+            $gte: yesterdayStart.toDate(),
+            $lte: yesterdayEnd.toDate(),
+          },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: '$totalAmount' },
+          card: {
+            $sum: {
+              $cond: [{ $eq: ['$paymentMethod', 'Card'] }, '$totalAmount', 0],
+            },
+          },
+          cash: {
+            $sum: {
+              $cond: [{ $eq: ['$paymentMethod', 'COD'] }, '$totalAmount', 0],
+            },
+          },
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+    const [monthlyStats] = await Order.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: monthStart.toDate(), $lte: monthEnd.toDate() },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: '$totalAmount' },
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+    const [totalStats] = await Order.aggregate([
+      {
+        $group: {
+          _id: null,
+          total: { $sum: '$totalAmount' },
+          count: { $sum: 1 },
+        },
+      },
+    ]);
 
     res.status(200).send({
-      todayOrderAmount,
-      yesterdayOrderAmount,
-      monthlyOrderAmount,
-      totalOrderAmount,
-      todayCardPaymentAmount,
-      todayCashPaymentAmount,
-      yesterDayCardPaymentAmount,
-      yesterDayCashPaymentAmount,
+      todayOrderAmount: todayStats?.total || 0,
+      yesterdayOrderAmount: yesterdayStats?.total || 0,
+      monthlyOrderAmount: monthlyStats?.total || 0,
+      totalOrderAmount: totalStats?.total || 0,
+      todayCardPaymentAmount: todayStats?.card || 0,
+      todayCashPaymentAmount: todayStats?.cash || 0,
+      yesterDayCardPaymentAmount: yesterdayStats?.card || 0,
+      yesterDayCashPaymentAmount: yesterdayStats?.cash || 0,
     });
   } catch (error) {
     next(error);

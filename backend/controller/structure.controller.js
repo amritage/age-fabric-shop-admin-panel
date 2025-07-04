@@ -8,8 +8,7 @@ exports.addStructure = async (req, res) => {
     const saved = await struct.save();
     res.json(saved);
   } catch (err) {
-    console.error('Error adding structure:', err);
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
@@ -19,8 +18,7 @@ exports.viewStructures = async (req, res) => {
     const list = await Structure.find();
     res.json({ status: 1, data: list });
   } catch (err) {
-    console.error('Error fetching structures:', err);
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
@@ -39,11 +37,9 @@ exports.updateStructure = async (req, res) => {
       return res.status(404).json({ error: 'Structure not found' });
     }
 
-    console.log('Structure Data is Updated Successfully');
     res.status(200).json({ status: 1, data: updated });
   } catch (err) {
-    console.error('Error updating structure:', err);
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
@@ -55,8 +51,7 @@ exports.deleteStructure = async (req, res) => {
     if (!deleted) return res.status(404).json({ error: 'Not found' });
     res.json({ status: 1, data: deleted });
   } catch (err) {
-    console.error('Error deleting structure:', err);
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
@@ -70,7 +65,6 @@ exports.getStructureById = async (req, res) => {
     }
     res.json({ status: 1, data: structure });
   } catch (err) {
-    console.error('Error fetching structure by ID:', err);
-    res.status(500).json({ status: 0, error: err.message });
+    next(err);
   }
 };

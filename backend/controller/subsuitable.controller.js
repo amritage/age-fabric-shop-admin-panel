@@ -62,7 +62,8 @@ exports.deleteSubSuitable = async (req, res) => {
 
 // GET ONE by ID
 exports.getSubSuitableById = async (req, res) => {
-  const id = req.params.id.trim();
+  const id =
+    typeof req.params.id === 'string' ? req.params.id.trim() : req.params.id;
   try {
     const item = await SubSuitable.findById(id).populate(
       'suitableforId',

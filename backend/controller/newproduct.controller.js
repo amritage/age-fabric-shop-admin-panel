@@ -1,40 +1,74 @@
 const NewProductModel = require('../model/newproductdata');
+const { cloudinaryServices } = require('../services/cloudinary.service');
+const NewCategoryModel = require('../model/newcategorydata');
+const slugify = require('slugify');
 
-const getMediaUrl = (filename, type) => {
-  const BASE_URL = process.env.BASE_URL || 'http://localhost:7000';
-  if (!filename) return '';
-  const path = type === 'video' ? 'uploadvideo' : 'uploadimage';
-  return `${BASE_URL}/${path}/${filename}`;
-};
+function stripCloudinaryVersion(url) {
+  return url ? url.replace(/\/v\d+\//, '/') : url;
+}
+
+// Helper to upload a file buffer to Cloudinary and return the URL
+async function uploadToCloudinary(file, folder) {
+  if (!file) return null;
+  const result = await cloudinaryServices.cloudinaryImageUpload(
+    file.buffer,
+    file.originalname,
+    folder,
+  );
+  return stripCloudinaryVersion(result.secure_url);
+}
 
 // CREATE
 exports.addProduct = async (req, res, next) => {
   try {
     const files = req.files || {};
 
+    // Determine folder name based on newCategoryId
+    let folderName = 'product';
+    console.log('newCategoryId:', req.body.newCategoryId);
+    if (req.body.newCategoryId) {
+      try {
+        const category = await NewCategoryModel.findById(
+          req.body.newCategoryId,
+        );
+        console.log('Fetched category:', category);
+        if (category && category.name) {
+          folderName = slugify(category.name, { lower: true, strict: true });
+          console.log('Using folder:', folderName);
+        }
+      } catch (err) {
+        console.log('Category fetch error:', err);
+        // fallback to 'product'
+      }
+    }
+
+    // Upload images/videos to Cloudinary
+    const imageUrl = files.image
+      ? await uploadToCloudinary(files.image[0], folderName)
+      : stripCloudinaryVersion(req.body.image) || null;
+    const image1Url = files.image1
+      ? await uploadToCloudinary(files.image1[0], folderName)
+      : stripCloudinaryVersion(req.body.image1) || null;
+    const image2Url = files.image2
+      ? await uploadToCloudinary(files.image2[0], folderName)
+      : stripCloudinaryVersion(req.body.image2) || null;
+    const videoUrl = files.video
+      ? await uploadToCloudinary(files.video[0], folderName)
+      : stripCloudinaryVersion(req.body.video) || null;
+
     const payload = {
       sku: req.body.sku,
       slug: req.body.slug,
       name: req.body.name,
       newCategoryId: req.body.newCategoryId,
-      productdescription:req.body.productdescription,
-      popularproduct:req.body.popularproduct,
-      productoffer:req.body.productoffer,
-      topratedproduct:req.body.topratedproduct,
-      
-      image: files.image
-        ? getMediaUrl(files.image[0].filename, 'image')
-        : req.body.image,
-      image1: files.image1
-        ? getMediaUrl(files.image1[0].filename, 'image')
-        : req.body.image1,
-      image2: files.image2
-        ? getMediaUrl(files.image2[0].filename, 'image')
-        : req.body.image2,
-      video: files.video
-        ? getMediaUrl(files.video[0].filename, 'video')
-        : req.body.video,
-
+      productdescription: req.body.productdescription,
+      popularproduct: req.body.popularproduct,
+      productoffer: req.body.productoffer,
+      topratedproduct: req.body.topratedproduct,
+      image: imageUrl,
+      image1: image1Url,
+      image2: image2Url,
+      video: videoUrl,
       structureId: req.body.structureId,
       contentId: req.body.contentId,
       gsm: req.body.gsm,
@@ -51,7 +85,7 @@ exports.addProduct = async (req, res, next) => {
       motifsizeId: req.body.motifsizeId,
       suitableforId: req.body.suitableforId,
       vendorId: req.body.vendorId,
-      groupcodeId: req.body.groupcodeId, // ✅ updated
+      groupcodeId: req.body.groupcodeId,
       charset: req.body.charset,
       xUaCompatible: req.body.xUaCompatible,
       viewport: req.body.viewport,
@@ -88,6 +122,9 @@ exports.addProduct = async (req, res, next) => {
       salesPrice: req.body.salesPrice,
       locationCode: req.body.locationCode,
       productIdentifier: req.body.productIdentifier,
+      subsuitableId: req.body.subsuitableId,
+      subfinishId: req.body.subfinishId,
+      substructureId: req.body.substructureId,
     };
 
     const product = await NewProductModel.create(payload);
@@ -127,18 +164,39 @@ exports.getProductById = async (req, res, next) => {
 // UPDATE
 exports.updateProduct = async (req, res, next) => {
   try {
-    const id = req.params.id.trim();
+    const id =
+      typeof req.params.id === 'string' ? req.params.id.trim() : req.params.id;
     const files = req.files || {};
 
+    // Determine folder name based on newCategoryId
+    let folderName = 'product';
+    console.log('newCategoryId:', req.body.newCategoryId);
+    if (req.body.newCategoryId) {
+      try {
+        const category = await NewCategoryModel.findById(
+          req.body.newCategoryId,
+        );
+        console.log('Fetched category:', category);
+        if (category && category.name) {
+          folderName = slugify(category.name, { lower: true, strict: true });
+          console.log('Using folder:', folderName);
+        }
+      } catch (err) {
+        console.log('Category fetch error:', err);
+        // fallback to 'product'
+      }
+    }
+
+    // Upload images/videos to Cloudinary if present
     const updates = {
       sku: req.body.sku,
       slug: req.body.slug,
       name: req.body.name,
       newCategoryId: req.body.newCategoryId,
-      productdescription:req.body.productdescription, // new added product description
-      popularproduct:req.body.popularproduct,
-      productoffer:req.body.productoffer,
-      topratedproduct:req.body.topratedproduct,
+      productdescription: req.body.productdescription,
+      popularproduct: req.body.popularproduct,
+      productoffer: req.body.productoffer,
+      topratedproduct: req.body.topratedproduct,
       structureId: req.body.structureId,
       contentId: req.body.contentId,
       gsm: req.body.gsm,
@@ -155,20 +213,7 @@ exports.updateProduct = async (req, res, next) => {
       motifsizeId: req.body.motifsizeId,
       suitableforId: req.body.suitableforId,
       vendorId: req.body.vendorId,
-      groupcodeId: req.body.groupcodeId, // ✅ updated
-      ...(files.image && {
-        image: getMediaUrl(files.image[0].filename, 'image'),
-      }),
-      ...(files.image1 && {
-        image1: getMediaUrl(files.image1[0].filename, 'image'),
-      }),
-      ...(files.image2 && {
-        image2: getMediaUrl(files.image2[0].filename, 'image'),
-      }),
-      ...(files.video && {
-        video: getMediaUrl(files.video[0].filename, 'video'),
-      }),
-
+      groupcodeId: req.body.groupcodeId,
       charset: req.body.charset,
       xUaCompatible: req.body.xUaCompatible,
       viewport: req.body.viewport,
@@ -205,16 +250,32 @@ exports.updateProduct = async (req, res, next) => {
       salesPrice: req.body.salesPrice,
       locationCode: req.body.locationCode,
       productIdentifier: req.body.productIdentifier,
+      subsuitableId: req.body.subsuitableId,
+      subfinishId: req.body.subfinishId,
+      substructureId: req.body.substructureId,
+      ...(files.image && {
+        image: await uploadToCloudinary(files.image[0], folderName),
+      }),
+      ...(files.image1 && {
+        image1: await uploadToCloudinary(files.image1[0], folderName),
+      }),
+      ...(files.image2 && {
+        image2: await uploadToCloudinary(files.image2[0], folderName),
+      }),
+      ...(files.video && {
+        video: await uploadToCloudinary(files.video[0], folderName),
+      }),
     };
 
-    const updated = await NewProductModel.findByIdAndUpdate(id, updates, {
-      new: true,
-      runValidators: true,
-    });
+    const updated = await NewProductModel.findByIdAndUpdate(
+      id,
+      { $set: updates },
+      { new: true, runValidators: true },
+    );
     if (!updated) {
       return res.status(404).json({ error: 'Product not found' });
     }
-    res.status(200).json({ status: 1, data: updated });
+    res.status(200).json(updated);
   } catch (error) {
     console.error('Error updating product:', error);
     next(error);
@@ -224,7 +285,8 @@ exports.updateProduct = async (req, res, next) => {
 // DELETE
 exports.deleteProduct = async (req, res, next) => {
   try {
-    const id = req.params.id.trim();
+    const id =
+      typeof req.params.id === 'string' ? req.params.id.trim() : req.params.id;
     const deleted = await NewProductModel.findByIdAndDelete(id);
     if (!deleted) {
       return res.status(404).json({ error: 'Product not found' });
@@ -239,11 +301,14 @@ exports.deleteProduct = async (req, res, next) => {
 // SEARCH
 exports.searchProducts = async (req, res, next) => {
   const q = req.params.q || '';
+  // Escape regex special characters
+  const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const safeQ = escapeRegex(q);
   try {
     const results = await NewProductModel.find({
       $or: [
-        { name: { $regex: q, $options: 'i' } },
-        { keywords: { $regex: q, $options: 'i' } },
+        { name: { $regex: safeQ, $options: 'i' } },
+        { keywords: { $regex: safeQ, $options: 'i' } },
       ],
     });
     res.status(200).json({ status: 1, data: results });
@@ -670,15 +735,11 @@ exports.getProductsByPurchasePriceValue = async (req, res, next) => {
 // ✅ GET products where all three flags are 'yes'
 const commonFilter = {
   popularproduct: 'yes',
- 
 };
 const commonFilter1 = {
-  
   productoffer: 'yes',
- 
 };
 const commonFilter2 = {
- 
   topratedproduct: 'yes',
 };
 
@@ -688,7 +749,9 @@ exports.getPopularProducts = async (req, res) => {
     const products = await NewProductModel.find(commonFilter);
     res.status(200).json({ status: 1, data: products });
   } catch (error) {
-    res.status(500).json({ status: 0, message: 'Error fetching popular products' });
+    res
+      .status(500)
+      .json({ status: 0, message: 'Error fetching popular products' });
   }
 };
 
@@ -698,7 +761,9 @@ exports.getProductOffers = async (req, res) => {
     const products = await NewProductModel.find(commonFilter1);
     res.status(200).json({ status: 1, data: products });
   } catch (error) {
-    res.status(500).json({ status: 0, message: 'Error fetching offer products' });
+    res
+      .status(500)
+      .json({ status: 0, message: 'Error fetching offer products' });
   }
 };
 
@@ -708,6 +773,8 @@ exports.getTopRatedProducts = async (req, res) => {
     const products = await NewProductModel.find(commonFilter2);
     res.status(200).json({ status: 1, data: products });
   } catch (error) {
-    res.status(500).json({ status: 0, message: 'Error fetching top-rated products' });
+    res
+      .status(500)
+      .json({ status: 0, message: 'Error fetching top-rated products' });
   }
 };

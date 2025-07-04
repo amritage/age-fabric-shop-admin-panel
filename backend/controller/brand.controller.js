@@ -61,6 +61,10 @@ exports.getActiveBrands = async (req, res, next) => {
 // delete Brand
 exports.deleteBrand = async (req, res, next) => {
   try {
+    const brand = await Brand.findByIdAndDelete(req.params.id);
+    if (!brand) {
+      return res.status(404).json({ message: 'Brand not found' });
+    }
     await brandService.deleteBrandsService(req.params.id);
     res.status(200).json({
       success: true,

@@ -3,6 +3,9 @@ const express = require('express');
 const path = require('path');
 const cors = require('cors');
 const morgan = require('morgan');
+const compression = require('compression');
+const helmet = require('helmet');
+const hpp = require('hpp');
 
 const connectDB = require('./config/db');
 const globalErrorHandler = require('./middleware/global-error-handler');
@@ -10,18 +13,25 @@ const { secret } = require('./config/secret');
 
 const app = express();
 const PORT = process.env.PORT || 7000;
-const BASE_URL = process.env.BASE_URL || 'http://localhost';
+const BASE_URL = process.env.BASE_URL || 'http://localhost:7000';
 
 // Connect to database
 connectDB();
 
 // Middleware
 app.use(cors());
+app.use(helmet());
+app.use(hpp());
+app.use(compression());
 app.use(express.json());
 app.use(morgan('dev'));
 
 // Static files
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(
+  '/public/images',
+  express.static(path.join(__dirname, 'public/images')),
+);
 
 // Serve uploaded images and videos from separate folders
 app.use(
@@ -88,9 +98,10 @@ app.use((req, res) => {
 // Global error handler
 app.use(globalErrorHandler);
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on ${BASE_URL}${PORT}`);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on ${BASE_URL}`);
+  });
+}
 
 module.exports = app;

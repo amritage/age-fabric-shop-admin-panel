@@ -12,9 +12,9 @@ const DB_URL = process.env.MONGO_URI;
 const connectDB = async () => {
   try {
     await mongoose.connect(DB_URL);
-    console.log('mongodb connection success!');
   } catch (err) {
-    console.log('mongodb connection failed!', err.message);
+    console.error('mongodb connection failed!', err.message);
+    process.exit(1);
   }
 };
 

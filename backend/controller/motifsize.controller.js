@@ -26,7 +26,8 @@ exports.viewMotifsizes = async (req, res) => {
 
 // UPDATE by ID
 exports.updateMotifsize = async (req, res) => {
-  const id = req.params.id.trim();
+  const id =
+    typeof req.params.id === 'string' ? req.params.id.trim() : req.params.id;
   try {
     const updated = await Motifsize.findByIdAndUpdate(
       id,
@@ -43,7 +44,8 @@ exports.updateMotifsize = async (req, res) => {
 
 // DELETE by ID
 exports.deleteMotifsize = async (req, res) => {
-  const id = req.params.id.trim();
+  const id =
+    typeof req.params.id === 'string' ? req.params.id.trim() : req.params.id;
   try {
     const deleted = await Motifsize.findByIdAndDelete(id);
     if (!deleted) return res.status(404).json({ error: 'Not found' });
@@ -56,7 +58,8 @@ exports.deleteMotifsize = async (req, res) => {
 
 // GET ONE by ID
 exports.getMotifsizeById = async (req, res) => {
-  const id = req.params.id.trim();
+  const id =
+    typeof req.params.id === 'string' ? req.params.id.trim() : req.params.id;
   try {
     const motifsize = await Motifsize.findById(id);
     if (!motifsize) {

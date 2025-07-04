@@ -74,10 +74,20 @@ exports.getOfferTimerProductService = async (query) => {
 
 // get popular product service by type
 exports.getPopularProductServiceByType = async (type) => {
-  const products = await Product.find({ productType: type })
-    .sort({ 'reviews.length': -1 })
-    .limit(8)
-    .populate('reviews');
+  const products = await Product.aggregate([
+    { $match: { productType: type } },
+    { $addFields: { reviewCount: { $size: '$reviews' } } },
+    { $sort: { reviewCount: -1 } },
+    { $limit: 8 },
+    {
+      $lookup: {
+        from: 'reviews',
+        localField: '_id',
+        foreignField: 'productId',
+        as: 'reviews',
+      },
+    },
+  ]).populate('reviews');
   return products;
 };
 
@@ -149,8 +159,12 @@ exports.updateProductService = async (id, currProduct) => {
     product.productType = currProduct.productType;
     product.description = currProduct.description;
     product.additionalInformation = currProduct.additionalInformation;
-    product.offerDate.startDate = currProduct.offerDate.startDate;
-    product.offerDate.endDate = currProduct.offerDate.endDate;
+    if (currProduct.offerDate) {
+      product.offerDate = {
+        startDate: currProduct.offerDate.startDate,
+        endDate: currProduct.offerDate.endDate,
+      };
+    }
 
     await product.save();
   }

@@ -22,7 +22,7 @@ const userSchema = mongoose.Schema(
     },
     password: {
       type: String,
-      required: [false, 'Password is required'],
+      required: [true, 'Password is required'],
       minLength: [6, 'Must be at least 6 character'],
     },
 
@@ -82,7 +82,7 @@ userSchema.pre('save', function (next) {
     return next();
   }
   const password = this.password;
-  const hashedPassword = bcrypt.hashSync(password);
+  const hashedPassword = bcrypt.hashSync(password, 10);
   this.password = hashedPassword;
 
   next();
@@ -100,7 +100,7 @@ userSchema.methods.generateConfirmationToken = function () {
 
   const date = new Date();
 
-  date.setDate(date.getDate() + 1);
+  date.setMinutes(date.getMinutes() + 10);
   this.confirmationTokenExpires = date;
 
   return token;

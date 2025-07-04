@@ -9,7 +9,7 @@ exports.addSuitablefor = async (req, res) => {
     res.status(201).json(saved);
   } catch (err) {
     console.error('Error adding suitablefor:', err);
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
@@ -20,13 +20,14 @@ exports.viewSuitablefors = async (req, res) => {
     res.json({ status: 1, data: list });
   } catch (err) {
     console.error('Error fetching suitablefors:', err);
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
 // UPDATE by ID
 exports.updateSuitablefor = async (req, res) => {
-  const id = req.params.id.trim();
+  const id =
+    typeof req.params.id === 'string' ? req.params.id.trim() : req.params.id;
   try {
     const updated = await Suitablefor.findByIdAndUpdate(
       id,
@@ -37,26 +38,28 @@ exports.updateSuitablefor = async (req, res) => {
     res.json({ status: 1, data: updated });
   } catch (err) {
     console.error('Error updating suitablefor:', err);
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
 // DELETE by ID
 exports.deleteSuitablefor = async (req, res) => {
-  const id = req.params.id.trim();
+  const id =
+    typeof req.params.id === 'string' ? req.params.id.trim() : req.params.id;
   try {
     const deleted = await Suitablefor.findByIdAndDelete(id);
     if (!deleted) return res.status(404).json({ error: 'Not found' });
     res.json({ status: 1, data: deleted });
   } catch (err) {
     console.error('Error deleting suitablefor:', err);
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
 // GET ONE by ID
 exports.getSuitableforById = async (req, res) => {
-  const id = req.params.id.trim();
+  const id =
+    typeof req.params.id === 'string' ? req.params.id.trim() : req.params.id;
   try {
     const item = await Suitablefor.findById(id);
     if (!item) {
@@ -67,6 +70,6 @@ exports.getSuitableforById = async (req, res) => {
     res.json({ status: 1, data: item });
   } catch (err) {
     console.error('Error fetching suitablefor by ID:', err);
-    res.status(500).json({ status: 0, error: err.message });
+    next(err);
   }
 };

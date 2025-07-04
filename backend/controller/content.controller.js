@@ -6,10 +6,8 @@ exports.addContent = async (req, res) => {
   try {
     const newContent = new ContentModel({ name: req.body.name });
     const saved = await newContent.save();
-    console.log('Content is Stored Successfully');
     res.status(201).json(saved);
   } catch (error) {
-    console.error('Error storing content', error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -20,7 +18,6 @@ exports.viewContents = async (req, res) => {
     const contents = await ContentModel.find();
     res.status(200).json({ status: 1, message: 'success', data: contents });
   } catch (error) {
-    console.error('Error fetching contents', error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -35,7 +32,6 @@ exports.viewContentById = async (req, res) => {
     }
     res.status(200).json({ status: 1, data: content });
   } catch (error) {
-    console.error('Error fetching content by ID', error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -52,19 +48,18 @@ exports.updateContent = async (req, res) => {
     if (!updated) {
       return res.status(404).json({ error: 'Content not found' });
     }
-    console.log('Content Data is Updated Successfully');
     res
       .status(200)
       .json({ status: 1, message: 'Updated successfully', data: updated });
   } catch (error) {
-    console.error('Error updating content', error);
     res.status(500).json({ error: error.message });
   }
 };
 
 // DELETE
 exports.deleteContent = async (req, res) => {
-  const id = req.params.id.trim();
+  const id =
+    typeof req.params.id === 'string' ? req.params.id.trim() : req.params.id;
   try {
     const deleted = await ContentModel.findByIdAndDelete(id);
     if (!deleted) {
@@ -74,7 +69,6 @@ exports.deleteContent = async (req, res) => {
       .status(200)
       .json({ status: 1, message: 'Deleted successfully', data: deleted });
   } catch (error) {
-    console.error('Error deleting content', error);
     res.status(500).json({ error: error.message });
   }
 };
