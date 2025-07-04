@@ -7,7 +7,7 @@ import {
   useGetProductByIdQuery,
   useGetProductsByGroupCodeQuery,
 } from "@/redux/newproduct/NewProductApi";
-import { filterConfig, subFilterConfig } from "@/utils/filterconfig";
+import { filterConfig } from "@/utils/filterconfig";
 import { useDispatch } from "react-redux";
 import { setProductMedia } from "@/redux/features/productImageSlice";
 import { IProduct } from "@/types/fabricproduct-type";
@@ -91,8 +91,9 @@ export default function AddProductForm({ productId }: { productId?: string }) {
   });
 
   const [formData, setFormData] = useState<Record<string, any>>({});
-  const [filters, setFilters] = useState<{ [key: string]: any[] }>({});
-  const [subFilters, setSubFilters] = useState<{ [key: string]: any[] }>({});
+  const [filters, setFilters] = useState<
+    { name: string; label: string; options: any[] }[]
+  >([]);
   const [previews, setPreviews] = useState<Record<string, string>>({});
   const [isLoadingFilters, setIsLoadingFilters] = useState(true);
   const [filterErrors, setFilterErrors] = useState<Record<string, string>>({});
@@ -102,7 +103,6 @@ export default function AddProductForm({ productId }: { productId?: string }) {
   // Add sub-filter options state
   const [substructureOptions, setSubstructureOptions] = useState<{ _id: string; name: string }[]>([]);
   const [subfinishOptions, setSubfinishOptions] = useState<{ _id: string; name: string }[]>([]);
-  const [subsuitableOptions, setSubsuitableOptions] = useState<{ _id: string; name: string }[]>([]);
 
   // Load saved form data from localStorage on component mount
   useEffect(() => {
@@ -132,9 +132,11 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     }
   }, []);
 
-  // Load all main filter options
+  // 1) only fetch TOP-LEVELs on mount
   useEffect(() => {
-    async function loadFilters() {
+    (async () => {
+      setIsLoadingFilters(true);
+      // Extract token as before
       const adminCookie = typeof window !== "undefined" ? Cookies.get("admin") : null;
       let token = "";
       if (adminCookie) {
@@ -145,17 +147,27 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           token = "";
         }
       }
-      const newFilters: { [key: string]: any[] } = {};
-      await Promise.all(
-        filterConfig.map(async (f) => {
-          const res = await fetch(BASE_URL + f.api, { headers: { Authorization: `Bearer ${token}` } });
-          const data = await res.json();
-          newFilters[f.name] = data.data || [];
-        })
-      );
-      setFilters(newFilters);
-    }
-    loadFilters();
+      try {
+        const results = await Promise.all(
+          filterConfig.map(f =>
+            fetch(BASE_URL + f.api, { headers: { Authorization: `Bearer ${token}` } })
+              .then(r => r.json())
+              .then(j => j.data || [])
+          )
+        );
+        setFilters(
+          filterConfig.map((f, i) => ({
+            name:    f.name,
+            label:   f.label,
+            options: results[i],
+          }))
+        );
+      } catch {
+        // handle errors into filterErrors as before
+      } finally {
+        setIsLoadingFilters(false);
+      }
+    })();
   }, []);
 
   // Fetch sub-filter options on mount
@@ -169,54 +181,16 @@ export default function AddProductForm({ productId }: { productId?: string }) {
       .then(res => res.json())
       .then(data => setSubfinishOptions(data.data || []));
   }, []);
-  useEffect(() => {
-    fetch('/api/subsuitable/view')
-      .then(res => res.json())
-      .then(data => setSubsuitableOptions(data.data || []));
-  }, []);
 
-  // Load sub-filter options when parent changes
+  // 2) hydrate formData ONLY after filters & productDetail are both ready
   useEffect(() => {
-    subFilterConfig.forEach((sub) => {
-      const parentValue = formData[sub.parentKey];
-      if (!parentValue) {
-        setSubFilters((prev) => ({ ...prev, [sub.name]: [] }));
-        return;
-      }
-      const adminCookie = typeof window !== "undefined" ? Cookies.get("admin") : null;
-      let token = "";
-      if (adminCookie) {
-        try {
-          const adminObj = JSON.parse(adminCookie);
-          token = adminObj.accessToken;
-        } catch (e) {
-          token = "";
-        }
-      }
-      fetch(BASE_URL + sub.api, { headers: { Authorization: `Bearer ${token}` } })
-        .then((r) => r.json())
-        .then((j) => {
-          // Only show sub-filter options that match the selected parent
-          const opts = (j.data || []).filter((item: any) => item[sub.parentKey] === parentValue);
-          setSubFilters((prev) => ({ ...prev, [sub.name]: opts }));
-        });
-    });
-  }, [formData.structureId, formData.finishId, formData.suitableforId]);
-
-  // When editing, hydrate formData with all filter and sub-filter values
-  useEffect(() => {
-    if (!isEdit || !productDetail) return;
+    if (isLoadingFilters || !productDetail) return;
     const processed = { ...productDetail };
     function extractId(val: any) {
       return val && typeof val === "object" && "_id" in val ? val._id : val || "";
     }
-    // Set all main and sub-filter ids
-    filterConfig.forEach(f => {
-      processed[f.name] = extractId(processed[f.name]);
-    });
-    subFilterConfig.forEach(f => {
-      processed[f.name] = extractId(processed[f.name]);
-    });
+    processed.substructureId = extractId(processed.substructureId);
+    processed.subfinishId = extractId(processed.subfinishId);
     setFormData(processed);
     ["image", "image1", "image2", "video"].forEach((key) => {
       const url = (processed as any)[key];
@@ -224,7 +198,73 @@ export default function AddProductForm({ productId }: { productId?: string }) {
         setPreviews((p) => ({ ...p, [key]: url }));
       }
     });
-  }, [isEdit, productDetail]);
+  }, [isLoadingFilters, productDetail]);
+
+  // Sub Structure
+  useEffect(() => {
+    const parentId = formData.structureId;
+    if (!parentId) {
+      setFilters(fs =>
+        fs.map(f => f.name === "subStructureId" ? { ...f, options: [] } : f)
+      );
+      return;
+    }
+    // Extract token as before
+    const adminCookie = typeof window !== "undefined" ? Cookies.get("admin") : null;
+    let token = "";
+    if (adminCookie) {
+      try {
+        const adminObj = JSON.parse(adminCookie);
+        token = adminObj.accessToken;
+      } catch (e) {
+        token = "";
+      }
+    }
+    fetch(BASE_URL + "/api/substructure/view", { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.json())
+      .then(j => {
+        const opts = (j.data || []).filter((item: any) => item.structureId === parentId);
+        setFilters(fs =>
+          fs.map(f => f.name === "subStructureId" ? { ...f, options: opts } : f)
+        );
+      })
+      .catch(() => {
+        setFilterErrors(e => ({ ...e, ["subStructureId"]: `Failed to load subStructureId` }));
+      });
+  }, [formData.structureId]);
+
+  // Sub Finish
+  useEffect(() => {
+    const parentId = formData.finishId;
+    if (!parentId) {
+      setFilters(fs =>
+        fs.map(f => f.name === "subFinishId" ? { ...f, options: [] } : f)
+      );
+      return;
+    }
+    // Extract token as before
+    const adminCookie = typeof window !== "undefined" ? Cookies.get("admin") : null;
+    let token = "";
+    if (adminCookie) {
+      try {
+        const adminObj = JSON.parse(adminCookie);
+        token = adminObj.accessToken;
+      } catch (e) {
+        token = "";
+      }
+    }
+    fetch(BASE_URL + "/api/subfinish/view", { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.json())
+      .then(j => {
+        const opts = (j.data || []).filter((item: any) => item.finishId === parentId);
+        setFilters(fs =>
+          fs.map(f => f.name === "subFinishId" ? { ...f, options: opts } : f)
+        );
+      })
+      .catch(() => {
+        setFilterErrors(e => ({ ...e, ["subFinishId"]: `Failed to load subFinishId` }));
+      });
+  }, [formData.finishId]);
 
   // generic handlers
   const handleInputChange = (
@@ -453,49 +493,6 @@ export default function AddProductForm({ productId }: { productId?: string }) {
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Main Filters */}
-          {filterConfig.map((f) => (
-            <div key={f.name} className="mb-6">
-              <label htmlFor={f.name} className="block font-bold text-gray-800 text-lg mb-2">
-                {f.label} <span className="text-red-500">*</span>
-              </label>
-              <select
-                id={f.name}
-                name={f.name}
-                required
-                value={formData[f.name] || ""}
-                onChange={handleInputChange}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
-              >
-                <option value="">Select {f.label}</option>
-                {filters[f.name]?.map((o: any) => (
-                  <option key={o._id} value={o._id}>{o.name}</option>
-                ))}
-              </select>
-            </div>
-          ))}
-          {/* Sub Filters */}
-          {subFilterConfig.map((f) => (
-            <div key={f.name} className="mb-6">
-              <label htmlFor={f.name} className="block font-bold text-gray-800 text-lg mb-2">
-                {f.name.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())} <span className="text-red-500">*</span>
-              </label>
-              <select
-                id={f.name}
-                name={f.name}
-                required
-                value={formData[f.name] || ""}
-                onChange={handleInputChange}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
-              >
-                <option value="">Select {f.name.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}</option>
-                {subFilters[f.name]?.map((o: any) => (
-                  <option key={o._id} value={o._id}>{o.name}</option>
-                ))}
-              </select>
-            </div>
-          ))}
-
           {/* Product Name */}
           <div>
             <label
@@ -792,121 +789,161 @@ export default function AddProductForm({ productId }: { productId?: string }) {
             />
           </div>
 
-          {/* Uploads & previews */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {["image", "image1", "image2", "video"].map((key) => (
-              <div key={key} className="mb-6">
-                <label className="block font-bold text-gray-800 text-lg mb-2">
-                  {key === "video" ? "Upload Video" : `Upload ${key}`}
-                </label>
-                <input
-                  type="file"
-                  name={key}
-                  accept={key === "video" ? "video/*" : "image/*"}
-                  onChange={(e) => handleFileChange(e, key)}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
-                />
-                {previews[key] &&
-                  (key === "video" ? (
-                    <video
-                      src={previews[key]}
-                      controls
-                      className="mt-2 w-full h-32 rounded border border-gray-200 bg-gray-50"
-                    />
-                  ) : (
-                    <Image
-                      src={previews[key]}
-                      alt={key}
-                      width={320}
-                      height={128}
-                      unoptimized
-                      className="mt-2 w-full h-32 object-cover rounded border border-gray-200 bg-gray-50"
-                    />
-                  ))}
-              </div>
-            ))}
-          </div>
+          {/* Dynamic filters */}
+          {filters.map((f) => (
+            <div key={f.name} className="mb-6">
+              <label
+                htmlFor={f.name}
+                className="block font-bold text-gray-800 text-lg mb-2"
+              >
+                {f.label} <span className="text-red-500">*</span>
+              </label>
+              <select
+                id={f.name}
+                name={f.name}
+                required
+                value={formData[f.name] || ""}
+                onChange={handleInputChange}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+              >
+                <option value="">Select {f.label}</option>
+                {f.options.map((o: any) => (
+                  <option key={o._id} value={o._id}>
+                    {o.name}
+                  </option>
+                ))}
+              </select>
 
-          {/* Product Flags (Popular, Top Rated, Product Offer) */}
-          <div className="flex flex-wrap gap-8 items-center mt-8">
-            {/* Popular Product */}
-            <div>
-              <span className="block font-bold text-gray-800 text-lg mb-2">Popular Product:</span>
-              <label className="text-xl font-bold mr-2">
-                <input
-                  type="radio"
-                  name="popularproduct"
-                  value="yes"
-                  checked={formData.popularproduct === "yes"}
-                  onChange={handleInputChange}
-                  className="w-6 h-6 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-2"
-                />
-                Yes
-              </label>
-              <label className="text-xl font-bold mr-2">
-                <input
-                  type="radio"
-                  name="popularproduct"
-                  value="no"
-                  checked={formData.popularproduct === "no"}
-                  onChange={handleInputChange}
-                  className="w-6 h-6 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-2"
-                />
-                No
-              </label>
+              {/* Show related products for Group Code */}
+              {f.name === "groupcodeId" && (
+                <>
+                  <div className="text-md text-blue-600 mt-1 mb-2">
+                    💡 Group Code helps organize related products. When selected,
+                    you&apos;ll see other products with the same group code below.
+                  </div>
+                  {formData[f.name] && (
+                    <RelatedProducts groupcodeId={formData[f.name]} />
+                  )}
+                </>
+              )}
             </div>
-            {/* Top Rated */}
-            <div>
-              <span className="block font-bold text-gray-800 text-lg mb-2">Top Rated:</span>
-              <label className="text-xl font-bold mr-2">
-                <input
-                  type="radio"
-                  name="topratedproduct"
-                  value="yes"
-                  checked={formData.topratedproduct === "yes"}
-                  onChange={handleInputChange}
-                  className="w-6 h-6 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-2"
-                />
-                Yes
+          ))}
+        </div>
+
+        {/* Uploads & previews */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {["image", "image1", "image2", "video"].map((key) => (
+            <div key={key} className="mb-6">
+              <label className="block font-bold text-gray-800 text-lg mb-2">
+                {key === "video" ? "Upload Video" : `Upload ${key}`}
               </label>
-              <label className="text-xl font-bold mr-2">
-                <input
-                  type="radio"
-                  name="topratedproduct"
-                  value="no"
-                  checked={formData.topratedproduct === "no"}
-                  onChange={handleInputChange}
-                  className="w-6 h-6 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-2"
-                />
-                No
-              </label>
+              <input
+                type="file"
+                name={key}
+                accept={key === "video" ? "video/*" : "image/*"}
+                onChange={(e) => handleFileChange(e, key)}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+              />
+              {previews[key] &&
+                (key === "video" ? (
+                  <video
+                    src={previews[key]}
+                    controls
+                    className="mt-2 w-full h-32 rounded border border-gray-200 bg-gray-50"
+                  />
+                ) : (
+                  <Image
+                    src={previews[key]}
+                    alt={key}
+                    width={320}
+                    height={128}
+                    unoptimized
+                    className="mt-2 w-full h-32 object-cover rounded border border-gray-200 bg-gray-50"
+                  />
+                ))}
             </div>
-            {/* Product Offer */}
-            <div>
-              <span className="block font-bold text-gray-800 text-lg mb-2">Product Offer:</span>
-              <label className="text-xl font-bold mr-2">
-                <input
-                  type="radio"
-                  name="productoffer"
-                  value="yes"
-                  checked={formData.productoffer === "yes"}
-                  onChange={handleInputChange}
-                  className="w-6 h-6 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-2"
-                />
-                Yes
-              </label>
-              <label className="text-xl font-bold mr-2">
-                <input
-                  type="radio"
-                  name="productoffer"
-                  value="no"
-                  checked={formData.productoffer === "no"}
-                  onChange={handleInputChange}
-                  className="w-6 h-6 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-2"
-                />
-                No
-              </label>
-            </div>
+          ))}
+        </div>
+
+        {/* Product Flags (Popular, Top Rated, Product Offer) */}
+        <div className="flex flex-wrap gap-8 items-center mt-8">
+          {/* Popular Product */}
+          <div>
+            <span className="block font-bold text-gray-800 text-lg mb-2">Popular Product:</span>
+            <label className="text-xl font-bold mr-2">
+              <input
+                type="radio"
+                name="popularproduct"
+                value="yes"
+                checked={formData.popularproduct === "yes"}
+                onChange={handleInputChange}
+                className="w-6 h-6 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-2"
+              />
+              Yes
+            </label>
+            <label className="text-xl font-bold mr-2">
+              <input
+                type="radio"
+                name="popularproduct"
+                value="no"
+                checked={formData.popularproduct === "no"}
+                onChange={handleInputChange}
+                className="w-6 h-6 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-2"
+              />
+              No
+            </label>
+          </div>
+          {/* Top Rated */}
+          <div>
+            <span className="block font-bold text-gray-800 text-lg mb-2">Top Rated:</span>
+            <label className="text-xl font-bold mr-2">
+              <input
+                type="radio"
+                name="topratedproduct"
+                value="yes"
+                checked={formData.topratedproduct === "yes"}
+                onChange={handleInputChange}
+                className="w-6 h-6 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-2"
+              />
+              Yes
+            </label>
+            <label className="text-xl font-bold mr-2">
+              <input
+                type="radio"
+                name="topratedproduct"
+                value="no"
+                checked={formData.topratedproduct === "no"}
+                onChange={handleInputChange}
+                className="w-6 h-6 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-2"
+              />
+              No
+            </label>
+          </div>
+          {/* Product Offer */}
+          <div>
+            <span className="block font-bold text-gray-800 text-lg mb-2">Product Offer:</span>
+            <label className="text-xl font-bold mr-2">
+              <input
+                type="radio"
+                name="productoffer"
+                value="yes"
+                checked={formData.productoffer === "yes"}
+                onChange={handleInputChange}
+                className="w-6 h-6 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-2"
+              />
+              Yes
+            </label>
+            <label className="text-xl font-bold mr-2">
+              <input
+                type="radio"
+                name="productoffer"
+                value="no"
+                checked={formData.productoffer === "no"}
+                onChange={handleInputChange}
+                className="w-6 h-6 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-2"
+              />
+              No
+            </label>
           </div>
         </div>
 
