@@ -103,6 +103,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
   // Add sub-filter options state
   const [substructureOptions, setSubstructureOptions] = useState<{ _id: string; name: string }[]>([]);
   const [subfinishOptions, setSubfinishOptions] = useState<{ _id: string; name: string }[]>([]);
+  const [subsuitableOptions, setSubsuitableOptions] = useState<{ _id: string; name: string }[]>([]);
 
   // Load saved form data from localStorage on component mount
   useEffect(() => {
@@ -181,6 +182,11 @@ export default function AddProductForm({ productId }: { productId?: string }) {
       .then(res => res.json())
       .then(data => setSubfinishOptions(data.data || []));
   }, []);
+  useEffect(() => {
+    fetch('/api/subsuitable/view')
+      .then(res => res.json())
+      .then(data => setSubsuitableOptions(data.data || []));
+  }, []);
 
   // 2) hydrate formData ONLY after filters & productDetail are both ready
   useEffect(() => {
@@ -191,6 +197,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     }
     processed.substructureId = extractId(processed.substructureId);
     processed.subfinishId = extractId(processed.subfinishId);
+    processed.subsuitableId = extractId(processed.subsuitableId);
     setFormData(processed);
     ["image", "image1", "image2", "video"].forEach((key) => {
       const url = (processed as any)[key];
@@ -265,6 +272,39 @@ export default function AddProductForm({ productId }: { productId?: string }) {
         setFilterErrors(e => ({ ...e, ["subFinishId"]: `Failed to load subFinishId` }));
       });
   }, [formData.finishId]);
+
+  // Sub Suitable
+  useEffect(() => {
+    const parentId = formData.suitableforId;
+    if (!parentId) {
+      setFilters(fs =>
+        fs.map(f => f.name === "subSuitableId" ? { ...f, options: [] } : f)
+      );
+      return;
+    }
+    // Extract token as before
+    const adminCookie = typeof window !== "undefined" ? Cookies.get("admin") : null;
+    let token = "";
+    if (adminCookie) {
+      try {
+        const adminObj = JSON.parse(adminCookie);
+        token = adminObj.accessToken;
+      } catch (e) {
+        token = "";
+      }
+    }
+    fetch(BASE_URL + "/api/subsuitable/view", { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.json())
+      .then(j => {
+        const opts = (j.data || []).filter((item: any) => item.suitableforId === parentId);
+        setFilters(fs =>
+          fs.map(f => f.name === "subSuitableId" ? { ...f, options: opts } : f)
+        );
+      })
+      .catch(() => {
+        setFilterErrors(e => ({ ...e, ["subSuitableId"]: `Failed to load subSuitableId` }));
+      });
+  }, [formData.suitableforId]);
 
   // generic handlers
   const handleInputChange = (
@@ -828,6 +868,66 @@ export default function AddProductForm({ productId }: { productId?: string }) {
               )}
             </div>
           ))}
+
+          {/* Sub Structure */}
+          <div className="mb-6">
+            <label htmlFor="substructureId" className="block font-bold text-gray-800 text-lg mb-2">
+              Sub Structure <span className="text-red-500">*</span>
+            </label>
+            <select
+              id="substructureId"
+              name="substructureId"
+              required
+              value={formData.substructureId || ""}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+            >
+              <option value="">Select Sub Structure</option>
+              {substructureOptions.map((o) => (
+                <option key={o._id} value={o._id}>{o.name}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Sub Finish */}
+          <div className="mb-6">
+            <label htmlFor="subfinishId" className="block font-bold text-gray-800 text-lg mb-2">
+              Sub Finish <span className="text-red-500">*</span>
+            </label>
+            <select
+              id="subfinishId"
+              name="subfinishId"
+              required
+              value={formData.subfinishId || ""}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+            >
+              <option value="">Select Sub Finish</option>
+              {subfinishOptions.map((o) => (
+                <option key={o._id} value={o._id}>{o.name}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Sub Suitable */}
+          <div className="mb-6">
+            <label htmlFor="subsuitableId" className="block font-bold text-gray-800 text-lg mb-2">
+              Sub Suitable For <span className="text-red-500">*</span>
+            </label>
+            <select
+              id="subsuitableId"
+              name="subsuitableId"
+              required
+              value={formData.subsuitableId || ""}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+            >
+              <option value="">Select Sub Suitable For</option>
+              {subsuitableOptions.map((o) => (
+                <option key={o._id} value={o._id}>{o.name}</option>
+              ))}
+            </select>
+          </div>
         </div>
 
         {/* Uploads & previews */}

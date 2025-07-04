@@ -13,6 +13,7 @@ import { ISubFinish } from "@/types/subfinish-type";
 
 type FormVals = {
   name: string;
+
   finishId: string;
 };
 

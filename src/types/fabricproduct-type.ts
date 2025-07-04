@@ -70,6 +70,7 @@ export interface IProduct {
   substructureId?: string;
   subfinishId?: string;
   subsuitableforId?: string;
+  subsuitableId?: string;
 }
 
 export interface IProductFormData {
@@ -102,6 +103,7 @@ export interface IProductFormData {
   image1?: File | null;
   image2?: File | null;
   video?: File | null;
+  subsuitableId?: string;
 }
 
 export interface IFilter {
