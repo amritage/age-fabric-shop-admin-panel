@@ -197,7 +197,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     }
     processed.substructureId = extractId(processed.substructureId);
     processed.subfinishId = extractId(processed.subfinishId);
-    processed.subsuitableId = extractId(processed.subsuitableId);
+    processed.subsuitableforId = extractId(processed.subsuitableforId);
     setFormData(processed);
     ["image", "image1", "image2", "video"].forEach((key) => {
       const url = (processed as any)[key];
@@ -275,7 +275,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
 
   // Sub Suitable
   useEffect(() => {
-    const parentId = formData.suitableId;
+    const parentId = formData.suitableforId;
     if (!parentId) {
       setFilters(fs =>
         fs.map(f => f.name === "subSuitableId" ? { ...f, options: [] } : f)
@@ -296,7 +296,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     fetch(BASE_URL + "/api/subsuitable/view", { headers: { Authorization: `Bearer ${token}` } })
       .then(r => r.json())
       .then(j => {
-        const opts = (j.data || []).filter((item: any) => item.suitableId === parentId);
+        const opts = (j.data || []).filter((item: any) => item.suitableforId === parentId);
         setFilters(fs =>
           fs.map(f => f.name === "subSuitableId" ? { ...f, options: opts } : f)
         );
@@ -304,7 +304,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
       .catch(() => {
         setFilterErrors(e => ({ ...e, ["subSuitableId"]: `Failed to load subSuitableId` }));
       });
-  }, [formData.suitableId]);
+  }, [formData.suitableforId]);
 
   // generic handlers
   const handleInputChange = (
@@ -389,7 +389,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
       { name: "colorId", label: "Color" },
       { name: "css", label: "CSS" },
       { name: "motifsizeId", label: "Motif Size" },
-      { name: "suitableId", label: "Suitable For" },
+      { name: "suitableforId", label: "Suitable For" },
       { name: "vendorId", label: "Vendor" },
       { name: "groupcodeId", label: "Group Code" },
       { name: "purchasePrice", label: "Purchase Price" },
@@ -440,7 +440,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     const stringFields = [
       "name", "productdescription", "popularproduct", "productoffer", "topratedproduct",
       "newCategoryId", "structureId", "contentId", "um", "currency", "finishId", "designId",
-      "colorId", "css", "motifsizeId", "suitableId", "vendorId", "groupcodeId", "charset",
+      "colorId", "css", "motifsizeId", "suitableforId", "vendorId", "groupcodeId", "charset",
       "title", "description", "keywords", "ogTitle", "ogDescription", "ogUrl", "sku", "slug",
       "locationCode", "productIdentifier"
     ];
@@ -920,8 +920,8 @@ export default function AddProductForm({ productId }: { productId?: string }) {
               Sub Suitable For
             </label>
             <select
-              name="subsuitableId"
-              value={formData.subsuitableId || ""}
+              name="subsuitableforId"
+              value={formData.subsuitableforId || ""}
               onChange={handleInputChange}
               className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm"
             >
