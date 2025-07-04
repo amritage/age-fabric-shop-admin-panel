@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+// File: app/components/fabric-products/AddProductForm.tsx
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -7,9 +7,10 @@ import {
   useGetProductByIdQuery,
   useGetProductsByGroupCodeQuery,
 } from "@/redux/newproduct/NewProductApi";
-import { filterConfig, subFilterConfig } from "@/utils/filterconfig";
+import { filterConfig } from "@/utils/filterconfig";
 import { useDispatch } from "react-redux";
 import { setProductMedia } from "@/redux/features/productImageSlice";
+import { IProduct } from "@/types/fabricproduct-type";
 import { notifyError } from "@/utils/toast";
 import Image from "next/image";
 import Cookies from "js-cookie";
@@ -18,17 +19,31 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 // Related Products Component
 const RelatedProducts = ({ groupcodeId }: { groupcodeId: string }) => {
-  const { data: response, isLoading, error } =
-    useGetProductsByGroupCodeQuery(groupcodeId, { skip: !groupcodeId });
+  const {
+    data: response,
+    isLoading,
+    error,
+  } = useGetProductsByGroupCodeQuery(groupcodeId, {
+    skip: !groupcodeId,
+  });
+
   const relatedProducts = response?.data || [];
 
   if (!groupcodeId) return null;
   if (isLoading)
-    return <div className="text-sm text-gray-500">Loading related products...</div>;
+    return (
+      <div className="text-sm text-gray-500">Loading related products...</div>
+    );
   if (error)
-    return <div className="text-sm text-red-500">Error loading related products</div>;
+    return (
+      <div className="text-sm text-red-500">Error loading related products</div>
+    );
   if (relatedProducts.length === 0)
-    return <div className="text-sm text-gray-500">No related products found.</div>;
+    return (
+      <div className="text-sm text-gray-500">
+        No related products found for this group code.
+      </div>
+    );
 
   return (
     <div className="w-full mt-4 p-4 bg-gray-50 rounded-lg">
@@ -36,20 +51,27 @@ const RelatedProducts = ({ groupcodeId }: { groupcodeId: string }) => {
         Related Products ({relatedProducts.length})
       </h4>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-60 overflow-y-auto">
-        {relatedProducts.slice(0, 6).map((p) => (
-          <div key={p._id} className="bg-white p-3 rounded border text-xs">
-            <div className="font-medium text-gray-800 truncate">{p.name}</div>
-            <div className="text-gray-600">SKU: {p.sku}</div>
-            <div className="text-gray-600">
-              Price: {p.salesPrice} {p.currency}
+        {relatedProducts.slice(0, 6).map((product) => (
+          <div
+            key={product._id}
+            className="bg-white p-3 rounded border text-xs"
+          >
+            <div className="font-medium text-gray-800 truncate">
+              {product.name}
             </div>
-            <div className="text-gray-600">GSM: {p.gsm} | OZ: {p.oz}</div>
+            <div className="text-gray-600">SKU: {product.sku}</div>
+            <div className="text-gray-600">
+              Price: {product.salesPrice} {product.currency}
+            </div>
+            <div className="text-gray-600">
+              GSM: {product.gsm} | OZ: {product.oz}
+            </div>
           </div>
         ))}
       </div>
       {relatedProducts.length > 6 && (
         <div className="text-xs text-gray-500 mt-2">
-          Showing 6 of {relatedProducts.length}
+          Showing 6 of {relatedProducts.length} related products
         </div>
       )}
     </div>
@@ -59,349 +81,873 @@ const RelatedProducts = ({ groupcodeId }: { groupcodeId: string }) => {
 export default function AddProductForm({ productId }: { productId?: string }) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  // Use the productId from props if available, otherwise check search params
   const editId = productId ?? searchParams.get("editId") ?? undefined;
   const isEdit = Boolean(editId);
 
-  // Fetch existing product when editing
-  const { data: productDetail, isLoading: loadingDetail } =
-    useGetProductByIdQuery(editId!, { skip: !isEdit });
+  // if editing, fetch the product
+  const { data: productDetail, isLoading: isLoadingProductDetail } = useGetProductByIdQuery(editId!, {
+    skip: !isEdit,
+  });
 
   const [formData, setFormData] = useState<Record<string, any>>({});
-  const [filters, setFilters] = useState<{
-    name: string;
-    label: string;
-    options: any[];
-  }[]>(
-    [
-      ...filterConfig.map((f) => ({ name: f.name, label: f.label, options: [] })),
-      ...subFilterConfig.map((f) => ({ name: f.name, label: f.name, options: [] })),
-    ]
-  );
-  const [loadingFilters, setLoadingFilters] = useState(true);
-  const [filterErrors, setFilterErrors] = useState<Record<string, string>>({});
+  const [filters, setFilters] = useState<
+    { name: string; label: string; options: any[] }[]
+  >([]);
   const [previews, setPreviews] = useState<Record<string, string>>({});
-  const [restored, setRestored] = useState(false);
+  const [isLoadingFilters, setIsLoadingFilters] = useState(true);
+  const [filterErrors, setFilterErrors] = useState<Record<string, string>>({});
+  const [hasRestoredData, setHasRestoredData] = useState(false);
   const dispatch = useDispatch();
 
-  // Restore unsaved form if adding new
+  // Add sub-filter options state
+  const [substructureOptions, setSubstructureOptions] = useState<{ _id: string; name: string }[]>([]);
+  const [subfinishOptions, setSubfinishOptions] = useState<{ _id: string; name: string }[]>([]);
+  const [subsuitableforOptions, setSubsuitableforOptions] = useState<{ _id: string; name: string }[]>([]);
+
+  // Load saved form data from localStorage on component mount
   useEffect(() => {
     if (!isEdit) {
-      const saved = localStorage.getItem("ADD_PRODUCT_FORM_DATA");
-      if (saved) {
+      const savedFormData = localStorage.getItem('ADD_PRODUCT_FORM_DATA');
+      if (savedFormData) {
         try {
-          setFormData(JSON.parse(saved));
-          setRestored(true);
-        } catch {}
+          const parsedData = JSON.parse(savedFormData);
+          // Defensive: ensure productdescription is always a string
+          if (Array.isArray(parsedData.productdescription)) {
+            parsedData.productdescription = parsedData.productdescription.join(" ");
+          } else if (typeof parsedData.productdescription !== "string") {
+            parsedData.productdescription = String(parsedData.productdescription ?? "");
+          }
+          setFormData(parsedData);
+          setHasRestoredData(true);
+        } catch (error) {
+          console.error('Error parsing saved form data:', error);
+        }
       }
     }
   }, [isEdit]);
 
-  // Load top-level filters
   useEffect(() => {
-    setLoadingFilters(true);
-    const cookie = Cookies.get("admin");
-    let token = "";
-    if (cookie) {
-      try {
-        token = JSON.parse(cookie).accessToken;
-      } catch {}
+    if (!BASE_URL) {
+      notifyError("API base URL is not set. Please configure NEXT_PUBLIC_API_BASE_URL in your environment.");
     }
-    Promise.all(
-      filterConfig.map((cfg) =>
-        fetch(BASE_URL + cfg.api, { headers: { Authorization: `Bearer ${token}` } })
-          .then((r) => r.json())
-          .then((j) => j.data || [])
-      )
-    )
-      .then((results) => {
-        setFilters((fs) =>
-          fs.map((f) => {
-            const idx = filterConfig.findIndex((c) => c.name === f.name);
-            return idx >= 0 ? { ...f, options: results[idx] } : f;
-          })
-        );
-      })
-      .catch((e) => console.error(e))
-      .finally(() => setLoadingFilters(false));
   }, []);
 
-  // Hydrate formData for edit
+  // 1) only fetch TOP-LEVELs on mount
   useEffect(() => {
-    if (loadingFilters || !productDetail) return;
-    const data: Record<string, any> = { ...productDetail };
-    const extract = (v: any) => (v && v._id ? v._id : v || "");
-    [...filterConfig, ...subFilterConfig].forEach(({ name }) => {
-      data[name] = extract(data[name]);
-    });
-    setFormData(data);
-    ["image", "image1", "image2", "video"].forEach((k) => {
-      if (data[k]) setPreviews((p) => ({ ...p, [k]: data[k] }));
-    });
-  }, [loadingFilters, productDetail]);
+    (async () => {
+      setIsLoadingFilters(true);
+      // Extract token as before
+      const adminCookie = typeof window !== "undefined" ? Cookies.get("admin") : null;
+      let token = "";
+      if (adminCookie) {
+        try {
+          const adminObj = JSON.parse(adminCookie);
+          token = adminObj.accessToken;
+        } catch (e) {
+          token = "";
+        }
+      }
+      try {
+        const results = await Promise.all(
+          filterConfig.map(f =>
+            fetch(BASE_URL + f.api, { headers: { Authorization: `Bearer ${token}` } })
+              .then(r => r.json())
+              .then(j => j.data || [])
+          )
+        );
+        setFilters(
+          filterConfig.map((f, i) => ({
+            name:    f.name,
+            label:   f.label,
+            options: results[i],
+          }))
+        );
+      } catch {
+        // handle errors into filterErrors as before
+      } finally {
+        setIsLoadingFilters(false);
+      }
+    })();
+  }, []);
 
-  // Dependent sub-filters loader
-  const loadSubs = (
-    parentKey: string,
-    subName: string,
-    api: string,
-    errKey: string
-  ) => {
-    const val = formData[parentKey];
-    if (!val) {
-      setFilters((fs) => fs.map((f) => (f.name === subName ? { ...f, options: [] } : f)));
+  // Fetch sub-filter options on mount
+  useEffect(() => {
+    fetch('/api/substructure/view')
+      .then(res => res.json())
+      .then(data => setSubstructureOptions(data.data || []));
+  }, []);
+  useEffect(() => {
+    fetch('/api/subfinish/view')
+      .then(res => res.json())
+      .then(data => setSubfinishOptions(data.data || []));
+  }, []);
+  useEffect(() => {
+    fetch('/api/subsuitable/view')
+      .then(res => res.json())
+      .then(data => setSubsuitableforOptions(data.data || []));
+  }, []);
+
+  // 2) hydrate formData ONLY after filters & productDetail are both ready
+  useEffect(() => {
+    if (isLoadingFilters || !productDetail) return;
+    const processed = { ...productDetail };
+    function extractId(val: any) {
+      return val && typeof val === "object" && "_id" in val ? val._id : val || "";
+    }
+    processed.substructureId = extractId(processed.substructureId);
+    processed.subfinishId = extractId(processed.subfinishId);
+    processed.subsuitableforId = extractId(processed.subsuitableforId);
+    setFormData(processed);
+    ["image", "image1", "image2", "video"].forEach((key) => {
+      const url = (processed as any)[key];
+      if (url) {
+        setPreviews((p) => ({ ...p, [key]: url }));
+      }
+    });
+  }, [isLoadingFilters, productDetail]);
+
+  // Sub Structure
+  useEffect(() => {
+    const parentId = formData.structureId;
+    if (!parentId) {
+      setFilters(fs =>
+        fs.map(f => f.name === "subStructureId" ? { ...f, options: [] } : f)
+      );
       return;
     }
-    const cookie = Cookies.get("admin");
+    // Extract token as before
+    const adminCookie = typeof window !== "undefined" ? Cookies.get("admin") : null;
     let token = "";
-    if (cookie) {
+    if (adminCookie) {
       try {
-        token = JSON.parse(cookie).accessToken;
-      } catch {}
+        const adminObj = JSON.parse(adminCookie);
+        token = adminObj.accessToken;
+      } catch (e) {
+        token = "";
+      }
     }
-    fetch(BASE_URL + api, { headers: { Authorization: `Bearer ${token}` } })
-      .then((r) => r.json())
-      .then((j) => {
-        const opts = (j.data || []).filter((item: any) => item[parentKey] === val);
-        setFilters((fs) =>
-          fs.map((f) => (f.name === subName ? { ...f, options: opts } : f))
+    fetch(BASE_URL + "/api/substructure/view", { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.json())
+      .then(j => {
+        const opts = (j.data || []).filter((item: any) => item.structureId === parentId);
+        setFilters(fs =>
+          fs.map(f => f.name === "subStructureId" ? { ...f, options: opts } : f)
         );
       })
-      .catch(() =>
-        setFilterErrors((e) => ({ ...e, [errKey]: `Failed to load ${subName}` }))
+      .catch(() => {
+        setFilterErrors(e => ({ ...e, ["subStructureId"]: `Failed to load subStructureId` }));
+      });
+  }, [formData.structureId]);
+
+  // Sub Finish
+  useEffect(() => {
+    const parentId = formData.finishId;
+    if (!parentId) {
+      setFilters(fs =>
+        fs.map(f => f.name === "subFinishId" ? { ...f, options: [] } : f)
       );
-  };
+      return;
+    }
+    // Extract token as before
+    const adminCookie = typeof window !== "undefined" ? Cookies.get("admin") : null;
+    let token = "";
+    if (adminCookie) {
+      try {
+        const adminObj = JSON.parse(adminCookie);
+        token = adminObj.accessToken;
+      } catch (e) {
+        token = "";
+      }
+    }
+    fetch(BASE_URL + "/api/subfinish/view", { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.json())
+      .then(j => {
+        const opts = (j.data || []).filter((item: any) => item.finishId === parentId);
+        setFilters(fs =>
+          fs.map(f => f.name === "subFinishId" ? { ...f, options: opts } : f)
+        );
+      })
+      .catch(() => {
+        setFilterErrors(e => ({ ...e, ["subFinishId"]: `Failed to load subFinishId` }));
+      });
+  }, [formData.finishId]);
 
-  useEffect(() => loadSubs("structureId", "subStructureId", "/api/substructure/view", "subStructureId"), [
-    formData.structureId,
-  ]);
-  useEffect(() => loadSubs("finishId", "subFinishId", "/api/subfinish/view", "subFinishId"), [
-    formData.finishId,
-  ]);
-  useEffect(() =>
-    loadSubs("suitableforId", "subSuitableId", "/api/subsuitable/view", "subSuitableId"),
-    [formData.suitableforId]
-  );
+  // Sub Suitable
+  useEffect(() => {
+    const parentId = formData.suitableforId;
+    if (!parentId) {
+      setFilters(fs =>
+        fs.map(f => f.name === "subSuitableId" ? { ...f, options: [] } : f)
+      );
+      return;
+    }
+    // Extract token as before
+    const adminCookie = typeof window !== "undefined" ? Cookies.get("admin") : null;
+    let token = "";
+    if (adminCookie) {
+      try {
+        const adminObj = JSON.parse(adminCookie);
+        token = adminObj.accessToken;
+      } catch (e) {
+        token = "";
+      }
+    }
+    fetch(BASE_URL + "/api/subsuitable/view", { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.json())
+      .then(j => {
+        const opts = (j.data || []).filter((item: any) => item.suitableforId === parentId);
+        setFilters(fs =>
+          fs.map(f => f.name === "subSuitableId" ? { ...f, options: opts } : f)
+        );
+      })
+      .catch(() => {
+        setFilterErrors(e => ({ ...e, ["subSuitableId"]: `Failed to load subSuitableId` }));
+      });
+  }, [formData.suitableforId]);
 
-  // Handlers
-  const handleInputChange = (e: React.ChangeEvent<any>) => {
+  // generic handlers
+  const handleInputChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
+  ) => {
     const { name, value, type } = e.target;
-    let newVal: any = value;
-    if (type === "file") newVal = e.target.files[0] || null;
-    const updated = { ...formData, [name]: newVal };
-    setFormData(updated);
-    if (!isEdit) localStorage.setItem("ADD_PRODUCT_FORM_DATA", JSON.stringify(updated));
+    // if (name === "productdescription") {
+    //   console.log("Input value for productdescription:", value, typeof value, Array.isArray(value));
+    // }
+    let newValue = value;
+    const newFormData = { ...formData, [name]: newValue };
+    setFormData(newFormData);
+    // Save to localStorage (only for new products, not editing)
+    if (!isEdit) {
+      localStorage.setItem('ADD_PRODUCT_FORM_DATA', JSON.stringify(newFormData));
+    }
   };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, field: string) => {
-    const file = e.target.files?.[0] || null;
-    const updated = { ...formData, [field]: file };
-    setFormData(updated);
-    if (file) setPreviews((p) => ({ ...p, [field]: URL.createObjectURL(file) }));
+  const handleFileChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    field: string,
+  ) => {
+    const file = e.target.files?.[0] ?? null;
+    const newFormData = { ...formData, [field]: file };
+    setFormData(newFormData);
+    
+    if (file) {
+      setPreviews((p) => ({
+        ...p,
+        [field]: URL.createObjectURL(file),
+      }));
+    }
+    
+    // Dispatch to Redux global state
     dispatch(
       setProductMedia({
         image: field === "image" ? file : formData.image,
         image1: field === "image1" ? file : formData.image1,
         image2: field === "image2" ? file : formData.image2,
         video: field === "video" ? file : formData.video,
-      })
+      }),
     );
+    
+    // Save to localStorage (only for new products, not editing)
     if (!isEdit) {
-      const ls = { ...updated, [field]: file ? field : null };
-      localStorage.setItem("ADD_PRODUCT_FORM_DATA", JSON.stringify(ls));
+      // Don't save file objects to localStorage, just save the field name
+      const localStorageData = { ...newFormData };
+      localStorageData[field] = file ? field : null; // Just mark that a file was selected
+      localStorage.setItem('ADD_PRODUCT_FORM_DATA', JSON.stringify(localStorageData));
     }
   };
 
+  // Next → Metadata
   const goNext = (e: React.FormEvent) => {
     e.preventDefault();
-    // validate, coerce types, etc.
+
+    // Validate required fields with more detailed checking
+    const requiredFields = [
+      { name: "name", label: "Product Name" },
+      { name: "sku", label: "SKU" },
+      { name: "slug", label: "Slug" },
+      { name: "newCategoryId", label: "Category" },
+      { name: "structureId", label: "Structure" },
+      { name: "contentId", label: "Content" },
+      { name: "gsm", label: "GSM" },
+      { name: "oz", label: "OZ" },
+      { name: "cm", label: "Width (CM)" },
+      { name: "inch", label: "Width (Inch)" },
+      { name: "quantity", label: "Quantity" },
+      { name: "um", label: "Unit (UM)" },
+      { name: "currency", label: "Currency" },
+      { name: "finishId", label: "Finish" },
+      { name: "designId", label: "Design" },
+      { name: "colorId", label: "Color" },
+      { name: "css", label: "CSS" },
+      { name: "motifsizeId", label: "Motif Size" },
+      { name: "suitableforId", label: "Suitable For" },
+      { name: "vendorId", label: "Vendor" },
+      { name: "groupcodeId", label: "Group Code" },
+      { name: "purchasePrice", label: "Purchase Price" },
+      { name: "salesPrice", label: "Sales Price" },
+      { name: "locationCode", label: "Location Code" },
+      { name: "productIdentifier", label: "Product Identifier" },
+    ];
+
+    const missingFields = requiredFields.filter((field) => {
+      const value = formData[field.name];
+      return !value || value === "" || value === undefined;
+    });
+
+    if (missingFields.length > 0) {
+      const missingFieldNames = missingFields.map((f) => f.label).join(", ");
+      notifyError(`Please fill in all required fields: ${missingFieldNames}`);
+      return;
+    }
+
+    // Additional validation for numeric fields
+    const numericFields = [
+      "gsm",
+      "oz",
+      "cm",
+      "inch",
+      "quantity",
+      "purchasePrice",
+      "salesPrice",
+    ];
+    const invalidNumericFields = numericFields.filter((field) => {
+      const value = formData[field];
+      return isNaN(parseFloat(value)) || parseFloat(value) <= 0;
+    });
+
+    if (invalidNumericFields.length > 0) {
+      const invalidFieldNames = invalidNumericFields
+        .map((f) => {
+          const field = requiredFields.find((rf) => rf.name === f);
+          return field ? field.label : f;
+        })
+        .join(", ");
+      notifyError(`Please enter valid numbers for: ${invalidFieldNames}`);
+      return;
+    }
+
+    // In goNext, ensure all backend string fields are coerced to string and number fields to number
+    const cleanedFormData = { ...formData };
+    const stringFields = [
+      "name", "productdescription", "popularproduct", "productoffer", "topratedproduct",
+      "newCategoryId", "structureId", "contentId", "um", "currency", "finishId", "designId",
+      "colorId", "css", "motifsizeId", "suitableforId", "vendorId", "groupcodeId", "charset",
+      "title", "description", "keywords", "ogTitle", "ogDescription", "ogUrl", "sku", "slug",
+      "locationCode", "productIdentifier"
+    ];
+    stringFields.forEach(field => {
+      cleanedFormData[field] = String(cleanedFormData[field] ?? "");
+    });
+    const numberFields = ["gsm", "oz", "cm", "inch", "quantity", "purchasePrice", "salesPrice"];
+    numberFields.forEach(field => {
+      cleanedFormData[field] = Number(cleanedFormData[field]);
+    });
+
+    // Map isPopular to popularproduct for backend
+    cleanedFormData.popularproduct = formData.isPopular === true ? "yes" : "no";
+    delete cleanedFormData.isPopular;
+    ["image", "image1", "image2", "video"].forEach((key) => {
+      delete cleanedFormData[key];
+    });
+
+
+    // Coerce productoffer, popularproduct, and topratedproduct to string before submit
+    ["productoffer", "popularproduct", "topratedproduct"].forEach(field => {
+      if (Array.isArray(cleanedFormData[field])) {
+        cleanedFormData[field] = cleanedFormData[field][0] || "";
+      } else if (typeof cleanedFormData[field] !== "string") {
+        cleanedFormData[field] = String(cleanedFormData[field] ?? "");
+      }
+    });
+
+    Cookies.set("NEW_PRODUCT_BASE", JSON.stringify(cleanedFormData));
+    // Clear localStorage when moving to metadata (form is complete)
+    if (!isEdit) {
+      localStorage.removeItem('ADD_PRODUCT_FORM_DATA');
+    }
     router.push(
       isEdit
         ? `/fabric-products/metadata?editId=${editId}`
-        : "/fabric-products/metadata"
+        : `/fabric-products/metadata`,
     );
   };
-
   return (
-    <div className="w-full min-h-screen flex justify-center py-8">
-      <form onSubmit={goNext} className="w-full max-w-7xl bg-white rounded-lg shadow p-8 space-y-8">
-        <h1 className="text-3xl font-bold text-center text-indigo-700">
+    <div className="w-full min-h-screen flex justify-center items-start py-8">
+      <form
+        onSubmit={goNext}
+        className="w-full max-w-7xl bg-white rounded-xl shadow-md p-8 space-y-8"
+      >
+        <h1 className="text-3xl font-bold text-center text-indigo-700 mb-6 tracking-tight drop-shadow-sm">
           {isEdit ? "Edit" : "Add New"} Fabric Product
         </h1>
 
-        {/* Loading & Errors */}
-        {loadingFilters && <p>Loading filters...</p>}
-        {restored && !isEdit && <p>Your data was restored</p>}
-        {Object.keys(filterErrors).length > 0 && (
-          <div>
-            <strong>Dropdown errors:</strong>
-            {Object.entries(filterErrors).map(([k, v]) => (
-              <div key={k}>{v}</div>
-            ))}
+        {/* Loading and Error Indicators */}
+        {isLoadingFilters && (
+          <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mb-6">
+            <div className="flex items-center">
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
+              <span className="text-blue-800 text-sm">
+                Loading dropdown options...
+              </span>
+            </div>
           </div>
         )}
 
-        {/* Basic Fields */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <input
-            name="name"
-            placeholder="Product Name"
-            value={formData.name || ""}
-            onChange={handleInputChange}
-            required
-            className="form-input col-span-3"
-          />
-          <input
-            name="sku"
-            placeholder="SKU"
-            value={formData.sku || ""}
-            onChange={handleInputChange}
-            required
-            className="form-input"
-          />
-          <input
-            name="slug"
-            placeholder="Slug"
-            value={formData.slug || ""}
-            onChange={handleInputChange}
-            required
-            className="form-input"
-          />
-          <input
-            name="productIdentifier"
-            placeholder="Product Identifier"
-            value={formData.productIdentifier || ""}
-            onChange={handleInputChange}
-            required
-            className="form-input"
-          />
-          <input
-            name="locationCode"
-            placeholder="Location Code"
-            maxLength={3}
-            value={formData.locationCode || ""}
-            onChange={handleInputChange}
-            required
-            className="form-input"
-          />
-          <input
-            name="css"
-            placeholder="CSS"
-            value={formData.css || ""}
-            onChange={handleInputChange}
-            required
-            className="form-input col-span-2"
-          />
+        {/* Data Restored Notification */}
+        {hasRestoredData && !isEdit && (
+          <div className="bg-green-50 border border-green-200 rounded-md p-4 mb-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <div className="text-green-600 mr-2">✓</div>
+                <span className="text-green-800 text-sm">
+                  Your previous form data has been restored from local storage.
+                </span>
+              </div>
+              <button
+                onClick={() => setHasRestoredData(false)}
+                className="text-green-600 hover:text-green-800 text-sm font-medium"
+              >
+                Dismiss
+              </button>
+            </div>
+          </div>
+        )}
 
-          {/* Numeric Fields */}
-          <input
-            name="quantity"
-            placeholder="Quantity"
-            type="number"
-            value={formData.quantity || ""}
-            onChange={handleInputChange}
-            required
-            className="form-input"
-          />
-          <input
-            name="purchasePrice"
-            placeholder="Purchase Price"
-            type="number"
-            value={formData.purchasePrice || ""}
-            onChange={handleInputChange}
-            required
-            className="form-input"
-          />
-          <input
-            name="salesPrice"
-            placeholder="Sales Price"
-            type="number"
-            value={formData.salesPrice || ""}
-            onChange={handleInputChange}
-            required
-            className="form-input"
-          />
+        {Object.keys(filterErrors).length > 0 && (
+          <div className="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
+            <h3 className="text-red-800 font-medium text-sm mb-2">
+              Some dropdowns failed to load:
+            </h3>
+            <ul className="text-red-700 text-sm space-y-1">
+              {Object.entries(filterErrors).map(([fieldName, error]) => (
+                <li key={fieldName}>• {error}</li>
+              ))}
+            </ul>
+            <p className="text-red-600 text-xs mt-2">
+              Please refresh the page or check if the backend server is running
+              properly.
+            </p>
+          </div>
+        )}
 
-          {/* Unit & Currency */}
-          <select
-            name="um"
-            value={formData.um || ""}
-            onChange={handleInputChange}
-            required
-            className="form-input"
-          >
-            <option value="">Unit</option>
-            <option value="meter">Meter</option>
-            <option value="yard">Yard</option>
-            <option value="kgs">Kgs</option>
-          </select>
-          <select
-            name="currency"
-            value={formData.currency || ""}
-            onChange={handleInputChange}
-            required
-            className="form-input"
-          >
-            <option value="">Currency</option>
-            <option>INR</option>
-            <option>USD</option>
-          </select>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Product Name */}
+          <div>
+            <label
+              htmlFor="name"
+              className="block font-bold text-gray-800 text-lg mb-2"
+            >
+              Product Name <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="name"
+              name="name"
+              required
+              value={formData.name || ""}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+            />
+          </div>
 
-          {/* Conversions */}
-          <input
-            readOnly
-            value={formData.oz || ""}
-            placeholder="OZ"
-            className="form-input bg-gray-100"
-          />
-          <input
-            readOnly
-            value={formData.inch || ""}
-            placeholder="Inch"
-            className="form-input bg-gray-100"
-          />
-        </div>
+          {/* SKU */}
+          <div>
+            <label
+              htmlFor="sku"
+              className="block font-bold text-gray-800 text-lg mb-2"
+            >
+              SKU <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="sku"
+              name="sku"
+              required
+              value={formData.sku || ""}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+            />
+          </div>
 
-        {/* Dynamic Filters */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Slug */}
+          <div>
+            <label
+              htmlFor="slug"
+              className="block font-bold text-gray-800 text-lg mb-2"
+            >
+              Slug <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="slug"
+              name="slug"
+              required
+              value={formData.slug || ""}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+            />
+          </div>
+
+          {/* Product Identifier */}
+          <div>
+            <label
+              htmlFor="productIdentifier"
+              className="block font-bold text-gray-800 text-lg mb-2"
+            >
+              Product Identifier <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="productIdentifier"
+              name="productIdentifier"
+              required
+              value={formData.productIdentifier || ""}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+            />
+          </div>
+
+          {/* Location Code */}
+          <div>
+            <label
+              htmlFor="locationCode"
+              className="block font-bold text-gray-800 text-lg mb-2"
+            >
+              Location Code <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="locationCode"
+              name="locationCode"
+              required
+              maxLength={3}
+              value={formData.locationCode || ""}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+            />
+          </div>
+
+          {/* CSS */}
+          <div>
+            <label
+              htmlFor="css"
+              className="block font-bold text-gray-800 text-lg mb-2"
+            >
+              CSS <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="css"
+              name="css"
+              required
+              value={formData.css || ""}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+            />
+          </div>
+
+          {/* Quantity */}
+          <div>
+            <label
+              htmlFor="quantity"
+              className="block font-bold text-gray-800 text-lg mb-2"
+            >
+              Quantity <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="quantity"
+              name="quantity"
+              type="number"
+              required
+              value={formData.quantity || ""}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+            />
+          </div>
+
+          {/* Unit */}
+          <div>
+            <label
+              htmlFor="um"
+              className="block font-bold text-gray-800 text-lg mb-2"
+            >
+              Unit (UM) <span className="text-red-500">*</span>
+            </label>
+            <select
+              id="um"
+              name="um"
+              required
+              value={formData.um || ""}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+            >
+              <option value="">Select Unit</option>
+              <option value="meter">Meters</option>
+              <option value="yard">Yards</option>
+              <option value="kgs">kgs</option>
+            </select>
+          </div>
+
+          {/* Purchase Price */}
+          <div>
+            <label
+              htmlFor="purchasePrice"
+              className="block font-bold text-gray-800 text-lg mb-2"
+            >
+              Purchase Price <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="purchasePrice"
+              name="purchasePrice"
+              type="number"
+              required
+              value={formData.purchasePrice || ""}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+            />
+          </div>
+
+          {/* Sales Price */}
+          <div>
+            <label
+              htmlFor="salesPrice"
+              className="block font-bold text-gray-800 text-lg mb-2"
+            >
+              Sales Price <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="salesPrice"
+              name="salesPrice"
+              type="number"
+              required
+              value={formData.salesPrice || ""}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+            />
+          </div>
+
+          {/* Currency */}
+          <div>
+            <label
+              htmlFor="currency"
+              className="block font-bold text-gray-800 text-lg mb-2"
+            >
+              Currency <span className="text-red-500">*</span>
+            </label>
+            <select
+              id="currency"
+              name="currency"
+              required
+              value={formData.currency || ""}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+            >
+              <option value="">Select Currency</option>
+              <option>INR</option>
+              <option>USD</option>
+            </select>
+          </div>
+
+          {/* GSM → OZ */}
+          <div>
+            <label
+              htmlFor="gsm"
+              className="block font-bold text-gray-800 text-lg mb-2"
+            >
+              GSM <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="gsm"
+              name="gsm"
+              type="number"
+              required
+              value={formData.gsm || ""}
+              onChange={(e) => {
+                handleInputChange(e);
+                const v = parseFloat(e.target.value);
+                if (!isNaN(v)) {
+                  setFormData((p) => ({ ...p, oz: (v * 0.0295).toFixed(2) }));
+                }
+              }}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="oz"
+              className="block font-bold text-gray-800 text-lg mb-2"
+            >
+              OZ <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="oz"
+              name="oz"
+              readOnly
+              required
+              value={formData.oz || ""}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+            />
+          </div>
+
+          {/* Width CM → Inch */}
+          <div>
+            <label
+              htmlFor="cm"
+              className="block font-bold text-gray-800 text-lg mb-2"
+            >
+              Width (CM) <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="cm"
+              name="cm"
+              type="number"
+              required
+              value={formData.cm || ""}
+              onChange={(e) => {
+                handleInputChange(e);
+                const v = parseFloat(e.target.value);
+                if (!isNaN(v)) {
+                  setFormData((p) => ({
+                    ...p,
+                    inch: (v * 0.393701).toFixed(2),
+                  }));
+                }
+              }}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="inch"
+              className="block font-bold text-gray-800 text-lg mb-2"
+            >
+              Width (Inch) <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="inch"
+              name="inch"
+              readOnly
+              required
+              value={formData.inch || ""}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+            />
+          </div>
+
+          {/* Dynamic filters */}
           {filters.map((f) => (
-            <div key={f.name}>
-              <label className="block font-medium mb-1">{f.label}</label>
+            <div key={f.name} className="mb-6">
+              <label
+                htmlFor={f.name}
+                className="block font-bold text-gray-800 text-lg mb-2"
+              >
+                {f.label} <span className="text-red-500">*</span>
+              </label>
               <select
+                id={f.name}
                 name={f.name}
+                required
                 value={formData[f.name] || ""}
                 onChange={handleInputChange}
-                required
-                className="form-input"
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
               >
                 <option value="">Select {f.label}</option>
                 {f.options.map((o: any) => (
-                  <option key={o._id} value={o._id}>”{o.name}”</option>
+                  <option key={o._id} value={o._id}>
+                    {o.name}
+                  </option>
                 ))}
               </select>
-              {f.name === "groupcodeId" && formData.groupcodeId && (
-                <RelatedProducts groupcodeId={formData.groupcodeId} />
+
+              {/* Show related products for Group Code */}
+              {f.name === "groupcodeId" && (
+                <>
+                  <div className="text-md text-blue-600 mt-1 mb-2">
+                    💡 Group Code helps organize related products. When selected,
+                    you&apos;ll see other products with the same group code below.
+                  </div>
+                  {formData[f.name] && (
+                    <RelatedProducts groupcodeId={formData[f.name]} />
+                  )}
+                </>
               )}
             </div>
           ))}
+
+          {/* Sub Structure */}
+          <div className="mb-6">
+            <label className="block font-bold text-gray-800 text-lg mb-2">
+              Sub Structure
+            </label>
+            <select
+              name="substructureId"
+              value={formData.substructureId || ""}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm"
+            >
+              <option value="">Select Sub Structure</option>
+              {substructureOptions.map(option => (
+                <option key={option._id} value={option._id}>
+                  {option.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          {/* Sub Finish */}
+          <div className="mb-6">
+            <label className="block font-bold text-gray-800 text-lg mb-2">
+              Sub Finish
+            </label>
+            <select
+              name="subfinishId"
+              value={formData.subfinishId || ""}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm"
+            >
+              <option value="">Select Sub Finish</option>
+              {subfinishOptions.map(option => (
+                <option key={option._id} value={option._id}>
+                  {option.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          {/* Sub Suitable For */}
+          <div className="mb-6">
+            <label className="block font-bold text-gray-800 text-lg mb-2">
+              Sub Suitable For
+            </label>
+            <select
+              name="subsuitableforId"
+              value={formData.subsuitableforId || ""}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm"
+            >
+              <option value="">Select Sub Suitable For</option>
+              {subsuitableforOptions.map(option => (
+                <option key={option._id} value={option._id}>
+                  {option.name}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
-        {/* Uploads */}
+        {/* Uploads & previews */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {["image", "image1", "image2", "video"].map((key) => (
-            <div key={key}>
-              <label className="block font-medium mb-1">{key}</label>
+            <div key={key} className="mb-6">
+              <label className="block font-bold text-gray-800 text-lg mb-2">
+                {key === "video" ? "Upload Video" : `Upload ${key}`}
+              </label>
               <input
                 type="file"
+                name={key}
                 accept={key === "video" ? "video/*" : "image/*"}
                 onChange={(e) => handleFileChange(e, key)}
-                className="form-input"
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
               />
               {previews[key] &&
                 (key === "video" ? (
                   <video
                     src={previews[key]}
                     controls
-                    className="mt-2 w-full h-32 rounded border"
+                    className="mt-2 w-full h-32 rounded border border-gray-200 bg-gray-50"
                   />
                 ) : (
                   <Image
@@ -409,46 +955,113 @@ export default function AddProductForm({ productId }: { productId?: string }) {
                     alt={key}
                     width={320}
                     height={128}
-                    className="mt-2 object-cover rounded border"
                     unoptimized
+                    className="mt-2 w-full h-32 object-cover rounded border border-gray-200 bg-gray-50"
                   />
                 ))}
             </div>
           ))}
         </div>
 
-        {/* Flags */}
-        <div className="flex flex-wrap gap-4">
-          {['popularproduct','topratedproduct','productoffer'].map((flag) => (
-            <div key={flag} className="flex items-center">
-              <span className="mr-2 font-medium">{flag}:</span>
-              {['yes','no'].map((val) => (
-                <label key={val} className="mr-4">
-                  <input
-                    type="radio"
-                    name={flag}
-                    value={val}
-                    checked={formData[flag] === val}
-                    onChange={handleInputChange}
-                  />{' '}{val}
-                </label>
-              ))}
-            </div>
-          ))}
+        {/* Product Flags (Popular, Top Rated, Product Offer) */}
+        <div className="flex flex-wrap gap-8 items-center mt-8">
+          {/* Popular Product */}
+          <div>
+            <span className="block font-bold text-gray-800 text-lg mb-2">Popular Product:</span>
+            <label className="text-xl font-bold mr-2">
+              <input
+                type="radio"
+                name="popularproduct"
+                value="yes"
+                checked={formData.popularproduct === "yes"}
+                onChange={handleInputChange}
+                className="w-6 h-6 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-2"
+              />
+              Yes
+            </label>
+            <label className="text-xl font-bold mr-2">
+              <input
+                type="radio"
+                name="popularproduct"
+                value="no"
+                checked={formData.popularproduct === "no"}
+                onChange={handleInputChange}
+                className="w-6 h-6 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-2"
+              />
+              No
+            </label>
+          </div>
+          {/* Top Rated */}
+          <div>
+            <span className="block font-bold text-gray-800 text-lg mb-2">Top Rated:</span>
+            <label className="text-xl font-bold mr-2">
+              <input
+                type="radio"
+                name="topratedproduct"
+                value="yes"
+                checked={formData.topratedproduct === "yes"}
+                onChange={handleInputChange}
+                className="w-6 h-6 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-2"
+              />
+              Yes
+            </label>
+            <label className="text-xl font-bold mr-2">
+              <input
+                type="radio"
+                name="topratedproduct"
+                value="no"
+                checked={formData.topratedproduct === "no"}
+                onChange={handleInputChange}
+                className="w-6 h-6 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-2"
+              />
+              No
+            </label>
+          </div>
+          {/* Product Offer */}
+          <div>
+            <span className="block font-bold text-gray-800 text-lg mb-2">Product Offer:</span>
+            <label className="text-xl font-bold mr-2">
+              <input
+                type="radio"
+                name="productoffer"
+                value="yes"
+                checked={formData.productoffer === "yes"}
+                onChange={handleInputChange}
+                className="w-6 h-6 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-2"
+              />
+              Yes
+            </label>
+            <label className="text-xl font-bold mr-2">
+              <input
+                type="radio"
+                name="productoffer"
+                value="no"
+                checked={formData.productoffer === "no"}
+                onChange={handleInputChange}
+                className="w-6 h-6 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-2"
+              />
+              No
+            </label>
+          </div>
         </div>
 
-        {/* Actions */}
-        <div className="flex justify-between">
+        <div className="flex justify-between mt-8">
           {!isEdit && (
             <button
               type="button"
-              onClick={() => { setFormData({}); localStorage.removeItem("ADD_PRODUCT_FORM_DATA"); }}
-              className="px-6 py-2 bg-gray-200 rounded"
+              onClick={() => {
+                setFormData({});
+                localStorage.removeItem('ADD_PRODUCT_FORM_DATA');
+              }}
+              className="bg-gradient-to-r from-indigo-500 to-blue-500 hover:from-indigo-600 hover:to-blue-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-all text-lg"
             >
               Clear Form
             </button>
           )}
-          <button type="submit" className="px-6 py-2 bg-indigo-600 text-white rounded">
+          <button
+            type="submit"
+            className="bg-gradient-to-r from-indigo-500 to-blue-500 hover:from-indigo-600 hover:to-blue-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-all text-lg"
+          >
             Next → Metadata
           </button>
         </div>
