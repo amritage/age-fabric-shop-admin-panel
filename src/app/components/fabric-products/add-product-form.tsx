@@ -7,7 +7,7 @@ import {
   useGetProductByIdQuery,
   useGetProductsByGroupCodeQuery,
 } from "@/redux/newproduct/NewProductApi";
-import { filterConfig } from "@/utils/filterconfig";
+import { filterConfig, subFilterConfig } from "@/utils/filterconfig";
 import { useDispatch } from "react-redux";
 import { setProductMedia } from "@/redux/features/productImageSlice";
 import { IProduct } from "@/types/fabricproduct-type";
@@ -91,9 +91,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
   });
 
   const [formData, setFormData] = useState<Record<string, any>>({});
-  const [filters, setFilters] = useState<
-    { name: string; label: string; options: any[] }[]
-  >([]);
+  const [filters, setFilters] = useState<{ [key: string]: any[] }>({});
   const [previews, setPreviews] = useState<Record<string, string>>({});
   const [isLoadingFilters, setIsLoadingFilters] = useState(true);
   const [filterErrors, setFilterErrors] = useState<Record<string, string>>({});
@@ -133,92 +131,9 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     }
   }, []);
 
-  // 1) only fetch TOP-LEVELs on mount
+  // Load all main filter options
   useEffect(() => {
-    (async () => {
-      setIsLoadingFilters(true);
-      // Extract token as before
-      const adminCookie = typeof window !== "undefined" ? Cookies.get("admin") : null;
-      let token = "";
-      if (adminCookie) {
-        try {
-          const adminObj = JSON.parse(adminCookie);
-          token = adminObj.accessToken;
-        } catch (e) {
-          token = "";
-        }
-      }
-      try {
-        const results = await Promise.all(
-          filterConfig.map(f =>
-            fetch(BASE_URL + f.api, { headers: { Authorization: `Bearer ${token}` } })
-              .then(r => r.json())
-              .then(j => j.data || [])
-          )
-        );
-        setFilters(
-          filterConfig.map((f, i) => ({
-            name:    f.name,
-            label:   f.label,
-            options: results[i],
-          }))
-        );
-      } catch {
-        // handle errors into filterErrors as before
-      } finally {
-        setIsLoadingFilters(false);
-      }
-    })();
-  }, []);
-
-  // Fetch sub-filter options on mount
-  useEffect(() => {
-    fetch('/api/substructure/view')
-      .then(res => res.json())
-      .then(data => setSubstructureOptions(data.data || []));
-  }, []);
-  useEffect(() => {
-    fetch('/api/subfinish/view')
-      .then(res => res.json())
-      .then(data => setSubfinishOptions(data.data || []));
-  }, []);
-  useEffect(() => {
-    fetch('/api/subsuitable/view')
-      .then(res => res.json())
-      .then(data => setSubsuitableforOptions(data.data || []));
-  }, []);
-
-  // 2) hydrate formData ONLY after filters & productDetail are both ready
-  useEffect(() => {
-    if (isLoadingFilters || !productDetail) return;
-    const processed = { ...productDetail };
-    function extractId(val: any) {
-      return val && typeof val === "object" && "_id" in val ? val._id : val || "";
-    }
-    processed.substructureId = extractId(processed.substructureId);
-    processed.subfinishId = extractId(processed.subfinishId);
-    processed.subsuitableforId = extractId(processed.subsuitableforId);
-    setFormData(processed);
-    ["image", "image1", "image2", "video"].forEach((key) => {
-      const url = (processed as any)[key];
-      if (url) {
-        setPreviews((p) => ({ ...p, [key]: url }));
-      }
-    });
-  }, [isLoadingFilters, productDetail]);
-
-  // Update the loadSubs function to robustly compare parent IDs and log API data for debugging
-  const loadSubs = (
-    parentKey: string,
-    subName: string,
-    api: string,
-    errKey: string
-  ) => {
-    const val = formData[parentKey];
-    if (!val) {
-      setFilters((fs) => fs.map((f) => (f.name === subName ? { ...f, options: [] } : f)));
-      return;
-    }
+    setIsLoadingFilters(true);
     const cookie = Cookies.get("admin");
     let token = "";
     if (cookie) {
@@ -226,23 +141,65 @@ export default function AddProductForm({ productId }: { productId?: string }) {
         token = JSON.parse(cookie).accessToken;
       } catch {}
     }
-    fetch(BASE_URL + api, { headers: { Authorization: `Bearer ${token}` } })
-      .then((r) => r.json())
-      .then((j) => {
-        console.log('API data for', subName, ':', j.data, 'Parent value:', val);
-        const opts = (j.data || []).filter((item: any) => {
-          const itemVal = item[parentKey]?._id || item[parentKey];
-          return String(itemVal) === String(val);
+    Promise.all(
+      filterConfig.map((cfg) =>
+        fetch(BASE_URL + cfg.api, { headers: { Authorization: `Bearer ${token}` } })
+          .then((r) => r.json())
+          .then((j) => j.data || [])
+      )
+    ).then((results) => {
+      const newFilters: { [key: string]: any[] } = {};
+      filterConfig.forEach((cfg, i) => {
+        newFilters[cfg.name] = results[i];
+      });
+      setFilters(newFilters);
+      setIsLoadingFilters(false);
+    });
+  }, []);
+
+  // Load sub-filter options when parent changes
+  useEffect(() => {
+    const cookie = Cookies.get("admin");
+    let token = "";
+    if (cookie) {
+      try {
+        token = JSON.parse(cookie).accessToken;
+      } catch {}
+    }
+    subFilterConfig.forEach((sub) => {
+      const parentValue = formData[sub.parentKey];
+      if (!parentValue) {
+        setFilters((prev) => ({ ...prev, [sub.name]: [] }));
+        return;
+      }
+      fetch(BASE_URL + sub.api, { headers: { Authorization: `Bearer ${token}` } })
+        .then((r) => r.json())
+        .then((j) => {
+          const opts = (j.data || []).filter((item: any) => {
+            const itemVal = item[sub.parentKey]?._id || item[sub.parentKey];
+            return String(itemVal) === String(parentValue);
+          });
+          setFilters((prev) => ({ ...prev, [sub.name]: opts }));
         });
-        console.log('Filtered options for', subName, ':', opts);
-        setFilters((fs) =>
-          fs.map((f) => (f.name === subName ? { ...f, options: opts } : f))
-        );
-      })
-      .catch(() =>
-        setFilterErrors((e) => ({ ...e, [errKey]: `Failed to load ${subName}` }))
-      );
-  };
+    });
+  }, [formData.structureId, formData.finishId, formData.suitableforId]);
+
+  // Hydrate formData for edit
+  useEffect(() => {
+    if (!isEdit || !productDetail) return;
+    const data: Record<string, any> = { ...productDetail };
+    const extract = (v: any) => (v && v._id ? v._id : v || "");
+    [...filterConfig, ...subFilterConfig].forEach(({ name }) => {
+      data[name] = extract(data[name]);
+    });
+    setFormData(data);
+    ["image", "image1", "image2", "video"].forEach((key) => {
+      const url = (data as any)[key];
+      if (url) {
+        setPreviews((p) => ({ ...p, [key]: url }));
+      }
+    });
+  }, [isEdit, productDetail]);
 
   // generic handlers
   const handleInputChange = (
@@ -768,7 +725,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           </div>
 
           {/* Dynamic filters */}
-          {filters.map((f) => (
+          {filterConfig.map((f) => (
             <div key={f.name} className="mb-6">
               <label
                 htmlFor={f.name}
@@ -785,7 +742,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
               >
                 <option value="">Select {f.label}</option>
-                {f.options.map((o: any) => (
+                {filters[f.name]?.map((o: any) => (
                   <option key={o._id} value={o._id}>
                     {o.name}
                   </option>
