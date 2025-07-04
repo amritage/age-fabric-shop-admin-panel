@@ -71,6 +71,7 @@ export interface IProduct {
   subfinishId?: string;
   subsuitableforId?: string;
   subsuitableId?: string;
+  [key: string]: any;
 }
 
 export interface IProductFormData {
@@ -104,6 +105,7 @@ export interface IProductFormData {
   image2?: File | null;
   video?: File | null;
   subsuitableId?: string;
+  [key: string]: any;
 }
 
 export interface IFilter {
