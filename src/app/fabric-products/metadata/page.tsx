@@ -35,6 +35,14 @@ export default function MetadataPage() {
       return;
     }
     const parsed = JSON.parse(raw);
+    
+    // Debug: Log the flag values loaded from cookie
+    console.log("Debug - Flag values loaded from cookie:", {
+      popularproduct: parsed.popularproduct,
+      topratedproduct: parsed.topratedproduct,
+      productoffer: parsed.productoffer
+    });
+    
     setBaseData(parsed);
   }, [router]);
 
@@ -46,9 +54,17 @@ export default function MetadataPage() {
     if (fullData._id) {
       delete fullData._id;
     }
+    
+    // Debug: Log the flag values
+    console.log("Debug - Flag values in fullData:", {
+      popularproduct: fullData.popularproduct,
+      topratedproduct: fullData.topratedproduct,
+      productoffer: fullData.productoffer
+    });
+    
     const fd = new FormData();
 
-    // Append all text-based data except description fields
+    // Append all text-based data except description fields and flag fields
     for (const key in fullData) {
       if (
         fullData[key] != null &&
@@ -56,8 +72,10 @@ export default function MetadataPage() {
         key !== "description_html" && // skip, handled below
         key !== "isProductOffer" &&
         key !== "isTopRated" &&
+        key !== "isPopular" &&
         key !== "productoffer" && // exclude from loop
-        key !== "topratedproduct" // exclude from loop
+        key !== "topratedproduct" && // exclude from loop
+        key !== "popularproduct" // exclude from loop
       ) {
         fd.append(key, fullData[key]);
       }
@@ -81,8 +99,17 @@ export default function MetadataPage() {
     }
     fd.append("description_html", metaDescription);
 
-    fd.append("productoffer", fullData.isProductOffer === true ? "yes" : "no");
-    fd.append("topratedproduct", fullData.isTopRated === true ? "yes" : "no");
+    // Handle flag fields - convert from string "yes"/"no" to "yes"/"no"
+    fd.append("popularproduct", fullData.popularproduct === "yes" ? "yes" : "no");
+    fd.append("productoffer", fullData.productoffer === "yes" ? "yes" : "no");
+    fd.append("topratedproduct", fullData.topratedproduct === "yes" ? "yes" : "no");
+
+    // Debug: Log what's being sent to API
+    console.log("Debug - Final flag values being sent to API:", {
+      popularproduct: fullData.popularproduct === "yes" ? "yes" : "no",
+      productoffer: fullData.productoffer === "yes" ? "yes" : "no",
+      topratedproduct: fullData.topratedproduct === "yes" ? "yes" : "no"
+    });
 
     // Explicitly append file data from Redux store
     if (image) fd.append("image", image);

@@ -64,6 +64,11 @@ export default function MetadataForm({
     // Preserve all base product data from initial
     ...initial,
 
+    // Set defaults for flag fields if not provided
+    popularproduct: initial.popularproduct || "no",
+    topratedproduct: initial.topratedproduct || "no",
+    productoffer: initial.productoffer || "no",
+
     // Set defaults for metadata fields if not provided
     charset: initial.charset || "UTF-8",
     xUaCompatible: initial.xUaCompatible || "IE=edge",
@@ -194,6 +199,109 @@ export default function MetadataForm({
         <h2 className="text-3xl font-bold text-center text-indigo-700 mb-6 tracking-tight drop-shadow-sm">
           Product Metadata
         </h2>
+        
+        {/* Product Flags (Editable) */}
+        <div className="bg-blue-50 p-6 rounded-xl shadow mb-8 border border-blue-200">
+          <h3 className="text-lg font-bold text-blue-800 mb-4">Product Flags</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Popular Product */}
+            <div className="bg-white p-4 rounded-lg border border-blue-200">
+              <label className="block font-bold text-blue-700 text-sm mb-3">
+                Popular Product
+              </label>
+              <div className="flex items-center gap-4">
+                <label className="flex items-center">
+                  <input
+                    type="radio"
+                    name="popularproduct"
+                    value="yes"
+                    checked={meta.popularproduct === "yes"}
+                    onChange={handleChange}
+                    className="mr-2 text-blue-600 focus:ring-blue-500"
+                  />
+                  <span className="text-sm font-medium text-gray-700">Yes</span>
+                </label>
+                <label className="flex items-center">
+                  <input
+                    type="radio"
+                    name="popularproduct"
+                    value="no"
+                    checked={meta.popularproduct === "no"}
+                    onChange={handleChange}
+                    className="mr-2 text-blue-600 focus:ring-blue-500"
+                  />
+                  <span className="text-sm font-medium text-gray-700">No</span>
+                </label>
+              </div>
+            </div>
+
+            {/* Top Rated */}
+            <div className="bg-white p-4 rounded-lg border border-blue-200">
+              <label className="block font-bold text-blue-700 text-sm mb-3">
+                Top Rated
+              </label>
+              <div className="flex items-center gap-4">
+                <label className="flex items-center">
+                  <input
+                    type="radio"
+                    name="topratedproduct"
+                    value="yes"
+                    checked={meta.topratedproduct === "yes"}
+                    onChange={handleChange}
+                    className="mr-2 text-blue-600 focus:ring-blue-500"
+                  />
+                  <span className="text-sm font-medium text-gray-700">Yes</span>
+                </label>
+                <label className="flex items-center">
+                  <input
+                    type="radio"
+                    name="topratedproduct"
+                    value="no"
+                    checked={meta.topratedproduct === "no"}
+                    onChange={handleChange}
+                    className="mr-2 text-blue-600 focus:ring-blue-500"
+                  />
+                  <span className="text-sm font-medium text-gray-700">No</span>
+                </label>
+              </div>
+            </div>
+
+            {/* Product Offer */}
+            <div className="bg-white p-4 rounded-lg border border-blue-200">
+              <label className="block font-bold text-blue-700 text-sm mb-3">
+                Product Offer
+              </label>
+              <div className="flex items-center gap-4">
+                <label className="flex items-center">
+                  <input
+                    type="radio"
+                    name="productoffer"
+                    value="yes"
+                    checked={meta.productoffer === "yes"}
+                    onChange={handleChange}
+                    className="mr-2 text-blue-600 focus:ring-blue-500"
+                  />
+                  <span className="text-sm font-medium text-gray-700">Yes</span>
+                </label>
+                <label className="flex items-center">
+                  <input
+                    type="radio"
+                    name="productoffer"
+                    value="no"
+                    checked={meta.productoffer === "no"}
+                    onChange={handleChange}
+                    className="mr-2 text-blue-600 focus:ring-blue-500"
+                  />
+                  <span className="text-sm font-medium text-gray-700">No</span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <p className="text-sm text-blue-600 mt-3">
+            Set these flags to control how your product appears in the store.
+          </p>
+        </div>
+        
         {/* Product Name (required) */}
         <div className="bg-gray-50 p-6 rounded-xl shadow mb-8 border border-gray-200">
           <div>

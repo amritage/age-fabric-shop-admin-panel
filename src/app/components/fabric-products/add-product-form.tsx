@@ -91,7 +91,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
   });
 
   const [formData, setFormData] = useState<Record<string, any>>({
-    popularproduct: "no",
+    popularproduct: "no", // Default to "no" - user can change in metadata form
     topratedproduct: "no",
     productoffer: "no",
   });
@@ -122,10 +122,18 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           } else if (typeof parsedData.productdescription !== "string") {
             parsedData.productdescription = String(parsedData.productdescription ?? "");
           }
-          // Ensure radio fields are strings ("yes"/"no") from localStorage
+          // Ensure flag fields are strings ("yes"/"no") from localStorage
           parsedData.popularproduct = parsedData.popularproduct === true || parsedData.popularproduct === "yes" ? "yes" : "no";
           parsedData.topratedproduct = parsedData.topratedproduct === true || parsedData.topratedproduct === "yes" ? "yes" : "no";
           parsedData.productoffer = parsedData.productoffer === true || parsedData.productoffer === "yes" ? "yes" : "no";
+          
+          // Debug: Log the flag values from localStorage
+          console.log("Debug - Flag values from localStorage:", {
+            popularproduct: parsedData.popularproduct,
+            topratedproduct: parsedData.topratedproduct,
+            productoffer: parsedData.productoffer
+          });
+          
           setFormData(parsedData);
           setHasRestoredData(true);
         } catch (error) {
@@ -209,10 +217,18 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     processed.substructureId = extractId(processed.substructureId);
     processed.subfinishId = extractId(processed.subfinishId);
     processed.subsuitableforId = extractId(processed.subsuitableforId);
-    // Ensure radio fields are set to 'yes' or 'no' only
+    // Ensure flag fields are set to 'yes' or 'no' only
     processed.popularproduct = processed.popularproduct === "yes" ? "yes" : "no";
     processed.topratedproduct = processed.topratedproduct === "yes" ? "yes" : "no";
     processed.productoffer = processed.productoffer === "yes" ? "yes" : "no";
+    
+    // Debug: Log the flag values from API response
+    console.log("Debug - Flag values from API response:", {
+      popularproduct: processed.popularproduct,
+      topratedproduct: processed.topratedproduct,
+      productoffer: processed.productoffer
+    });
+    
     setFormData(processed);
     
     ["image", "image1", "image2", "video"].forEach((key) => {
@@ -461,7 +477,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     numberFields.forEach(field => {
       cleanedFormData[field] = Number(cleanedFormData[field]);
     });
-    // Ensure radio fields are always 'yes' or 'no' strings
+    // Ensure flag fields are always 'yes' or 'no' strings
     ["popularproduct", "topratedproduct", "productoffer"].forEach(field => {
       if (cleanedFormData[field] !== "yes" && cleanedFormData[field] !== "no") {
         cleanedFormData[field] = "no"; // Default to "no" if invalid
@@ -470,6 +486,13 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     
 
 
+    // Debug: Log the flag values before saving to cookie
+    console.log("Debug - Flag values before saving to cookie:", {
+      popularproduct: cleanedFormData.popularproduct,
+      topratedproduct: cleanedFormData.topratedproduct,
+      productoffer: cleanedFormData.productoffer
+    });
+    
     Cookies.set("NEW_PRODUCT_BASE", JSON.stringify(cleanedFormData));
     // Clear localStorage when moving to metadata (form is complete)
     localStorage.removeItem('ADD_PRODUCT_FORM_DATA');
@@ -971,89 +994,20 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           ))}
         </div>
 
-      {/* Product Flags (Popular, Top Rated, Product Offer) */}
-<div className="flex flex-wrap gap-8 items-center mt-8">
-  {/* Popular Product */}
-  <div className="flex items-center gap-2 text-xs font-medium text-gray-600">
-    <span>Popular Product:</span>
-    <label className="flex items-center ml-2">
-      <input
-        type="radio"
-        name="popularproduct"
-        value="yes"
-        checked={formData.popularproduct === "yes"}
-        onChange={handleInputChange}
-        className="mr-1"
-      />
-      Yes
-    </label>
-    <label className="flex items-center ml-2">
-      <input
-        type="radio"
-        name="popularproduct"
-        value="no"
-        checked={formData.popularproduct === "no"}
-        onChange={handleInputChange}
-        className="mr-1"
-      />
-      No
-    </label>
-  </div>
-
-  {/* Top Rated */}
-  <div className="flex items-center gap-2 text-xs font-medium text-gray-600">
-    <span>Top Rated:</span>
-    <label className="flex items-center ml-2">
-      <input
-        type="radio"
-        name="topratedproduct"
-        value="yes"
-        checked={formData.topratedproduct === "yes"}
-        onChange={handleInputChange}
-        className="mr-1"
-      />
-      Yes
-    </label>
-    <label className="flex items-center ml-2">
-      <input
-        type="radio"
-        name="topratedproduct"
-        value="no"
-        checked={formData.topratedproduct === "no"}
-        onChange={handleInputChange}
-        className="mr-1"
-      />
-      No
-    </label>
-  </div>
-
-  {/* Product Offer */}
-  <div className="flex items-center gap-2 text-xs font-medium text-gray-600">
-    <span>Product Offer:</span>
-    <label className="flex items-center ml-2">
-      <input
-        type="radio"
-        name="productoffer"
-        value="yes"
-        checked={formData.productoffer === "yes"}
-        onChange={handleInputChange}
-        className="mr-1"
-      />
-      Yes
-    </label>
-    <label className="flex items-center ml-2">
-      <input
-        type="radio"
-        name="productoffer"
-        value="no"
-        checked={formData.productoffer === "no"}
-        onChange={handleInputChange}
-        className="mr-1"
-      />
-      No
-    </label>
-  </div>
-</div>
+      {/* Product Flags Note */}
+      <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mt-8">
+        <div className="flex items-center">
+          <div className="text-blue-600 mr-3">ℹ️</div>
+          <div>
+            <p className="text-sm text-blue-800 font-medium">
+              Product Flags
+            </p>
+            <p className="text-xs text-blue-600">
+              You can set Popular Product, Top Rated, and Product Offer flags on the next page.
+            </p>
+          </div>
+        </div>
+      </div>
 
 
 
