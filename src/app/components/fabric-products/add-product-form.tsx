@@ -122,7 +122,16 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           } else if (typeof parsedData.productdescription !== "string") {
             parsedData.productdescription = String(parsedData.productdescription ?? "");
           }
-          // Do NOT set default for radio fields in add mode
+          // Convert radio fields from localStorage back to booleans for add mode
+          if (parsedData.popularproduct !== undefined) {
+            parsedData.popularproduct = parsedData.popularproduct === true || parsedData.popularproduct === "yes";
+          }
+          if (parsedData.topratedproduct !== undefined) {
+            parsedData.topratedproduct = parsedData.topratedproduct === true || parsedData.topratedproduct === "yes";
+          }
+          if (parsedData.productoffer !== undefined) {
+            parsedData.productoffer = parsedData.productoffer === true || parsedData.productoffer === "yes";
+          }
           setFormData(parsedData);
           setHasRestoredData(true);
         } catch (error) {
@@ -206,10 +215,10 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     processed.substructureId = extractId(processed.substructureId);
     processed.subfinishId = extractId(processed.subfinishId);
     processed.subsuitableforId = extractId(processed.subsuitableforId);
-    // Ensure radio fields are set to 'yes' or 'no' only
-    processed.popularproduct = processed.popularproduct === "yes" ? "yes" : processed.popularproduct === "no" ? "no" : undefined;
-    processed.topratedproduct = processed.topratedproduct === "yes" ? "yes" : processed.topratedproduct === "no" ? "no" : undefined;
-    processed.productoffer = processed.productoffer === "yes" ? "yes" : processed.productoffer === "no" ? "no" : undefined;
+    // Convert radio fields from backend strings to frontend booleans for edit mode
+    (processed as any).popularproduct = processed.popularproduct === "yes" ? true : processed.popularproduct === "no" ? false : undefined;
+    (processed as any).topratedproduct = processed.topratedproduct === "yes" ? true : processed.topratedproduct === "no" ? false : undefined;
+    (processed as any).productoffer = processed.productoffer === "yes" ? true : processed.productoffer === "no" ? false : undefined;
     setFormData(processed);
     ["image", "image1", "image2", "video"].forEach((key) => {
       const url = (processed as any)[key];
@@ -338,10 +347,8 @@ export default function AddProductForm({ productId }: { productId?: string }) {
   const newFormData = { ...formData, [name]: newValue };
   setFormData(newFormData);
 
-  // Save to localStorage (only for new products, not editing)
-  if (!isEdit) {
-    localStorage.setItem("ADD_PRODUCT_FORM_DATA", JSON.stringify(newFormData));
-  }
+  // Save to localStorage for both add and edit modes
+  localStorage.setItem("ADD_PRODUCT_FORM_DATA", JSON.stringify(newFormData));
 };
 
 
@@ -371,13 +378,11 @@ export default function AddProductForm({ productId }: { productId?: string }) {
       }),
     );
     
-    // Save to localStorage (only for new products, not editing)
-    if (!isEdit) {
-      // Don't save file objects to localStorage, just save the field name
-      const localStorageData = { ...newFormData };
-      localStorageData[field] = file ? field : null; // Just mark that a file was selected
-      localStorage.setItem('ADD_PRODUCT_FORM_DATA', JSON.stringify(localStorageData));
-    }
+    // Save to localStorage for both add and edit modes
+    // Don't save file objects to localStorage, just save the field name
+    const localStorageData = { ...newFormData };
+    localStorageData[field] = file ? field : null; // Just mark that a file was selected
+    localStorage.setItem('ADD_PRODUCT_FORM_DATA', JSON.stringify(localStorageData));
   };
 
   // Next → Metadata
@@ -482,9 +487,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
 
     Cookies.set("NEW_PRODUCT_BASE", JSON.stringify(cleanedFormData));
     // Clear localStorage when moving to metadata (form is complete)
-    if (!isEdit) {
-      localStorage.removeItem('ADD_PRODUCT_FORM_DATA');
-    }
+    localStorage.removeItem('ADD_PRODUCT_FORM_DATA');
     router.push(
       isEdit
         ? `/fabric-products/metadata?editId=${editId}`
