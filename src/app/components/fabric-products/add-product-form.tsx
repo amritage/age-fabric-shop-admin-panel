@@ -122,16 +122,10 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           } else if (typeof parsedData.productdescription !== "string") {
             parsedData.productdescription = String(parsedData.productdescription ?? "");
           }
-          // Convert radio fields from localStorage back to booleans for add mode
-          if (parsedData.popularproduct !== undefined) {
-            parsedData.popularproduct = parsedData.popularproduct === true || parsedData.popularproduct === "yes";
-          }
-          if (parsedData.topratedproduct !== undefined) {
-            parsedData.topratedproduct = parsedData.topratedproduct === true || parsedData.topratedproduct === "yes";
-          }
-          if (parsedData.productoffer !== undefined) {
-            parsedData.productoffer = parsedData.productoffer === true || parsedData.productoffer === "yes";
-          }
+          // Ensure radio fields are strings ("yes"/"no") from localStorage
+          parsedData.popularproduct = parsedData.popularproduct === true || parsedData.popularproduct === "yes" ? "yes" : "no";
+          parsedData.topratedproduct = parsedData.topratedproduct === true || parsedData.topratedproduct === "yes" ? "yes" : "no";
+          parsedData.productoffer = parsedData.productoffer === true || parsedData.productoffer === "yes" ? "yes" : "no";
           setFormData(parsedData);
           setHasRestoredData(true);
         } catch (error) {
@@ -215,13 +209,18 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     processed.substructureId = extractId(processed.substructureId);
     processed.subfinishId = extractId(processed.subfinishId);
     processed.subsuitableforId = extractId(processed.subsuitableforId);
-    // Convert radio fields from backend strings to frontend booleans for edit mode
-    (processed as any).popularproduct = processed.popularproduct === "yes" ? true : processed.popularproduct === "no" ? false : undefined;
-    (processed as any).topratedproduct = processed.topratedproduct === "yes" ? true : processed.topratedproduct === "no" ? false : undefined;
-    (processed as any).productoffer = processed.productoffer === "yes" ? true : processed.productoffer === "no" ? false : undefined;
+    // Ensure radio fields are set to 'yes' or 'no' only
+    (processed as any).popularproduct = processed.popularproduct === "yes" ? "yes" : "no";
+    (processed as any).topratedproduct = processed.topratedproduct === "yes" ? "yes" : "no";
+    (processed as any).productoffer = processed.productoffer === "yes" ? "yes" : "no";
     
     // Debug: Log the radio field values for troubleshooting
-    console.log("Edit mode - Radio field values from backend:", {
+    console.log("Edit mode - Original backend values:", {
+      popularproduct: productDetail.popularproduct,
+      topratedproduct: productDetail.topratedproduct,
+      productoffer: productDetail.productoffer
+    });
+    console.log("Edit mode - Processed values:", {
       popularproduct: processed.popularproduct,
       topratedproduct: processed.topratedproduct,
       productoffer: processed.productoffer
@@ -342,13 +341,12 @@ export default function AddProductForm({ productId }: { productId?: string }) {
 ) => {
   const { name, value, type } = e.target;
 
-  // Convert "yes"/"no" radios to booleans for these specific fields
-  let newValue: string | boolean = value;
-  if (
-    type === "radio" &&
-    ["popularproduct", "topratedproduct", "productoffer"].includes(name)
-  ) {
-    newValue = value === "yes";
+  // Keep radio values as strings ("yes"/"no")
+  let newValue: string = value;
+  
+  // Debug: Log radio button changes
+  if (type === "radio" && ["popularproduct", "topratedproduct", "productoffer"].includes(name)) {
+    console.log(`Radio button changed: ${name} = ${value}`);
   }
 
   const newFormData = { ...formData, [name]: newValue };
@@ -485,19 +483,20 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     numberFields.forEach(field => {
       cleanedFormData[field] = Number(cleanedFormData[field]);
     });
-    // Convert radio fields from booleans to 'yes'/'no' strings for backend
+    // Ensure radio fields are always 'yes' or 'no' strings
     ["popularproduct", "topratedproduct", "productoffer"].forEach(field => {
-      if (cleanedFormData[field] === true) {
-        cleanedFormData[field] = "yes";
-      } else if (cleanedFormData[field] === false) {
-        cleanedFormData[field] = "no";
-      } else {
-        cleanedFormData[field] = "no"; // Default to "no" if undefined
+      if (cleanedFormData[field] !== "yes" && cleanedFormData[field] !== "no") {
+        cleanedFormData[field] = "no"; // Default to "no" if invalid
       }
     });
     
     // Debug: Log the final radio field values being sent to backend
-    console.log("Form submission - Radio field values to backend:", {
+    console.log("Form submission - Original formData values:", {
+      popularproduct: formData.popularproduct,
+      topratedproduct: formData.topratedproduct,
+      productoffer: formData.productoffer
+    });
+    console.log("Form submission - Final cleaned values to backend:", {
       popularproduct: cleanedFormData.popularproduct,
       topratedproduct: cleanedFormData.topratedproduct,
       productoffer: cleanedFormData.productoffer
@@ -1014,7 +1013,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
         type="radio"
         name="popularproduct"
         value="yes"
-        checked={formData.popularproduct === true}
+        checked={formData.popularproduct === "yes"}
         onChange={handleInputChange}
         className="mr-1"
       />
@@ -1025,7 +1024,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
         type="radio"
         name="popularproduct"
         value="no"
-        checked={formData.popularproduct === false}
+        checked={formData.popularproduct === "no"}
         onChange={handleInputChange}
         className="mr-1"
       />
@@ -1041,7 +1040,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
         type="radio"
         name="topratedproduct"
         value="yes"
-        checked={formData.topratedproduct === true}
+        checked={formData.topratedproduct === "yes"}
         onChange={handleInputChange}
         className="mr-1"
       />
@@ -1052,7 +1051,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
         type="radio"
         name="topratedproduct"
         value="no"
-        checked={formData.topratedproduct === false}
+        checked={formData.topratedproduct === "no"}
         onChange={handleInputChange}
         className="mr-1"
       />
@@ -1068,7 +1067,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
         type="radio"
         name="productoffer"
         value="yes"
-        checked={formData.productoffer === true}
+        checked={formData.productoffer === "yes"}
         onChange={handleInputChange}
         className="mr-1"
       />
@@ -1079,7 +1078,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
         type="radio"
         name="productoffer"
         value="no"
-        checked={formData.productoffer === false}
+        checked={formData.productoffer === "no"}
         onChange={handleInputChange}
         className="mr-1"
       />
