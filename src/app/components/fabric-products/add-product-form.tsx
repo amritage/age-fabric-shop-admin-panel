@@ -969,14 +969,16 @@ export default function AddProductForm({ productId }: { productId?: string }) {
                     className="mt-2 w-full h-32 rounded border border-gray-200 bg-gray-50"
                   />
                 ) : (
-                  <Image
-                    src={previews[key]}
-                    alt={key}
-                    width={320}
-                    height={128}
-                    unoptimized
-                    className="mt-2 w-full h-32 object-cover rounded border border-gray-200 bg-gray-50"
-                  />
+                  <div className="mt-2 w-full aspect-[16/9] relative rounded border border-gray-200 bg-gray-50 overflow-hidden">
+                    <Image
+                      src={previews[key]}
+                      alt={key}
+                      fill
+                      unoptimized
+                      className="object-cover"
+                      style={{ objectFit: "cover" }}
+                    />
+                  </div>
                 ))}
             </div>
           ))}
