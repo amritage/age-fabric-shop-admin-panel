@@ -90,7 +90,11 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     skip: !isEdit,
   });
 
-  const [formData, setFormData] = useState<Record<string, any>>({});
+  const [formData, setFormData] = useState<Record<string, any>>({
+    popularproduct: undefined,
+    topratedproduct: undefined,
+    productoffer: undefined,
+  });
   const [filters, setFilters] = useState<
     { name: string; label: string; options: any[] }[]
   >([]);
@@ -125,13 +129,8 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           console.error('Error parsing saved form data:', error);
         }
       } else {
-        // Explicitly clear radio fields in add mode
-        setFormData((prev) => ({
-          ...prev,
-          popularproduct: undefined,
-          topratedproduct: undefined,
-          productoffer: undefined,
-        }));
+        // Keep radio fields as undefined in add mode (already set in initial state)
+        // No need to explicitly set them again
       }
     }
   }, [isEdit]);
@@ -1023,6 +1022,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           <div className="flex-1 bg-gray-50 p-6 rounded-lg min-w-[220px]">
             <span className="block font-bold text-gray-800 text-lg mb-4">Top Rated</span>
             <div className="space-y-3">
+              {/* Placeholder for required visual cue */}
               {formData.topratedproduct === undefined && (
                 <span className="text-red-500 text-sm">Please select an option</span>
               )}
@@ -1056,6 +1056,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           <div className="flex-1 bg-gray-50 p-6 rounded-lg min-w-[220px]">
             <span className="block font-bold text-gray-800 text-lg mb-4">Product Offer</span>
             <div className="space-y-3">
+              {/* Placeholder for required visual cue */}
               {formData.productoffer === undefined && (
                 <span className="text-red-500 text-sm">Please select an option</span>
               )}
