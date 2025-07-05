@@ -171,22 +171,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     })();
   }, []);
 
-  // Fetch sub-filter options on mount
-  useEffect(() => {
-    fetch('https://adorable-gentleness-production.up.railway.app/api/substructure/view')
-      .then(res => res.json())
-      .then(data => setSubstructureOptions(data.data || []));
-  }, []);
-  useEffect(() => {
-    fetch('https://adorable-gentleness-production.up.railway.app/api/subfinish/view')
-      .then(res => res.json())
-      .then(data => setSubfinishOptions(data.data || []));
-  }, []);
-  useEffect(() => {
-    fetch('https://adorable-gentleness-production.up.railway.app/api/subsuitable/view')
-      .then(res => res.json())
-      .then(data => setSubsuitableforOptions(data.data || []));
-  }, []);
+  // Remove initial fetches for sub-filter options as they will be loaded based on parent selection
 
   // 2) hydrate formData ONLY after filters & productDetail are both ready
   useEffect(() => {
@@ -205,7 +190,60 @@ export default function AddProductForm({ productId }: { productId?: string }) {
         setPreviews((p) => ({ ...p, [key]: url }));
       }
     });
-  }, [isLoadingFilters, productDetail]);
+    
+    // Load sub-filter options for editing mode
+    if (isEdit) {
+      const adminCookie = typeof window !== "undefined" ? Cookies.get("admin") : null;
+      let token = "";
+      if (adminCookie) {
+        try {
+          const adminObj = JSON.parse(adminCookie);
+          token = adminObj.accessToken;
+        } catch (e) {
+          token = "";
+        }
+      }
+      
+      // Load subsuitable options if suitableforId exists
+      if (processed.suitableforId) {
+        fetch(BASE_URL + "/api/subsuitable/view", { headers: { Authorization: `Bearer ${token}` } })
+          .then(r => r.json())
+          .then(j => {
+            const opts = (j.data || []).filter((item: any) => item.suitableforId === processed.suitableforId);
+            setSubsuitableforOptions(opts);
+          })
+          .catch(() => {
+            console.error('Failed to load subsuitable options for editing');
+          });
+      }
+      
+      // Load substructure options if structureId exists
+      if (processed.structureId) {
+        fetch(BASE_URL + "/api/substructure/view", { headers: { Authorization: `Bearer ${token}` } })
+          .then(r => r.json())
+          .then(j => {
+            const opts = (j.data || []).filter((item: any) => item.structureId === processed.structureId);
+            setSubstructureOptions(opts);
+          })
+          .catch(() => {
+            console.error('Failed to load substructure options for editing');
+          });
+      }
+      
+      // Load subfinish options if finishId exists
+      if (processed.finishId) {
+        fetch(BASE_URL + "/api/subfinish/view", { headers: { Authorization: `Bearer ${token}` } })
+          .then(r => r.json())
+          .then(j => {
+            const opts = (j.data || []).filter((item: any) => item.finishId === processed.finishId);
+            setSubfinishOptions(opts);
+          })
+          .catch(() => {
+            console.error('Failed to load subfinish options for editing');
+          });
+      }
+    }
+  }, [isLoadingFilters, productDetail, isEdit]);
 
   // Sub Structure
   useEffect(() => {
@@ -234,6 +272,8 @@ export default function AddProductForm({ productId }: { productId?: string }) {
         setFilters(fs =>
           fs.map(f => f.name === "subStructureId" ? { ...f, options: opts } : f)
         );
+        // Update substructureOptions for the standalone dropdown
+        setSubstructureOptions(opts);
       })
       .catch(() => {
         setFilterErrors(e => ({ ...e, ["subStructureId"]: `Failed to load subStructureId` }));
@@ -267,6 +307,8 @@ export default function AddProductForm({ productId }: { productId?: string }) {
         setFilters(fs =>
           fs.map(f => f.name === "subFinishId" ? { ...f, options: opts } : f)
         );
+        // Update subfinishOptions for the standalone dropdown
+        setSubfinishOptions(opts);
       })
       .catch(() => {
         setFilterErrors(e => ({ ...e, ["subFinishId"]: `Failed to load subFinishId` }));
@@ -300,6 +342,8 @@ export default function AddProductForm({ productId }: { productId?: string }) {
         setFilters(fs =>
           fs.map(f => f.name === "subSuitableId" ? { ...f, options: opts } : f)
         );
+        // Update subsuitableforOptions for the standalone dropdown
+        setSubsuitableforOptions(opts);
       })
       .catch(() => {
         setFilterErrors(e => ({ ...e, ["subSuitableId"]: `Failed to load subSuitableId` }));
