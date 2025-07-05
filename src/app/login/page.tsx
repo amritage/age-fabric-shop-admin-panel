@@ -19,7 +19,7 @@ const LoginPage = () => {
               <div className="text-center">
                 <h4 className="text-[24px] mb-1">Login Now.</h4>
                 <p className="mb-2">
-                  {"Don't"} have an account?
+                  {"Don&apos;t"} have an account?
                   <span>
                     <Link href="/register" className="text-theme">
                       Sign Up

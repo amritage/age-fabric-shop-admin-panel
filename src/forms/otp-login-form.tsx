@@ -186,7 +186,7 @@ const OTPLoginForm = () => {
             <div className="text-center mb-6">
               <h3 className="text-xl font-semibold mb-2">Enter OTP</h3>
               <p className="text-gray-600">
-                We've sent a 6-digit code to <strong>{userEmail}</strong>
+                We&apos;ve sent a 6-digit code to <strong>{userEmail}</strong>
               </p>
             </div>
             
@@ -229,7 +229,7 @@ const OTPLoginForm = () => {
               
               <div className="mt-4 text-center">
                 <p className="text-sm text-gray-600 mb-2">
-                  Didn't receive the code?
+                  Didn&apos;t receive the code?
                 </p>
                 {canResendOTP ? (
                   <button
