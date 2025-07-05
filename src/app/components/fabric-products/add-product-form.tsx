@@ -986,9 +986,9 @@ export default function AddProductForm({ productId }: { productId?: string }) {
         </div>
 
         {/* Product Flags (Popular, Top Rated, Product Offer) */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
+        <div className="w-full flex flex-col md:flex-row gap-8 mt-8">
           {/* Popular Product */}
-          <div className="bg-gray-50 p-6 rounded-lg">
+          <div className="flex-1 bg-gray-50 p-6 rounded-lg min-w-[220px]">
             <span className="block font-bold text-gray-800 text-lg mb-4">Popular Product</span>
             <div className="space-y-3">
               <label className="flex items-center cursor-pointer">
@@ -1015,9 +1015,8 @@ export default function AddProductForm({ productId }: { productId?: string }) {
               </label>
             </div>
           </div>
-          
           {/* Top Rated */}
-          <div className="bg-gray-50 p-6 rounded-lg">
+          <div className="flex-1 bg-gray-50 p-6 rounded-lg min-w-[220px]">
             <span className="block font-bold text-gray-800 text-lg mb-4">Top Rated</span>
             <div className="space-y-3">
               <label className="flex items-center cursor-pointer">
@@ -1044,9 +1043,8 @@ export default function AddProductForm({ productId }: { productId?: string }) {
               </label>
             </div>
           </div>
-          
           {/* Product Offer */}
-          <div className="bg-gray-50 p-6 rounded-lg">
+          <div className="flex-1 bg-gray-50 p-6 rounded-lg min-w-[220px]">
             <span className="block font-bold text-gray-800 text-lg mb-4">Product Offer</span>
             <div className="space-y-3">
               <label className="flex items-center cursor-pointer">
