@@ -81,8 +81,8 @@ export default function MetadataPage() {
     }
     fd.append("description_html", metaDescription);
 
-    fd.append("productoffer", fullData.isProductOffer ? "yes" : "no");
-    fd.append("topratedproduct", fullData.isTopRated ? "yes" : "no");
+  /*   fd.append("productoffer", fullData.isProductOffer ? "yes" : "no");
+    fd.append("topratedproduct", fullData.isTopRated ? "yes" : "no"); */
 
     // Explicitly append file data from Redux store
     if (image) fd.append("image", image);
