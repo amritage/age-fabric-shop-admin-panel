@@ -457,8 +457,8 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     });
 
     // Map isPopular to popularproduct for backend
-    cleanedFormData.popularproduct = formData.isPopular === true ? "yes" : "no";
-    delete cleanedFormData.isPopular;
+    // cleanedFormData.popularproduct = formData.isPopular === true ? "yes" : "no";
+    // delete cleanedFormData.isPopular;
     ["image", "image1", "image2", "video"].forEach((key) => {
       delete cleanedFormData[key];
     });
