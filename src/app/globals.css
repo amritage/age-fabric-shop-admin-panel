@@ -90,6 +90,9 @@
   .tp-btn {
     @apply inline-flex rounded-md items-center tracking-wide text-base font-medium py-1 px-5 text-white bg-theme hover:bg-themeDark;
   }
+  .tp-btn-outline {
+    @apply inline-flex rounded-md items-center tracking-wide text-base font-medium py-1 px-5 text-theme border border-theme bg-transparent hover:bg-theme hover:text-white;
+  }
   .text-hover-primary {
     @apply hover:text-theme;
   }

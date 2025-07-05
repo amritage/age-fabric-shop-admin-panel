@@ -1,8 +1,9 @@
-import LoginForm from "@/forms/login-form";
+"use client";
+import OTPLoginForm from "@/forms/otp-login-form";
 import login_bg from "@assets/img/bg/login-bg.jpg";
 import Link from "next/link";
 
-const LoginPage = () => {
+const OTPLoginPage = () => {
   return (
     <div className="tp-main-wrapper h-screen">
       <div className="container mx-auto my-auto h-full flex items-center justify-center">
@@ -17,24 +18,19 @@ const LoginPage = () => {
             </div>
             <div className="col-span-12 lg:col-span-6 md:w-[500px] mx-auto my-auto  pt-[50px] py-[60px] px-5 md:px-[60px]">
               <div className="text-center">
-                <h4 className="text-[24px] mb-1">Login Now.</h4>
-                <p className="mb-2">
-                  {"Don't"} have an account?
-                  <span>
-                    <Link href="/register" className="text-theme">
-                      Sign Up
-                    </Link>
-                  </span>
+                <h4 className="text-[24px] mb-1">OTP Login</h4>
+                <p className="mb-4">
+                  Enter your email to receive a one-time password
                 </p>
                 <p className="text-sm">
-                  Prefer OTP login?{" "}
-                  <Link href="/otplogin" className="text-theme hover:text-themeDark">
+                  Prefer password login?{" "}
+                  <Link href="/login" className="text-theme hover:text-themeDark">
                     Click here
                   </Link>
                 </p>
               </div>
               <div className="">
-                <LoginForm />
+                <OTPLoginForm />
               </div>
             </div>
           </div>
@@ -44,4 +40,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default OTPLoginPage; 
