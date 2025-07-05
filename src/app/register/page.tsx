@@ -1,38 +1,34 @@
 import React from "react";
 import Link from "next/link";
-import register_bg from "@assets/img/bg/login-bg.jpg";
 import RegisterForm from "@/forms/register-form";
 
 const RegisterPage = () => {
   return (
-    <div className="tp-main-wrapper h-screen">
-      <div className="container mx-auto my-auto h-full flex items-center justify-center">
-        <div className="pt-[120px] pb-[120px]">
-          <div className="grid grid-cols-12 shadow-lg bg-white overflow-hidden rounded-md ">
-            <div className="col-span-4 lg:col-span-6 relative h-full hidden lg:block">
-              <div
-                className="data-bg absolute top-0 left-0 w-full h-full bg-cover bg-no-repeat"
-                data-bg="assets/img/bg/login-bg.jpg"
-                style={{ backgroundImage: `url(${register_bg.src})` }}
-              ></div>
-            </div>
-            <div className="col-span-12 lg:col-span-6 md:w-[500px] mx-auto my-auto  pt-[50px] py-[60px] px-5 md:px-[60px]">
-              <div className="text-center">
-                <h4 className="text-[24px] mb-1">Register Now.</h4>
-                <p>
-                  Already have an account?{" "}
-                  <span>
-                    <Link href="/login" className="text-theme">
-                      Sign In
-                    </Link>{" "}
-                  </span>
-                </p>
-              </div>
-              <div className="">
-                <RegisterForm />
-              </div>
-            </div>
+    <div className="min-h-screen flex items-center justify-center bg-[#f3f8fe]">
+      <div className="bg-white rounded-xl shadow-lg flex flex-col md:flex-row w-full max-w-4xl overflow-hidden">
+        {/* Left: Logo */}
+        <div className="flex-1 flex items-center justify-center p-8 bg-white">
+          <img
+            src="/assets/img/logo/logo.svg"
+            alt="Amrita Global Enterprises Logo"
+            className="max-w-xs w-full"
+          />
+        </div>
+        {/* Right: Register Form */}
+        <div className="flex-1 flex flex-col justify-center p-10">
+          <div className="text-center mb-6">
+            <h4 className="text-[24px] mb-1">Register Now</h4>
+            <p className="mb-4">
+              Create your account to get started with our platform
+            </p>
+            <p className="text-sm">
+              Already have an account?{" "}
+              <Link href="/login" className="text-theme hover:text-themeDark">
+                Sign In
+              </Link>
+            </p>
           </div>
+          <RegisterForm />
         </div>
       </div>
     </div>

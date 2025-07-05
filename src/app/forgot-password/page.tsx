@@ -2,16 +2,25 @@ import ForgotForm from "../components/forgot/forgot-form";
 
 const ForgetPage = () => {
   return (
-    <div className="tp-main-wrapper h-screen">
-      <div className="container mx-auto my-auto h-full flex items-center justify-center">
-        <div className="w-[500px] mx-auto my-auto shadow-lg bg-white pt-[50px] py-[60px] px-[60px]">
-          <div className="text-center">
+    <div className="min-h-screen flex items-center justify-center bg-[#f3f8fe]">
+      <div className="bg-white rounded-xl shadow-lg flex flex-col md:flex-row w-full max-w-4xl overflow-hidden">
+        {/* Left: Logo */}
+        <div className="flex-1 flex items-center justify-center p-8 bg-white">
+          <img
+            src="/assets/img/logo/logo.svg"
+            alt="Amrita Global Enterprises Logo"
+            className="max-w-xs w-full"
+          />
+        </div>
+        {/* Right: Forgot Password Form */}
+        <div className="flex-1 flex flex-col justify-center p-10">
+          <div className="text-center mb-6">
             <h4 className="text-[24px] mb-1">Reset Password</h4>
-            <p>Enter your email address to request password reset.</p>
+            <p className="mb-4">
+              Enter your email address to request password reset
+            </p>
           </div>
-          <div className="">
-            <ForgotForm />
-          </div>
+          <ForgotForm />
         </div>
       </div>
     </div>
