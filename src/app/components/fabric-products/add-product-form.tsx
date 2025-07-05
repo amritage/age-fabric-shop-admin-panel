@@ -467,19 +467,23 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     // Map isPopular to popularproduct for backend
     // cleanedFormData.popularproduct = formData.isPopular === true ? "yes" : "no";
     // delete cleanedFormData.isPopular;
+    
+    // Map isPopular to popularproduct for backend
+    cleanedFormData.popularproduct = formData.isPopular === true ? 'yes' : 'no';
+    delete cleanedFormData.isPopular;
     ["image", "image1", "image2", "video"].forEach((key) => {
       delete cleanedFormData[key];
     });
 
 
     // Coerce productoffer, popularproduct, and topratedproduct to string before submit
-    ["productoffer", "popularproduct", "topratedproduct"].forEach(field => {
-      if (Array.isArray(cleanedFormData[field])) {
-        cleanedFormData[field] = cleanedFormData[field][0] || "";
-      } else if (typeof cleanedFormData[field] !== "string") {
-        cleanedFormData[field] = String(cleanedFormData[field] ?? "");
-      }
-    });
+    // ["productoffer", "popularproduct", "topratedproduct"].forEach(field => {
+    //   if (Array.isArray(cleanedFormData[field])) {
+    //     cleanedFormData[field] = cleanedFormData[field][0] || "";
+    //   } else if (typeof cleanedFormData[field] !== "string") {
+    //     cleanedFormData[field] = String(cleanedFormData[field] ?? "");
+    //   }
+    // });
 
     Cookies.set("NEW_PRODUCT_BASE", JSON.stringify(cleanedFormData));
     // Clear localStorage when moving to metadata (form is complete)
@@ -984,111 +988,82 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           ))}
         </div>
 
-        {/* Product Flags (Popular, Top Rated, Product Offer) */}
-        <div className="w-full flex flex-col md:flex-row gap-8 mt-8">
-          {/* Popular Product */}
-          <div className="flex-1 bg-gray-50 p-6 rounded-lg min-w-[220px]">
-            <span className="block font-bold text-gray-800 text-lg mb-4">Popular Product</span>
-            <div className="space-y-3">
-              {/* Placeholder for required visual cue */}
-              {formData.popularproduct === undefined && (
-                <span className="text-red-500 text-sm">Please select an option</span>
-              )}
-              <label className="flex items-center cursor-pointer">
-                <input
-                  type="radio"
-                  name="popularproduct"
-                  value="yes"
-                  checked={formData.popularproduct === "yes"}
-                  onChange={handleInputChange}
-                  required
-                  className="w-5 h-5 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-3"
-                />
-                <span className="text-lg font-medium text-gray-700">Yes</span>
-              </label>
-              <label className="flex items-center cursor-pointer">
-                <input
-                  type="radio"
-                  name="popularproduct"
-                  value="no"
-                  checked={formData.popularproduct === "no"}
-                  onChange={handleInputChange}
-                  required
-                  className="w-5 h-5 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-3"
-                />
-                <span className="text-lg font-medium text-gray-700">No</span>
-              </label>
-            </div>
-          </div>
-          {/* Top Rated */}
-          <div className="flex-1 bg-gray-50 p-6 rounded-lg min-w-[220px]">
-            <span className="block font-bold text-gray-800 text-lg mb-4">Top Rated</span>
-            <div className="space-y-3">
-              {/* Placeholder for required visual cue */}
-              {formData.topratedproduct === undefined && (
-                <span className="text-red-500 text-sm">Please select an option</span>
-              )}
-              <label className="flex items-center cursor-pointer">
-                <input
-                  type="radio"
-                  name="topratedproduct"
-                  value="yes"
-                  checked={formData.topratedproduct === "yes"}
-                  onChange={handleInputChange}
-                  required
-                  className="w-5 h-5 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-3"
-                />
-                <span className="text-lg font-medium text-gray-700">Yes</span>
-              </label>
-              <label className="flex items-center cursor-pointer">
-                <input
-                  type="radio"
-                  name="topratedproduct"
-                  value="no"
-                  checked={formData.topratedproduct === "no"}
-                  onChange={handleInputChange}
-                  required
-                  className="w-5 h-5 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-3"
-                />
-                <span className="text-lg font-medium text-gray-700">No</span>
-              </label>
-            </div>
-          </div>
-          {/* Product Offer */}
-          <div className="flex-1 bg-gray-50 p-6 rounded-lg min-w-[220px]">
-            <span className="block font-bold text-gray-800 text-lg mb-4">Product Offer</span>
-            <div className="space-y-3">
-              {/* Placeholder for required visual cue */}
-              {formData.productoffer === undefined && (
-                <span className="text-red-500 text-sm">Please select an option</span>
-              )}
-              <label className="flex items-center cursor-pointer">
-                <input
-                  type="radio"
-                  name="productoffer"
-                  value="yes"
-                  checked={formData.productoffer === "yes"}
-                  onChange={handleInputChange}
-                  required
-                  className="w-5 h-5 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-3"
-                />
-                <span className="text-lg font-medium text-gray-700">Yes</span>
-              </label>
-              <label className="flex items-center cursor-pointer">
-                <input
-                  type="radio"
-                  name="productoffer"
-                  value="no"
-                  checked={formData.productoffer === "no"}
-                  onChange={handleInputChange}
-                  required
-                  className="w-5 h-5 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-3"
-                />
-                <span className="text-lg font-medium text-gray-700">No</span>
-              </label>
-            </div>
-          </div>
+         {/* Product Flags (Popular, Top Rated, Product Offer) */}
+      <div className="flex flex-wrap gap-8 items-center mt-8">
+        {/* Popular Product */}
+        <div className="flex items-center gap-2 text-xs font-medium text-gray-600">
+          <span>Popular Product:</span>
+          <label className="flex items-center">
+            <input
+              type="checkbox"
+              name="isPopularYes"
+              checked={formData.isPopular === true}
+              onChange={() => setFormData(p => ({ ...p, isPopular: true }))}
+              className="mr-1"
+            />
+            Yes
+          </label>
+          <label className="flex items-center ml-2">
+            <input
+              type="checkbox"
+              name="isPopularNo"
+              checked={formData.isPopular === false}
+              onChange={() => setFormData(p => ({ ...p, isPopular: false }))}
+              className="mr-1"
+            />
+            No
+          </label>
         </div>
+        {/* Top Rated */}
+        <div className="flex items-center gap-2 text-xs font-medium text-gray-600">
+          <span>Top Rated:</span>
+          <label className="flex items-center">
+            <input
+              type="checkbox"
+              name="isTopRatedYes"
+              checked={formData.isTopRated === true}
+              onChange={() => setFormData(p => ({ ...p, isTopRated: true }))}
+              className="mr-1"
+            />
+            Yes
+          </label>
+          <label className="flex items-center ml-2">
+            <input
+              type="checkbox"
+              name="isTopRatedNo"
+              checked={formData.isTopRated === false}
+              onChange={() => setFormData(p => ({ ...p, isTopRated: false }))}
+              className="mr-1"
+            />
+            No
+          </label>
+        </div>
+        {/* Product Offer */}
+        <div className="flex items-center gap-2 text-xs font-medium text-gray-600">
+          <span>Product Offer:</span>
+          <label className="flex items-center">
+            <input
+              type="checkbox"
+              name="isProductOfferYes"
+              checked={formData.isProductOffer === true}
+              onChange={() => setFormData(p => ({ ...p, isProductOffer: true }))}
+              className="mr-1"
+            />
+            Yes
+          </label>
+          <label className="flex items-center ml-2">
+            <input
+              type="checkbox"
+              name="isProductOfferNo"
+              checked={formData.isProductOffer === false}
+              onChange={() => setFormData(p => ({ ...p, isProductOffer: false }))}
+              className="mr-1"
+            />
+            No
+          </label>
+        </div>
+      </div>
+
 
         <div className="flex justify-between mt-8">
           {!isEdit && (
