@@ -118,22 +118,15 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           } else if (typeof parsedData.productdescription !== "string") {
             parsedData.productdescription = String(parsedData.productdescription ?? "");
           }
-          // Ensure radio fields default to "no" if not present
-          parsedData.popularproduct = parsedData.popularproduct || "no";
-          parsedData.topratedproduct = parsedData.topratedproduct || "no";
-          parsedData.productoffer = parsedData.productoffer || "no";
+          // Do NOT set default for radio fields in add mode
           setFormData(parsedData);
           setHasRestoredData(true);
         } catch (error) {
           console.error('Error parsing saved form data:', error);
         }
       } else {
-        // Initialize with default values for new products
-        setFormData({
-          popularproduct: "no",
-          topratedproduct: "no",
-          productoffer: "no"
-        });
+        // Do not set any default for radio fields in add mode
+        setFormData({});
       }
     }
   }, [isEdit]);
@@ -209,10 +202,10 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     processed.substructureId = extractId(processed.substructureId);
     processed.subfinishId = extractId(processed.subfinishId);
     processed.subsuitableforId = extractId(processed.subsuitableforId);
-    // Ensure radio fields are always 'yes' or 'no' strings with 'no' as default
-    processed.popularproduct = processed.popularproduct === "yes" ? "yes" : "no";
-    processed.topratedproduct = processed.topratedproduct === "yes" ? "yes" : "no";
-    processed.productoffer = processed.productoffer === "yes" ? "yes" : "no";
+    // Only set radio fields if present in productDetail
+    processed.popularproduct = processed.popularproduct === "yes" ? "yes" : processed.popularproduct === "no" ? "no" : undefined;
+    processed.topratedproduct = processed.topratedproduct === "yes" ? "yes" : processed.topratedproduct === "no" ? "no" : undefined;
+    processed.productoffer = processed.productoffer === "yes" ? "yes" : processed.productoffer === "no" ? "no" : undefined;
     setFormData(processed);
     ["image", "image1", "image2", "video"].forEach((key) => {
       const url = (processed as any)[key];
@@ -998,6 +991,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
                   value="yes"
                   checked={formData.popularproduct === "yes"}
                   onChange={handleInputChange}
+                  required
                   className="w-5 h-5 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-3"
                 />
                 <span className="text-lg font-medium text-gray-700">Yes</span>
@@ -1009,6 +1003,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
                   value="no"
                   checked={formData.popularproduct === "no"}
                   onChange={handleInputChange}
+                  required
                   className="w-5 h-5 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-3"
                 />
                 <span className="text-lg font-medium text-gray-700">No</span>
@@ -1026,6 +1021,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
                   value="yes"
                   checked={formData.topratedproduct === "yes"}
                   onChange={handleInputChange}
+                  required
                   className="w-5 h-5 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-3"
                 />
                 <span className="text-lg font-medium text-gray-700">Yes</span>
@@ -1037,6 +1033,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
                   value="no"
                   checked={formData.topratedproduct === "no"}
                   onChange={handleInputChange}
+                  required
                   className="w-5 h-5 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-3"
                 />
                 <span className="text-lg font-medium text-gray-700">No</span>
@@ -1054,6 +1051,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
                   value="yes"
                   checked={formData.productoffer === "yes"}
                   onChange={handleInputChange}
+                  required
                   className="w-5 h-5 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-3"
                 />
                 <span className="text-lg font-medium text-gray-700">Yes</span>
@@ -1065,6 +1063,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
                   value="no"
                   checked={formData.productoffer === "no"}
                   onChange={handleInputChange}
+                  required
                   className="w-5 h-5 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-3"
                 />
                 <span className="text-lg font-medium text-gray-700">No</span>
