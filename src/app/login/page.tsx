@@ -21,7 +21,7 @@ const LoginPage = () => {
               Welcome back! Please enter your credentials to access your account
             </p>
             <p className="text-sm">
-              Don't have an account?{" "}
+              Do not have an account?{" "}
               <Link href="/register" className="text-theme hover:text-themeDark">
                 Sign Up
               </Link>
