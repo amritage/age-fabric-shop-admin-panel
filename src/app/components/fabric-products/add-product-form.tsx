@@ -171,39 +171,35 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     })();
   }, []);
 
-  // Fetch sub-filter options on mount
+  // Fetch manual sub-filters on mount
   useEffect(() => {
-    fetch('https://adorable-gentleness-production.up.railway.app/api/substructure/view')
+    fetch(`${BASE_URL}/api/substructure/view`)
       .then(res => res.json())
       .then(data => setSubstructureOptions(data.data || []));
   }, []);
   useEffect(() => {
-    fetch('https://adorable-gentleness-production.up.railway.app/api/subfinish/view')
+    fetch(`${BASE_URL}/api/subfinish/view`)
       .then(res => res.json())
       .then(data => setSubfinishOptions(data.data || []));
   }, []);
   useEffect(() => {
-    fetch('https://adorable-gentleness-production.up.railway.app/api/subsuitable/view')
+    fetch(`${BASE_URL}/api/subsuitable/view`)
       .then(res => res.json())
       .then(data => setSubsuitableforOptions(data.data || []));
   }, []);
 
-  // 2) hydrate formData ONLY after filters & productDetail are both ready
+  // Hydrate formData when editing
   useEffect(() => {
     if (isLoadingFilters || !productDetail) return;
-    const processed = { ...productDetail };
-    function extractId(val: any) {
-      return val && typeof val === "object" && "_id" in val ? val._id : val || "";
-    }
+    const processed: any = { ...productDetail };
+    const extractId = (val: any) => (val && val._id ? val._id : val || "");
     processed.substructureId = extractId(processed.substructureId);
     processed.subfinishId = extractId(processed.subfinishId);
     processed.subsuitableforId = extractId(processed.subsuitableforId);
     setFormData(processed);
-    ["image", "image1", "image2", "video"].forEach((key) => {
+    ["image", "image1", "image2", "video"].forEach(key => {
       const url = (processed as any)[key];
-      if (url) {
-        setPreviews((p) => ({ ...p, [key]: url }));
-      }
+      if (url) setPreviews(p => ({ ...p, [key]: url }));
     });
   }, [isLoadingFilters, productDetail]);
 
@@ -273,36 +269,31 @@ export default function AddProductForm({ productId }: { productId?: string }) {
       });
   }, [formData.finishId]);
 
-  // Sub Suitable
+  // Dynamic Sub Suitable For filtering
   useEffect(() => {
     const parentId = formData.suitableforId;
     if (!parentId) {
-      setFilters(fs =>
-        fs.map(f => f.name === "subSuitableId" ? { ...f, options: [] } : f)
-      );
+      setSubsuitableforOptions([]);
       return;
     }
-    // Extract token as before
     const adminCookie = typeof window !== "undefined" ? Cookies.get("admin") : null;
     let token = "";
     if (adminCookie) {
       try {
-        const adminObj = JSON.parse(adminCookie);
-        token = adminObj.accessToken;
-      } catch (e) {
+        token = JSON.parse(adminCookie).accessToken;
+      } catch {
         token = "";
       }
     }
-    fetch(BASE_URL + "/api/subsuitable/view", { headers: { Authorization: `Bearer ${token}` } })
-      .then(r => r.json())
+    fetch(`${BASE_URL}/api/subsuitable/view`, { headers: { Authorization: `Bearer ${token}` } })
+      .then(res => res.json())
       .then(j => {
-        const opts = (j.data || []).filter((item: any) => item.suitableforId === parentId);
-        setFilters(fs =>
-          fs.map(f => f.name === "subSuitableId" ? { ...f, options: opts } : f)
+        setSubsuitableforOptions(
+          (j.data || []).filter((item: any) => item.suitableforId === parentId)
         );
       })
       .catch(() => {
-        setFilterErrors(e => ({ ...e, ["subSuitableId"]: `Failed to load subSuitableId` }));
+        setFilterErrors(e => ({ ...e, subsuitableforId: `Failed to load Sub Suitable For options` }));
       });
   }, [formData.suitableforId]);
 
@@ -435,14 +426,11 @@ export default function AddProductForm({ productId }: { productId?: string }) {
       return;
     }
 
-    // In goNext, ensure all backend string fields are coerced to string and number fields to number
-    const cleanedFormData = { ...formData };
+    // Cleaned form data copy
+    const cleanedFormData: any = { ...formData };
     const stringFields = [
       "name", "productdescription", "popularproduct", "productoffer", "topratedproduct",
-      "newCategoryId", "structureId", "contentId", "um", "currency", "finishId", "designId",
-      "colorId", "css", "motifsizeId", "suitableforId", "vendorId", "groupcodeId", "charset",
-      "title", "description", "keywords", "ogTitle", "ogDescription", "ogUrl", "sku", "slug",
-      "locationCode", "productIdentifier"
+      // ... other string fields
     ];
     stringFields.forEach(field => {
       cleanedFormData[field] = String(cleanedFormData[field] ?? "");
@@ -452,33 +440,20 @@ export default function AddProductForm({ productId }: { productId?: string }) {
       cleanedFormData[field] = Number(cleanedFormData[field]);
     });
 
-    // Map isPopular to popularproduct for backend
-    cleanedFormData.popularproduct = formData.isPopular === true ? "yes" : "no";
-    delete cleanedFormData.isPopular;
-    ["image", "image1", "image2", "video"].forEach((key) => {
+    // Remove file fields before persisting
+    ["image", "image1", "image2", "video"].forEach(key => {
       delete cleanedFormData[key];
     });
 
-
-    // Coerce productoffer, popularproduct, and topratedproduct to string before submit
+    // Ensure product flags are strings
     ["productoffer", "popularproduct", "topratedproduct"].forEach(field => {
-      if (Array.isArray(cleanedFormData[field])) {
-        cleanedFormData[field] = cleanedFormData[field][0] || "";
-      } else if (typeof cleanedFormData[field] !== "string") {
-        cleanedFormData[field] = String(cleanedFormData[field] ?? "");
-      }
+      cleanedFormData[field] = String(cleanedFormData[field] ?? "");
     });
 
+    // Persist to cookie and route
     Cookies.set("NEW_PRODUCT_BASE", JSON.stringify(cleanedFormData));
-    // Clear localStorage when moving to metadata (form is complete)
-    if (!isEdit) {
-      localStorage.removeItem('ADD_PRODUCT_FORM_DATA');
-    }
-    router.push(
-      isEdit
-        ? `/fabric-products/metadata?editId=${editId}`
-        : `/fabric-products/metadata`,
-    );
+    if (!isEdit) localStorage.removeItem('ADD_PRODUCT_FORM_DATA');
+    router.push(isEdit ? `/fabric-products/metadata?editId=${editId}` : `/fabric-products/metadata`);
   };
   return (
     <div className="w-full min-h-screen flex justify-center items-start py-8">
