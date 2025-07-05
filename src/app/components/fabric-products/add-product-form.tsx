@@ -125,8 +125,13 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           console.error('Error parsing saved form data:', error);
         }
       } else {
-        // Do not set any default for radio fields in add mode
-        setFormData({});
+        // Explicitly clear radio fields in add mode
+        setFormData((prev) => ({
+          ...prev,
+          popularproduct: undefined,
+          topratedproduct: undefined,
+          productoffer: undefined,
+        }));
       }
     }
   }, [isEdit]);
@@ -984,6 +989,10 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           <div className="flex-1 bg-gray-50 p-6 rounded-lg min-w-[220px]">
             <span className="block font-bold text-gray-800 text-lg mb-4">Popular Product</span>
             <div className="space-y-3">
+              {/* Placeholder for required visual cue */}
+              {formData.popularproduct === undefined && (
+                <span className="text-red-500 text-sm">Please select an option</span>
+              )}
               <label className="flex items-center cursor-pointer">
                 <input
                   type="radio"
@@ -1014,6 +1023,9 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           <div className="flex-1 bg-gray-50 p-6 rounded-lg min-w-[220px]">
             <span className="block font-bold text-gray-800 text-lg mb-4">Top Rated</span>
             <div className="space-y-3">
+              {formData.topratedproduct === undefined && (
+                <span className="text-red-500 text-sm">Please select an option</span>
+              )}
               <label className="flex items-center cursor-pointer">
                 <input
                   type="radio"
@@ -1044,6 +1056,9 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           <div className="flex-1 bg-gray-50 p-6 rounded-lg min-w-[220px]">
             <span className="block font-bold text-gray-800 text-lg mb-4">Product Offer</span>
             <div className="space-y-3">
+              {formData.productoffer === undefined && (
+                <span className="text-red-500 text-sm">Please select an option</span>
+              )}
               <label className="flex items-center cursor-pointer">
                 <input
                   type="radio"
