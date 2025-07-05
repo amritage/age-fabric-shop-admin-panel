@@ -219,6 +219,13 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     (processed as any).popularproduct = processed.popularproduct === "yes" ? true : processed.popularproduct === "no" ? false : undefined;
     (processed as any).topratedproduct = processed.topratedproduct === "yes" ? true : processed.topratedproduct === "no" ? false : undefined;
     (processed as any).productoffer = processed.productoffer === "yes" ? true : processed.productoffer === "no" ? false : undefined;
+    
+    // Debug: Log the radio field values for troubleshooting
+    console.log("Edit mode - Radio field values from backend:", {
+      popularproduct: processed.popularproduct,
+      topratedproduct: processed.topratedproduct,
+      productoffer: processed.productoffer
+    });
     setFormData(processed);
     ["image", "image1", "image2", "video"].forEach((key) => {
       const url = (processed as any)[key];
@@ -465,7 +472,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     // In goNext, ensure all backend string fields are coerced to string and number fields to number
     const cleanedFormData = { ...formData };
     const stringFields = [
-      "name", "productdescription", "popularproduct", "productoffer", "topratedproduct",
+      "name", "productdescription",
       "newCategoryId", "structureId", "contentId", "um", "currency", "finishId", "designId",
       "colorId", "css", "motifsizeId", "suitableforId", "vendorId", "groupcodeId", "charset",
       "title", "description", "keywords", "ogTitle", "ogDescription", "ogUrl", "sku", "slug",
@@ -478,11 +485,22 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     numberFields.forEach(field => {
       cleanedFormData[field] = Number(cleanedFormData[field]);
     });
-    // Ensure radio fields are always 'yes' or 'no'
+    // Convert radio fields from booleans to 'yes'/'no' strings for backend
     ["popularproduct", "topratedproduct", "productoffer"].forEach(field => {
-      if (cleanedFormData[field] !== "yes" && cleanedFormData[field] !== "no") {
+      if (cleanedFormData[field] === true) {
+        cleanedFormData[field] = "yes";
+      } else if (cleanedFormData[field] === false) {
         cleanedFormData[field] = "no";
+      } else {
+        cleanedFormData[field] = "no"; // Default to "no" if undefined
       }
+    });
+    
+    // Debug: Log the final radio field values being sent to backend
+    console.log("Form submission - Radio field values to backend:", {
+      popularproduct: cleanedFormData.popularproduct,
+      topratedproduct: cleanedFormData.topratedproduct,
+      productoffer: cleanedFormData.productoffer
     });
 
     Cookies.set("NEW_PRODUCT_BASE", JSON.stringify(cleanedFormData));
