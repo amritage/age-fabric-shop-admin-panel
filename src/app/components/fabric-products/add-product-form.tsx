@@ -91,9 +91,9 @@ export default function AddProductForm({ productId }: { productId?: string }) {
   });
 
   const [formData, setFormData] = useState<Record<string, any>>({
-    popularproduct: undefined,
-    topratedproduct: undefined,
-    productoffer: undefined,
+    popularproduct: "no",
+    topratedproduct: "no",
+    productoffer: "no",
   });
   const [filters, setFilters] = useState<
     { name: string; label: string; options: any[] }[]
@@ -210,9 +210,9 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     processed.subfinishId = extractId(processed.subfinishId);
     processed.subsuitableforId = extractId(processed.subsuitableforId);
     // Ensure radio fields are set to 'yes' or 'no' only
-    (processed as any).popularproduct = processed.popularproduct || "no";
-    (processed as any).topratedproduct = processed.topratedproduct || "no";
-    (processed as any).productoffer = processed.productoffer || "no";
+    (processed as any).popularproduct = processed.popularproduct === "yes" ? "yes" : "no";
+    (processed as any).topratedproduct = processed.topratedproduct === "yes" ? "yes" : "no";
+    (processed as any).productoffer = processed.productoffer === "yes" ? "yes" : "no";
     setFormData(processed);
     
     ["image", "image1", "image2", "video"].forEach((key) => {
