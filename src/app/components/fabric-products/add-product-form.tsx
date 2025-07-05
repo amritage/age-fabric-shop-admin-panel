@@ -210,9 +210,9 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     processed.subfinishId = extractId(processed.subfinishId);
     processed.subsuitableforId = extractId(processed.subsuitableforId);
     // Ensure radio fields are set to 'yes' or 'no' only
-    (processed as any).popularproduct = processed.popularproduct === "yes" ? "yes" : "no";
-    (processed as any).topratedproduct = processed.topratedproduct === "yes" ? "yes" : "no";
-    (processed as any).productoffer = processed.productoffer === "yes" ? "yes" : "no";
+    processed.popularproduct = processed.popularproduct === "yes" ? "yes" : "no";
+    processed.topratedproduct = processed.topratedproduct === "yes" ? "yes" : "no";
+    processed.productoffer = processed.productoffer === "yes" ? "yes" : "no";
     setFormData(processed);
     
     ["image", "image1", "image2", "video"].forEach((key) => {
@@ -328,16 +328,10 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
   >,
 ) => {
-  const { name, value, type } = e.target;
-
-  // Keep radio values as strings ("yes"/"no")
-  let newValue: string = value;
-
-  const newFormData = { ...formData, [name]: newValue };
-  setFormData(newFormData);
-
+  const { name, value } = e.target;
+  setFormData({ ...formData, [name]: value });
   // Save to localStorage for both add and edit modes
-  localStorage.setItem("ADD_PRODUCT_FORM_DATA", JSON.stringify(newFormData));
+  localStorage.setItem("ADD_PRODUCT_FORM_DATA", JSON.stringify({ ...formData, [name]: value }));
 };
 
 
