@@ -319,23 +319,33 @@ export default function AddProductForm({ productId }: { productId?: string }) {
   }, [formData.suitableforId]);
 
   // generic handlers
-  const handleInputChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >,
-  ) => {
-    const { name, value, type } = e.target;
-    // if (name === "productdescription") {
-    //   console.log("Input value for productdescription:", value, typeof value, Array.isArray(value));
-    // }
-    let newValue = value;
-    const newFormData = { ...formData, [name]: newValue };
-    setFormData(newFormData);
-    // Save to localStorage (only for new products, not editing)
-    if (!isEdit) {
-      localStorage.setItem('ADD_PRODUCT_FORM_DATA', JSON.stringify(newFormData));
-    }
-  };
+ const handleInputChange = (
+  e: React.ChangeEvent<
+    HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+  >,
+) => {
+  const { name, value, type } = e.target;
+
+  // Convert "yes"/"no" radios to booleans for these specific fields
+  let newValue: string | boolean = value;
+  if (
+    type === "radio" &&
+    ["popularproduct", "topratedproduct", "productoffer"].includes(name)
+  ) {
+    newValue = value === "yes";
+  }
+
+  const newFormData = { ...formData, [name]: newValue };
+  setFormData(newFormData);
+
+  // Save to localStorage (only for new products, not editing)
+  if (!isEdit) {
+    localStorage.setItem("ADD_PRODUCT_FORM_DATA", JSON.stringify(newFormData));
+  }
+};
+
+
+
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     field: string,
@@ -973,87 +983,90 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           ))}
         </div>
 
-         {/* Product Flags (Popular, Top Rated, Product Offer) */}
-      <div className="flex flex-wrap gap-8 items-center mt-8">
-        {/* Popular Product */}
-        <div className="flex items-center gap-2 text-xs font-medium text-gray-600">
-          <span>Popular Product:</span>
-          <label className="flex items-center ml-2">
-            <input
-              type="radio"
-              name="popularproduct"
-              value="yes"
-              checked={formData.popularproduct === "yes"}
-              onChange={handleInputChange}
-              className="mr-1"
-            />
-            Yes
-          </label>
-          <label className="flex items-center ml-2">
-            <input
-              type="radio"
-              name="popularproduct"
-              value="no"
-              checked={formData.popularproduct === "no"}
-              onChange={handleInputChange}
-              className="mr-1"
-            />
-            No
-          </label>
-        </div>
-        {/* Top Rated */}
-        <div className="flex items-center gap-2 text-xs font-medium text-gray-600">
-          <span>Top Rated:</span>
-          <label className="flex items-center ml-2">
-            <input
-              type="radio"
-              name="topratedproduct"
-              value="yes"
-              checked={formData.topratedproduct === "yes"}
-              onChange={handleInputChange}
-              className="mr-1"
-            />
-            Yes
-          </label>
-          <label className="flex items-center ml-2">
-            <input
-              type="radio"
-              name="topratedproduct"
-              value="no"
-              checked={formData.topratedproduct === "no"}
-              onChange={handleInputChange}
-              className="mr-1"
-            />
-            No
-          </label>
-        </div>
-        {/* Product Offer */}
-        <div className="flex items-center gap-2 text-xs font-medium text-gray-600">
-          <span>Product Offer:</span>
-          <label className="flex items-center ml-2">
-            <input
-              type="radio"
-              name="productoffer"
-              value="yes"
-              checked={formData.productoffer === "yes"}
-              onChange={handleInputChange}
-              className="mr-1"
-            />
-            Yes
-          </label>
-          <label className="flex items-center ml-2">
-            <input
-              type="radio"
-              name="productoffer"
-              value="no"
-              checked={formData.productoffer === "no"}
-              onChange={handleInputChange}
-              className="mr-1"
-            />
-            No
-          </label>
-        </div>
-      </div>
+      {/* Product Flags (Popular, Top Rated, Product Offer) */}
+<div className="flex flex-wrap gap-8 items-center mt-8">
+  {/* Popular Product */}
+  <div className="flex items-center gap-2 text-xs font-medium text-gray-600">
+    <span>Popular Product:</span>
+    <label className="flex items-center ml-2">
+      <input
+        type="radio"
+        name="popularproduct"
+        value="yes"
+        checked={formData.popularproduct === true}
+        onChange={handleInputChange}
+        className="mr-1"
+      />
+      Yes
+    </label>
+    <label className="flex items-center ml-2">
+      <input
+        type="radio"
+        name="popularproduct"
+        value="no"
+        checked={formData.popularproduct === false}
+        onChange={handleInputChange}
+        className="mr-1"
+      />
+      No
+    </label>
+  </div>
+
+  {/* Top Rated */}
+  <div className="flex items-center gap-2 text-xs font-medium text-gray-600">
+    <span>Top Rated:</span>
+    <label className="flex items-center ml-2">
+      <input
+        type="radio"
+        name="topratedproduct"
+        value="yes"
+        checked={formData.topratedproduct === true}
+        onChange={handleInputChange}
+        className="mr-1"
+      />
+      Yes
+    </label>
+    <label className="flex items-center ml-2">
+      <input
+        type="radio"
+        name="topratedproduct"
+        value="no"
+        checked={formData.topratedproduct === false}
+        onChange={handleInputChange}
+        className="mr-1"
+      />
+      No
+    </label>
+  </div>
+
+  {/* Product Offer */}
+  <div className="flex items-center gap-2 text-xs font-medium text-gray-600">
+    <span>Product Offer:</span>
+    <label className="flex items-center ml-2">
+      <input
+        type="radio"
+        name="productoffer"
+        value="yes"
+        checked={formData.productoffer === true}
+        onChange={handleInputChange}
+        className="mr-1"
+      />
+      Yes
+    </label>
+    <label className="flex items-center ml-2">
+      <input
+        type="radio"
+        name="productoffer"
+        value="no"
+        checked={formData.productoffer === false}
+        onChange={handleInputChange}
+        className="mr-1"
+      />
+      No
+    </label>
+  </div>
+</div>
+
 
 
         <div className="flex justify-between mt-8">
