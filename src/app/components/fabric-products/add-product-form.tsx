@@ -207,9 +207,9 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     processed.subfinishId = extractId(processed.subfinishId);
     processed.subsuitableforId = extractId(processed.subsuitableforId);
     // Only set radio fields if present in productDetail
-    processed.popularproduct = processed.popularproduct === "yes" ? "yes" : processed.popularproduct === "no" ? "no" : undefined;
-    processed.topratedproduct = processed.topratedproduct === "yes" ? "yes" : processed.topratedproduct === "no" ? "no" : undefined;
-    processed.productoffer = processed.productoffer === "yes" ? "yes" : processed.productoffer === "no" ? "no" : undefined;
+    processed.popularproduct = processed.popularproduct === "yes" ? "yes" : processed.popularproduct === "no" ? "no" : "yes";
+    processed.topratedproduct = processed.topratedproduct === "yes" ? "yes" : processed.topratedproduct === "no" ? "no" : "yes";
+    processed.productoffer = processed.productoffer === "yes" ? "yes" : processed.productoffer === "no" ? "no" : "yes";
     setFormData(processed);
     ["image", "image1", "image2", "video"].forEach((key) => {
       const url = (processed as any)[key];
