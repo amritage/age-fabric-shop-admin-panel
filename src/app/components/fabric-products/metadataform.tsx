@@ -50,6 +50,9 @@ interface MetadataFormProps {
     locationCode?: string;
     productIdentifier?: string;
     name?: string;
+    popularproduct?: string;
+    topratedproduct?: string;
+    productoffer?: string;
   };
   onSubmit: (data: Record<string, any>) => Promise<void>;
   onBack: () => void;
