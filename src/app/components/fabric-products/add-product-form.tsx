@@ -118,11 +118,22 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           } else if (typeof parsedData.productdescription !== "string") {
             parsedData.productdescription = String(parsedData.productdescription ?? "");
           }
+          // Ensure radio fields default to "no" if not present
+          parsedData.popularproduct = parsedData.popularproduct || "no";
+          parsedData.topratedproduct = parsedData.topratedproduct || "no";
+          parsedData.productoffer = parsedData.productoffer || "no";
           setFormData(parsedData);
           setHasRestoredData(true);
         } catch (error) {
           console.error('Error parsing saved form data:', error);
         }
+      } else {
+        // Initialize with default values for new products
+        setFormData({
+          popularproduct: "no",
+          topratedproduct: "no",
+          productoffer: "no"
+        });
       }
     }
   }, [isEdit]);
@@ -198,10 +209,10 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     processed.substructureId = extractId(processed.substructureId);
     processed.subfinishId = extractId(processed.subfinishId);
     processed.subsuitableforId = extractId(processed.subsuitableforId);
-    // Ensure radio fields are always 'yes' or 'no' strings
-    processed.popularproduct = processed.popularproduct === "yes" ? "yes" : processed.popularproduct === "no" ? "no" : "no";
-    processed.topratedproduct = processed.topratedproduct === "yes" ? "yes" : processed.topratedproduct === "no" ? "no" : "no";
-    processed.productoffer = processed.productoffer === "yes" ? "yes" : processed.productoffer === "no" ? "no" : "no";
+    // Ensure radio fields are always 'yes' or 'no' strings with 'no' as default
+    processed.popularproduct = processed.popularproduct === "yes" ? "yes" : "no";
+    processed.topratedproduct = processed.topratedproduct === "yes" ? "yes" : "no";
+    processed.productoffer = processed.productoffer === "yes" ? "yes" : "no";
     setFormData(processed);
     ["image", "image1", "image2", "video"].forEach((key) => {
       const url = (processed as any)[key];
@@ -975,84 +986,92 @@ export default function AddProductForm({ productId }: { productId?: string }) {
         </div>
 
         {/* Product Flags (Popular, Top Rated, Product Offer) */}
-        <div className="flex flex-wrap gap-8 items-center mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
           {/* Popular Product */}
-          <div>
-            <span className="block font-bold text-gray-800 text-lg mb-2">Popular Product:</span>
-            <label className="text-xl font-bold mr-2">
-              <input
-                type="radio"
-                name="popularproduct"
-                value="yes"
-                checked={formData.popularproduct === "yes"}
-                onChange={handleInputChange}
-                className="w-6 h-6 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-2"
-              />
-              Yes
-            </label>
-            <label className="text-xl font-bold mr-2">
-              <input
-                type="radio"
-                name="popularproduct"
-                value="no"
-                checked={formData.popularproduct === "no"}
-                onChange={handleInputChange}
-                className="w-6 h-6 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-2"
-              />
-              No
-            </label>
+          <div className="bg-gray-50 p-6 rounded-lg">
+            <span className="block font-bold text-gray-800 text-lg mb-4">Popular Product</span>
+            <div className="space-y-3">
+              <label className="flex items-center cursor-pointer">
+                <input
+                  type="radio"
+                  name="popularproduct"
+                  value="yes"
+                  checked={formData.popularproduct === "yes"}
+                  onChange={handleInputChange}
+                  className="w-5 h-5 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-3"
+                />
+                <span className="text-lg font-medium text-gray-700">Yes</span>
+              </label>
+              <label className="flex items-center cursor-pointer">
+                <input
+                  type="radio"
+                  name="popularproduct"
+                  value="no"
+                  checked={formData.popularproduct === "no"}
+                  onChange={handleInputChange}
+                  className="w-5 h-5 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-3"
+                />
+                <span className="text-lg font-medium text-gray-700">No</span>
+              </label>
+            </div>
           </div>
+          
           {/* Top Rated */}
-          <div>
-            <span className="block font-bold text-gray-800 text-lg mb-2">Top Rated:</span>
-            <label className="text-xl font-bold mr-2">
-              <input
-                type="radio"
-                name="topratedproduct"
-                value="yes"
-                checked={formData.topratedproduct === "yes"}
-                onChange={handleInputChange}
-                className="w-6 h-6 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-2"
-              />
-              Yes
-            </label>
-            <label className="text-xl font-bold mr-2">
-              <input
-                type="radio"
-                name="topratedproduct"
-                value="no"
-                checked={formData.topratedproduct === "no"}
-                onChange={handleInputChange}
-                className="w-6 h-6 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-2"
-              />
-              No
-            </label>
+          <div className="bg-gray-50 p-6 rounded-lg">
+            <span className="block font-bold text-gray-800 text-lg mb-4">Top Rated</span>
+            <div className="space-y-3">
+              <label className="flex items-center cursor-pointer">
+                <input
+                  type="radio"
+                  name="topratedproduct"
+                  value="yes"
+                  checked={formData.topratedproduct === "yes"}
+                  onChange={handleInputChange}
+                  className="w-5 h-5 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-3"
+                />
+                <span className="text-lg font-medium text-gray-700">Yes</span>
+              </label>
+              <label className="flex items-center cursor-pointer">
+                <input
+                  type="radio"
+                  name="topratedproduct"
+                  value="no"
+                  checked={formData.topratedproduct === "no"}
+                  onChange={handleInputChange}
+                  className="w-5 h-5 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-3"
+                />
+                <span className="text-lg font-medium text-gray-700">No</span>
+              </label>
+            </div>
           </div>
+          
           {/* Product Offer */}
-          <div>
-            <span className="block font-bold text-gray-800 text-lg mb-2">Product Offer:</span>
-            <label className="text-xl font-bold mr-2">
-              <input
-                type="radio"
-                name="productoffer"
-                value="yes"
-                checked={formData.productoffer === "yes"}
-                onChange={handleInputChange}
-                className="w-6 h-6 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-2"
-              />
-              Yes
-            </label>
-            <label className="text-xl font-bold mr-2">
-              <input
-                type="radio"
-                name="productoffer"
-                value="no"
-                checked={formData.productoffer === "no"}
-                onChange={handleInputChange}
-                className="w-6 h-6 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-2"
-              />
-              No
-            </label>
+          <div className="bg-gray-50 p-6 rounded-lg">
+            <span className="block font-bold text-gray-800 text-lg mb-4">Product Offer</span>
+            <div className="space-y-3">
+              <label className="flex items-center cursor-pointer">
+                <input
+                  type="radio"
+                  name="productoffer"
+                  value="yes"
+                  checked={formData.productoffer === "yes"}
+                  onChange={handleInputChange}
+                  className="w-5 h-5 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-3"
+                />
+                <span className="text-lg font-medium text-gray-700">Yes</span>
+              </label>
+              <label className="flex items-center cursor-pointer">
+                <input
+                  type="radio"
+                  name="productoffer"
+                  value="no"
+                  checked={formData.productoffer === "no"}
+                  onChange={handleInputChange}
+                  className="w-5 h-5 accent-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500 mr-3"
+                />
+                <span className="text-lg font-medium text-gray-700">No</span>
+              </label>
+            </div>
           </div>
         </div>
 
