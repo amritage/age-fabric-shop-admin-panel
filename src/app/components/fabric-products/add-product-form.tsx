@@ -198,6 +198,10 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     processed.substructureId = extractId(processed.substructureId);
     processed.subfinishId = extractId(processed.subfinishId);
     processed.subsuitableforId = extractId(processed.subsuitableforId);
+    // Ensure radio fields are always 'yes' or 'no' strings
+    processed.popularproduct = processed.popularproduct === "yes" ? "yes" : processed.popularproduct === "no" ? "no" : "no";
+    processed.topratedproduct = processed.topratedproduct === "yes" ? "yes" : processed.topratedproduct === "no" ? "no" : "no";
+    processed.productoffer = processed.productoffer === "yes" ? "yes" : processed.productoffer === "no" ? "no" : "no";
     setFormData(processed);
     ["image", "image1", "image2", "video"].forEach((key) => {
       const url = (processed as any)[key];
