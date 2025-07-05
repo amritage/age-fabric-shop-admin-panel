@@ -210,22 +210,11 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     processed.subfinishId = extractId(processed.subfinishId);
     processed.subsuitableforId = extractId(processed.subsuitableforId);
     // Ensure radio fields are set to 'yes' or 'no' only
-    (processed as any).popularproduct = processed.popularproduct === "yes" ? "yes" : "no";
-    (processed as any).topratedproduct = processed.topratedproduct === "yes" ? "yes" : "no";
-    (processed as any).productoffer = processed.productoffer === "yes" ? "yes" : "no";
-    
-    // Debug: Log the radio field values for troubleshooting
-    console.log("Edit mode - Original backend values:", {
-      popularproduct: productDetail.popularproduct,
-      topratedproduct: productDetail.topratedproduct,
-      productoffer: productDetail.productoffer
-    });
-    console.log("Edit mode - Processed values:", {
-      popularproduct: processed.popularproduct,
-      topratedproduct: processed.topratedproduct,
-      productoffer: processed.productoffer
-    });
+    (processed as any).popularproduct = processed.popularproduct || "no";
+    (processed as any).topratedproduct = processed.topratedproduct || "no";
+    (processed as any).productoffer = processed.productoffer || "no";
     setFormData(processed);
+    
     ["image", "image1", "image2", "video"].forEach((key) => {
       const url = (processed as any)[key];
       if (url) {
@@ -343,11 +332,6 @@ export default function AddProductForm({ productId }: { productId?: string }) {
 
   // Keep radio values as strings ("yes"/"no")
   let newValue: string = value;
-  
-  // Debug: Log radio button changes
-  if (type === "radio" && ["popularproduct", "topratedproduct", "productoffer"].includes(name)) {
-    console.log(`Radio button changed: ${name} = ${value}`);
-  }
 
   const newFormData = { ...formData, [name]: newValue };
   setFormData(newFormData);
@@ -490,17 +474,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
       }
     });
     
-    // Debug: Log the final radio field values being sent to backend
-    console.log("Form submission - Original formData values:", {
-      popularproduct: formData.popularproduct,
-      topratedproduct: formData.topratedproduct,
-      productoffer: formData.productoffer
-    });
-    console.log("Form submission - Final cleaned values to backend:", {
-      popularproduct: cleanedFormData.popularproduct,
-      topratedproduct: cleanedFormData.topratedproduct,
-      productoffer: cleanedFormData.productoffer
-    });
+
 
     Cookies.set("NEW_PRODUCT_BASE", JSON.stringify(cleanedFormData));
     // Clear localStorage when moving to metadata (form is complete)
