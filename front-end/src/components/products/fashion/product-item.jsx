@@ -37,7 +37,7 @@ const ProductItem = ({ product }) => {
       return product.image;
     }
     // If not, construct the URL
-    const baseUrl = 'http://localhost:7000';
+    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     if (product.image) {
       return `${baseUrl}/uploads/${product.image}`;
     }

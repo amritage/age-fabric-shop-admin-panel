@@ -4,135 +4,130 @@ export const newProductApi = apiSlice.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({
     getAllNewProducts: builder.query({
-      query: () => `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/newproduct/view`,
-      providesTags: ['NewProducts']
+      query: () => "/newproduct/view",
     }),
-    getNewProduct: builder.query({
-      query: (id) => `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/newproduct/view/${id}`,
-      providesTags: (result, error, id) => [{ type: "NewProducts", id }],
+    getSingleNewProduct: builder.query({
+      query: (id) => `/newproduct/view/${id}`,
     }),
     addNewProduct: builder.mutation({
-      query: (formData) => ({
-        url: `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/newproduct/add`,
-        method: 'POST',
-        body: formData,
+      query: (data) => ({
+        url: "/newproduct/add",
+        method: "POST",
+        body: data,
       }),
     }),
     updateNewProduct: builder.mutation({
-      query: ({ id, formData }) => ({
-        url: `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/newproduct/update/${id}`,
-        method: 'PUT',
-        body: formData,
+      query: ({ id, ...data }) => ({
+        url: `/newproduct/update/${id}`,
+        method: "PUT",
+        body: data,
       }),
     }),
     deleteNewProduct: builder.mutation({
       query: (id) => ({
-        url: `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/newproduct/delete/${id}`,
-        method: 'DELETE',
+        url: `/newproduct/delete/${id}`,
+        method: "DELETE",
       }),
     }),
-    searchNewProducts: builder.query({
-      query: (q) => `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/newproduct/search/${q}`,
+    searchNewProduct: builder.query({
+      query: (q) => `/newproduct/search/${q}`,
     }),
-    getProductsByGroupCode: builder.query({
-      query: (groupcodeId) => `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/newproduct/groupcode/${groupcodeId}`,
+    getGroupCodeProducts: builder.query({
+      query: (groupcodeId) => `/newproduct/groupcode/${groupcodeId}`,
     }),
-    getProductsByCategoryId: builder.query({
-      query: (id) => `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/newproduct/category/${id}`,
+    getCategoryProducts: builder.query({
+      query: (id) => `/newproduct/category/${id}`,
     }),
-    getProductsByStructureId: builder.query({
-      query: (id) => `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/newproduct/structure/${id}`,
+    getStructureProducts: builder.query({
+      query: (id) => `/newproduct/structure/${id}`,
     }),
-    getProductsByContentId: builder.query({
-      query: (id) => `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/newproduct/content/${id}`,
+    getContentProducts: builder.query({
+      query: (id) => `/newproduct/content/${id}`,
     }),
-    getProductsByFinishId: builder.query({
-      query: (id) => `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/newproduct/finish/${id}`,
+    getFinishProducts: builder.query({
+      query: (id) => `/newproduct/finish/${id}`,
     }),
-    getProductsByDesignId: builder.query({
-      query: (id) => `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/newproduct/design/${id}`,
+    getDesignProducts: builder.query({
+      query: (id) => `/newproduct/design/${id}`,
     }),
-    getProductsByColorId: builder.query({
-      query: (id) => `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/newproduct/color/${id}`,
+    getColorProducts: builder.query({
+      query: (id) => `/newproduct/color/${id}`,
     }),
-    getProductsByMotifSizeId: builder.query({
-      query: (id) => `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/newproduct/motif/${id}`,
+    getMotifProducts: builder.query({
+      query: (id) => `/newproduct/motif/${id}`,
     }),
-    getProductsBySuitableForId: builder.query({
-      query: (id) => `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/newproduct/suitable/${id}`,
+    getSuitableProducts: builder.query({
+      query: (id) => `/newproduct/suitable/${id}`,
     }),
-    getProductsByVendorId: builder.query({
-      query: (id) => `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/newproduct/vendor/${id}`,
+    getVendorProducts: builder.query({
+      query: (id) => `/newproduct/vendor/${id}`,
     }),
-    getProductByIdentifier: builder.query({
-      query: (identifier) => `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/newproduct/identifier/${identifier}`,
+    getIdentifierProducts: builder.query({
+      query: (identifier) => `/newproduct/identifier/${identifier}`,
     }),
-    getProductsByGsmValue: builder.query({
-      query: (value) => `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/newproduct/gsm/upto/${value}`,
+    getGsmUpto: builder.query({
+      query: (value) => `/newproduct/gsm/upto/${value}`,
     }),
-    getProductsByOzValue: builder.query({
-      query: (value) => `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/newproduct/oz/upto/${value}`,
+    getOzUpto: builder.query({
+      query: (value) => `/newproduct/oz/upto/${value}`,
     }),
-    getProductsByInchValue: builder.query({
-      query: (value) => `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/newproduct/inch/upto/${value}`,
+    getInchUpto: builder.query({
+      query: (value) => `/newproduct/inch/upto/${value}`,
     }),
-    getProductsByCmValue: builder.query({
-      query: (value) => `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/newproduct/cm/upto/${value}`,
+    getCmUpto: builder.query({
+      query: (value) => `/newproduct/cm/upto/${value}`,
     }),
-    getProductsByPriceValue: builder.query({
-      query: (value) => `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/newproduct/price/upto/${value}`,
+    getPriceUpto: builder.query({
+      query: (value) => `/newproduct/price/upto/${value}`,
     }),
-    getProductsByQuantityValue: builder.query({
-      query: (value) => `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/newproduct/quantity/upto/${value}`,
+    getQuantityUpto: builder.query({
+      query: (value) => `/newproduct/quantity/upto/${value}`,
     }),
-    getProductsByPurchasePriceValue: builder.query({
-      query: (value) => `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/newproduct/purchaseprice/upto/${value}`,
+    getPurchasePriceUpto: builder.query({
+      query: (value) => `/newproduct/purchaseprice/upto/${value}`,
     }),
     getGroupCodeById: builder.query({
-      query: (id) => `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/groupcode/view/${id}`,
+      query: (id) => `/groupcode/view/${id}`,
     }),
     getPopularNewProducts: builder.query({
-      query: () => `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/newproduct/popular`,
-      providesTags: ["PopularNewProducts"],
+      query: () => "/newproduct/popular",
     }),
-    getOfferNewProducts: builder.query({
-      query: () => `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/newproduct/offers`,
-      providesTags: ["OfferNewProducts"],
+    getOffers: builder.query({
+      query: () => "/newproduct/offers",
     }),
-    getTopRatedNewProducts: builder.query({
-      query: () => `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/newproduct/toprated`,
-      providesTags: ["TopRatedNewProducts"],
+    getTopRated: builder.query({
+      query: () => "/newproduct/toprated",
     }),
   }),
 });
 
 export const {
   useGetAllNewProductsQuery,
-  useGetNewProductQuery,
+  useGetSingleNewProductQuery,
   useAddNewProductMutation,
   useUpdateNewProductMutation,
   useDeleteNewProductMutation,
-  useSearchNewProductsQuery,
-  useGetProductsByGroupCodeQuery,
-  useGetProductsByCategoryIdQuery,
-  useGetProductsByStructureIdQuery,
-  useGetProductsByContentIdQuery,
-  useGetProductsByFinishIdQuery,
-  useGetProductsByDesignIdQuery,
-  useGetProductsByColorIdQuery,
-  useGetProductsByMotifSizeIdQuery,
-  useGetProductsBySuitableForIdQuery,
-  useGetProductsByVendorIdQuery,
-  useGetProductByIdentifierQuery,
-  useGetProductsByGsmValueQuery,
-  useGetProductsByOzValueQuery,
-  useGetProductsByInchValueQuery,
-  useGetProductsByCmValueQuery,
-  useGetProductsByPriceValueQuery,
-  useGetProductsByQuantityValueQuery,
-  useGetProductsByPurchasePriceValueQuery,
+  useSearchNewProductQuery,
+  useGetGroupCodeProductsQuery,
+  useGetCategoryProductsQuery,
+  useGetStructureProductsQuery,
+  useGetContentProductsQuery,
+  useGetFinishProductsQuery,
+  useGetDesignProductsQuery,
+  useGetColorProductsQuery,
+  useGetMotifProductsQuery,
+  useGetSuitableProductsQuery,
+  useGetVendorProductsQuery,
+  useGetIdentifierProductsQuery,
+  useGetGsmUptoQuery,
+  useGetOzUptoQuery,
+  useGetInchUptoQuery,
+  useGetCmUptoQuery,
+  useGetPriceUptoQuery,
+  useGetQuantityUptoQuery,
+  useGetPurchasePriceUptoQuery,
   useGetGroupCodeByIdQuery,
   useGetPopularNewProductsQuery,
-  useGetOfferNewProductsQuery,
-  useGetTopRatedNewProductsQuery,
+  useGetOffersQuery,
+  useGetTopRatedQuery,
 } = newProductApi; 

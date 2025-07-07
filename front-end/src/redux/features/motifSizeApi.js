@@ -4,7 +4,7 @@ export const motifSizeApi = apiSlice.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({
     getMotifSizeById: builder.query({
-      query: (id) => `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/motifsize/view/${id}`,
+      query: (id) => `${process.env.NEXT_PUBLIC_API_BASE_URL}/motifsize/view/${id}`,
       providesTags: (result, error, id) => [{ type: "MotifSize", id }],
     }),
   }),

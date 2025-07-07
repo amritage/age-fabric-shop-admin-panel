@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 // internal
 import { ArrowRightLong, TextShapeLine } from '@/svg';
-import { useGetProductTypeQuery } from '@/redux/features/productApi';
+import { useGetProductsByTypeQuery } from '@/redux/features/productApi';
 import ProductItem from './product-item';
 import ErrorMsg from '@/components/common/error-msg';
 import trending_banner from '@assets/img/product/trending/banner/trending-banner.jpg';
@@ -36,8 +36,7 @@ const slider_setting = {
 }
 
 const TrendingProducts = () => {
-  const { data: products, isError, isLoading } =
-    useGetProductTypeQuery({ type: 'fashion', query: `new=true` });
+  const { data, isError, isLoading } = useGetProductsByTypeQuery({ type: 'fashion', query: 'new=true' });
   // decide what to render
   let content = null;
 
@@ -49,11 +48,11 @@ const TrendingProducts = () => {
   if (!isLoading && isError) {
     content = <ErrorMsg msg="There was an error" />;
   }
-  if (!isLoading && !isError && products?.data?.length === 0) {
+  if (!isLoading && !isError && data?.length === 0) {
     content = <ErrorMsg msg="No Products found!" />;
   }
-  if (!isLoading && !isError && products?.data?.length > 0) {
-    const product_items = products.data.slice(0,5);
+  if (!isLoading && !isError && data?.length > 0) {
+    const product_items = data.slice(0,5);
     content = (
       <Swiper {...slider_setting} modules={[Pagination]} className="tp-trending-slider-active swiper-container">
         {product_items.map((item) => {

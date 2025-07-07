@@ -4,54 +4,41 @@ export const productApi = apiSlice.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({
     getAllProducts: builder.query({
-      query: () => `/api/product/all`,
-      providesTags:['Products']
+      query: () => `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/all`,
     }),
-    getProductType: builder.query({
-      query: ({ type, query }) => `/api/product/${type}?${query}`,
-      providesTags:['ProductType']
+    getProductsByType: builder.query({
+      query: ({ type, query }) => `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/${type}?${query}`,
     }),
     getOfferProducts: builder.query({
-      query: (type) => `/api/product/offer?type=${type}`,
-      providesTags:['OfferProducts']
+      query: (type) => `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/offer?type=${type}`,
     }),
-    getPopularProductByType: builder.query({
-      query: (type) => `/api/product/popular/${type}`,
-      providesTags:['PopularProducts']
+    getPopularProducts: builder.query({
+      query: (type) => `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/popular/${type}`,
     }),
     getTopRatedProducts: builder.query({
-      query: () => `/api/product/top-rated`,
-      providesTags:['TopRatedProducts']
+      query: () => `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/top-rated`,
     }),
     // get single product
-    getProduct: builder.query({
-      query: (id) => `/api/product/single-product/${id}`,
-      providesTags: (result, error, arg) => [{ type: "Product", id: arg }],
-      invalidatesTags: (result, error, arg) => [
-        { type: "RelatedProducts", id:arg },
-      ],
+    getSingleProduct: builder.query({
+      query: (id) => `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/single-product/${id}`,
     }),
     // get related products
     getRelatedProducts: builder.query({
-      query: (id) => `/api/product/related-product/${id}`,
-      providesTags: (result, error, arg) => [
-        { type: "RelatedProducts", id: arg },
-      ],
+      query: (id) => `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/related-product/${id}`,
     }),
-    getCustomPopularProducts: builder.query({
-      query: () => `http://localhost:7000/api/newproduct/popular`,
-      providesTags: ['CustomPopularProducts']
+    getPopularNewProducts: builder.query({
+      query: () => `${process.env.NEXT_PUBLIC_API_BASE_URL}/newproduct/popular`,
     }),
   }),
 });
 
 export const {
   useGetAllProductsQuery,
-  useGetProductTypeQuery,
+  useGetProductsByTypeQuery,
   useGetOfferProductsQuery,
-  useGetPopularProductByTypeQuery,
+  useGetPopularProductsQuery,
   useGetTopRatedProductsQuery,
-  useGetProductQuery,
+  useGetSingleProductQuery,
   useGetRelatedProductsQuery,
-  useGetCustomPopularProductsQuery,
+  useGetPopularNewProductsQuery,
 } = productApi;

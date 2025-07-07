@@ -2,13 +2,13 @@
 import React from 'react';
 // internal
 import { ShapeLineSm } from '@/svg';
-import { useGetProductTypeQuery } from '@/redux/features/productApi';
+import { useGetProductsByTypeQuery } from '@/redux/features/productApi';
 import ErrorMsg from '@/components/common/error-msg';
 import ProductSmItem from './product-sm-item';
 import HomeSmPrdLoader from '@/components/loader/home/home-sm-prd-loader';
 
 const ProductSmArea = () => {
-  const { data: products, isError, isLoading, } = useGetProductTypeQuery({type:'electronics'});
+  const { data: products, isError, isLoading, } = useGetProductsByTypeQuery({type:'electronics', query: ''});
   // decide what to render
   let content = null;
 

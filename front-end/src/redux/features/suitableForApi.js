@@ -4,7 +4,7 @@ export const suitableForApi = apiSlice.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({
     getSuitableForById: builder.query({
-      query: (id) => `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/suitablefor/view/${id}`,
+      query: (id) => `${process.env.NEXT_PUBLIC_API_BASE_URL}/suitablefor/view/${id}`,
       providesTags: (result, error, id) => [{ type: "SuitableFor", id }],
     }),
   }),

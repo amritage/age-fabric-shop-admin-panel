@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import ProductItem from "./product-item";
 import ErrorMsg from "@/components/common/error-msg";
-import { useGetProductTypeQuery } from "@/redux/features/productApi";
+import { useGetProductsByTypeQuery } from "@/redux/features/productApi";
 import { HomeThreePrdTwoLoader } from "@/components/loader";
 
 // tabs
@@ -14,7 +14,7 @@ const ProductAreaTwo = () => {
     data: products,
     isError,
     isLoading,
-  } = useGetProductTypeQuery({ type: "beauty" });
+  } = useGetProductsByTypeQuery({ type: "beauty", query: '' });
   const activeRef = useRef(null);
   const marker = useRef(null);
 
@@ -75,7 +75,7 @@ const ProductAreaTwo = () => {
           <div className="col-xl-6 col-lg-6">
             <div className="tp-section-title-wrapper-3 mb-45 text-center text-lg-start">
               <span className="tp-section-title-pre-3">
-                Best Seller This Week’s
+                Best Seller This Week&apos;s
               </span>
               <h3 className="tp-section-title-3">Enjoy the best quality</h3>
             </div>

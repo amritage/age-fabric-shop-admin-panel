@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import ProductDetailsArea from '@/components/product-details/product-details-area';
-import { useGetNewProductQuery } from '@/redux/features/newProductApi';
+import { useGetAllNewProductsQuery } from '@/redux/features/newProductApi';
 import ErrorMsg from '@/components/common/error-msg';
 import ProductDetailsLoader from '@/components/loader/prd-details-loader';
 import { useParams } from 'next/navigation';
@@ -57,7 +57,7 @@ function mapBackendProductToFrontend(product) {
 export default function ProductDetailsPage() {
   const params = useParams();
   const id = params.id;
-  const { data: product, isError, isLoading } = useGetNewProductQuery(id, { skip: !id });
+  const { data: product, isError, isLoading } = useGetAllNewProductsQuery(id, { skip: !id });
 
   let content = null;
   if (isLoading) {

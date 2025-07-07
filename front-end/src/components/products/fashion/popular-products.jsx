@@ -57,15 +57,15 @@ function getFixedImageUrl(url) {
   }
   // If it's a relative path starting with uploadimage, construct full URL
   if (url.startsWith('uploadimage/')) {
-    return `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:7000'}/${url}`;
+    return `${process.env.NEXT_PUBLIC_API_BASE_URL}/${url}`;   
   }
   // If it's just a filename, assume it's in uploadimage folder
   if (!url.includes('/')) {
-    return `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:7000'}/uploadimage/${url}`;
+    return `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploadimage/${url}`;
   }
   // For any other case, try to construct the URL
-  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:7000';
-  return `${baseUrl}/${url}`;
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+  return `${baseUrl}`;
 }
 
 const PopularProducts = () => {

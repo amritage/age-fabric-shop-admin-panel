@@ -8,12 +8,12 @@ import ShopContent from "./shop-content";
 import ShopHiddenSidebarArea from "./shop-hidden-sidebar-area";
 import {
   useGetAllNewProductsQuery,
-  useGetProductsByPriceValueQuery,
-  useGetProductsByGsmValueQuery,
-  useGetProductsByOzValueQuery,
-  useGetProductsByQuantityValueQuery,
-  useGetProductsByPurchasePriceValueQuery
-} from "@/redux/features/newProductApi";
+  useGetPriceUptoQuery,
+  useGetGsmUptoQuery,
+  useGetOzUptoQuery,
+  useGetQuantityUptoQuery,
+  useGetPurchasePriceUptoQuery
+} from '@/redux/features/newProductApi';
 
 const ShopArea = ({ shop_right = false, hidden_sidebar = false }) => {
   const searchParams = useSearchParams();
@@ -40,31 +40,31 @@ const ShopArea = ({ shop_right = false, hidden_sidebar = false }) => {
 
   if (gsm) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const { data, isLoading: loading, isError: error } = useGetProductsByGsmValueQuery(gsm);
+    const { data, isLoading: loading, isError: error } = useGetGsmUptoQuery(gsm);
     products = data;
     isLoading = loading;
     isError = error;
   } else if (oz) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const { data, isLoading: loading, isError: error } = useGetProductsByOzValueQuery(oz);
+    const { data, isLoading: loading, isError: error } = useGetOzUptoQuery(oz);
     products = data;
     isLoading = loading;
     isError = error;
   } else if (quantity) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const { data, isLoading: loading, isError: error } = useGetProductsByQuantityValueQuery(quantity);
+    const { data, isLoading: loading, isError: error } = useGetQuantityUptoQuery(quantity);
     products = data;
     isLoading = loading;
     isError = error;
   } else if (purchasePrice) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const { data, isLoading: loading, isError: error } = useGetProductsByPurchasePriceValueQuery(purchasePrice);
+    const { data, isLoading: loading, isError: error } = useGetPurchasePriceUptoQuery(purchasePrice);
     products = data;
     isLoading = loading;
     isError = error;
   } else if (minPrice && maxPrice && minPrice === maxPrice) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const { data, isLoading: loading, isError: error } = useGetProductsByPriceValueQuery(minPrice);
+    const { data, isLoading: loading, isError: error } = useGetPriceUptoQuery(minPrice);
     products = data;
     isLoading = loading;
     isError = error;

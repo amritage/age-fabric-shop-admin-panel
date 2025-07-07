@@ -4,7 +4,7 @@ export const designApi = apiSlice.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({
     getDesignById: builder.query({
-      query: (id) => `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/design/view/${id}`,
+      query: (id) => `${process.env.NEXT_PUBLIC_API_BASE_URL}/design/view/${id}`,
       providesTags: (result, error, id) => [{ type: "Design", id }],
     }),
   }),

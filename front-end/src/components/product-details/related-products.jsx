@@ -4,7 +4,7 @@ import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import {  Navigation,Autoplay } from "swiper/modules";
 // internal
-import { useGetProductsByGroupCodeQuery } from "@/redux/features/newProductApi";
+import { useGetGroupCodeProductsQuery } from "@/redux/features/newProductApi";
 import ProductItem from "../products/fashion/product-item";
 import ErrorMsg from "../common/error-msg";
 import { HomeNewArrivalPrdLoader } from "../loader";
@@ -41,7 +41,7 @@ const slider_setting = {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const RelatedProducts = ({id, groupcodeId}) => {
-  const { data, isError, isLoading } = useGetProductsByGroupCodeQuery(groupcodeId, { 
+  const { data, isError, isLoading } = useGetGroupCodeProductsQuery(groupcodeId, { 
     skip: !groupcodeId 
   });
   // decide what to render

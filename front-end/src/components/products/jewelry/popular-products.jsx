@@ -3,7 +3,7 @@ import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Scrollbar } from 'swiper/modules';
 // internal
-import { useGetProductTypeQuery } from '@/redux/features/productApi';
+import { useGetProductsByTypeQuery } from '@/redux/features/productApi';
 import ProductSliderItem from './product-slider-item';
 import ErrorMsg from '@/components/common/error-msg';
 import { HomeTwoPopularPrdLoader } from '@/components/loader';
@@ -46,8 +46,7 @@ const slider_setting = {
 }
 
 const PopularProducts = () => {
-  const { data: products, isError, isLoading } =
-    useGetProductTypeQuery({ type: 'jewelry', query: `new=true` });
+  const { data, isError, isLoading } = useGetProductsByTypeQuery({ type: 'jewelry', query: 'new=true' });
   // decide what to render
   let content = null;
 
@@ -59,11 +58,11 @@ const PopularProducts = () => {
   if (!isLoading && isError) {
     content = <ErrorMsg msg="There was an error" />;
   }
-  if (!isLoading && !isError && products?.data?.length === 0) {
+  if (!isLoading && !isError && data?.length === 0) {
     content = <ErrorMsg msg="No Products found!" />;
   }
-  if (!isLoading && !isError && products?.data?.length > 0) {
-    const product_items = products.data.slice(0, 8);
+  if (!isLoading && !isError && data?.length > 0) {
+    const product_items = data.slice(0, 8);
     content = (
       <Swiper {...slider_setting} modules={[Scrollbar, Pagination]} className="tp-category-slider-active-4 swiper-container mb-70">
         {product_items.map(item => (

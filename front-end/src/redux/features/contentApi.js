@@ -4,7 +4,7 @@ export const contentApi = apiSlice.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({
     getContentById: builder.query({
-      query: (id) => `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/content/viewcontent/${id}`,
+      query: (id) => `/content/viewcontent/${id}`,
       providesTags: (result, error, id) => [{ type: "Content", id }],
     }),
   }),

@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 // internal
 import ProductItem from './product-item';
 import ErrorMsg from '@/components/common/error-msg';
-import { useGetProductTypeQuery } from '@/redux/features/productApi';
+import { useGetProductsByTypeQuery } from '@/redux/features/productApi';
 import { HomeTwoBestSellPrdPrdLoader } from '@/components/loader';
 
 // slider setting
@@ -39,8 +39,7 @@ const slider_setting = {
 }
 
 const BestSellerPrd = () => {
-  const { data: products, isError, isLoading } =
-    useGetProductTypeQuery({ type: 'jewelry', query: `topSeller=true` });
+  const { data, isError, isLoading } = useGetProductsByTypeQuery({ type: 'jewelry', query: 'topSeller=true' });
   // decide what to render
   let content = null;
 
@@ -54,11 +53,11 @@ const BestSellerPrd = () => {
   if (!isLoading && isError) {
     content = <ErrorMsg msg="There was an error" />;
   }
-  if (!isLoading && !isError && products?.data?.length === 0) {
+  if (!isLoading && !isError && data?.length === 0) {
     content = <ErrorMsg msg="No Products found!" />;
   }
-  if (!isLoading && !isError && products?.data?.length > 0) {
-    const product_items = products.data.slice(0, 8);
+  if (!isLoading && !isError && data?.length > 0) {
+    const product_items = data.slice(0, 8);
     content = (
       <Swiper {...slider_setting} modules={[Scrollbar]} className="tp-best-slider-active swiper-container mb-10">
         {product_items.map(item => (
@@ -76,7 +75,7 @@ const BestSellerPrd = () => {
             <div className="row">
               <div className="col-xl-12">
                   <div className="tp-section-title-wrapper-4 mb-50 text-center">
-                    <span className="tp-section-title-pre-4">Best Seller This Week’s</span>
+                    <span className="tp-section-title-pre-4">Best Seller This Week&apos;s</span>
                     <h3 className="tp-section-title-4">Top Sellers In Dress for You</h3>
                   </div>
               </div>

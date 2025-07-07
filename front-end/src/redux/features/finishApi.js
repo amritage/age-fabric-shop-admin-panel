@@ -4,7 +4,7 @@ export const finishApi = apiSlice.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({
     getFinishById: builder.query({
-      query: (id) => `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/finish/view/${id}`,
+      query: (id) => `${process.env.NEXT_PUBLIC_API_BASE_URL}/finish/view/${id}`,
       providesTags: (result, error, id) => [{ type: "Finish", id }],
     }),
   }),

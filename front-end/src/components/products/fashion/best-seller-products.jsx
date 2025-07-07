@@ -5,12 +5,11 @@ import Link from 'next/link';
 import { TextShapeLine } from '@/svg';
 import ProductItem from './product-item';
 import ErrorMsg from '@/components/common/error-msg';
-import { useGetProductTypeQuery } from '@/redux/features/productApi';
+import { useGetProductsByTypeQuery } from '@/redux/features/productApi';
 import { HomeTwoBestSellPrdPrdLoader } from '@/components/loader';
 
 const BestSellerProducts = () => {
-  const { data: products, isError, isLoading } =
-    useGetProductTypeQuery({ type: 'fashion', query: `topSellers=true` });
+  const { data, isError, isLoading } = useGetProductsByTypeQuery({ type: 'fashion', query: 'topSellers=true' });
   // decide what to render
   let content = null;
 
@@ -22,11 +21,11 @@ const BestSellerProducts = () => {
   if (!isLoading && isError) {
     content = <ErrorMsg msg="There was an error" />;
   }
-  if (!isLoading && !isError && products?.data?.length === 0) {
+  if (!isLoading && !isError && data?.length === 0) {
     content = <ErrorMsg msg="No Products found!" />;
   }
-  if (!isLoading && !isError && products?.data?.length > 0) {
-    const product_items = products.data.slice(0, 4);
+  if (!isLoading && !isError && data?.length > 0) {
+    const product_items = data.slice(0, 4);
     content = product_items.map((prd) => (
       <div key={prd._id} className="col-xl-3 col-lg-4 col-md-6 col-sm-6">
         <ProductItem product={prd} />
@@ -41,10 +40,10 @@ const BestSellerProducts = () => {
             <div className="col-xl-12">
               <div className="tp-section-title-wrapper-2 mb-50">
                 <span className="tp-section-title-pre-2">
-                  Best Seller This Week’s
+                  Best Seller This Week&apos;s
                   <TextShapeLine />
                 </span>
-                <h3 className="tp-section-title-2">This {"Week's"} Featured</h3>
+                <h3 className="tp-section-title-2">This Week&apos;s Featured</h3>
               </div>
             </div>
           </div>

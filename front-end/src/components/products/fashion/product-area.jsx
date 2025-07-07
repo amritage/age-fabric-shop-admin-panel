@@ -3,11 +3,11 @@
 /* import React, { useState } from 'react';
  */import ErrorMsg from '@/components/common/error-msg';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { useGetProductTypeQuery } from '@/redux/features/productApi';
+import { useGetProductsByTypeQuery } from '@/redux/features/productApi';
 import { TextShapeLine } from '@/svg';
 import ProductItem from './product-item';
 import { HomeTwoPrdLoader } from '@/components/loader';
-import { useGetOfferNewProductsQuery } from '@/redux/features/newProductApi';
+import { useGetOffersQuery } from '@/redux/features/newProductApi';
 
 // tabs
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -15,7 +15,7 @@ const tabs = ["All Collection", "Shoes", "Clothing", "Bags"];
 
 const ProductArea = () => {
   // Use the offer products API
-  const { data: products, isError, isLoading } = useGetOfferNewProductsQuery();
+  const { data: products, isError, isLoading } = useGetOffersQuery();
 
   // decide what to render
   let content = null;

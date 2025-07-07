@@ -3,7 +3,7 @@ import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation,Pagination } from 'swiper/modules';
 // internal
-import { useGetProductTypeQuery } from '@/redux/features/productApi';
+import { useGetProductsByTypeQuery } from '@/redux/features/productApi';
 import { NextArr, PrevArr, ShapeLine } from '@/svg';
 import ErrorMsg from '@/components/common/error-msg';
 import ProductItem from './product-item';
@@ -41,7 +41,7 @@ const slider_setting = {
 }
 
 const NewArrivals = () => {
-  const { data: products, isError, isLoading } = useGetProductTypeQuery({type:'electronics',query:'new=true'});
+  const { data: products, isError, isLoading } = useGetProductsByTypeQuery({type:'electronics',query:'new=true'});
   // decide what to render
   let content = null;
 

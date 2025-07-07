@@ -5,12 +5,11 @@ import Link from 'next/link';
 import { ArrowRightSmTwo } from '@/svg';
 import ProductItem from './product-item';
 import ErrorMsg from '@/components/common/error-msg';
-import { useGetProductTypeQuery } from '@/redux/features/productApi';
+import { useGetProductsByTypeQuery } from '@/redux/features/productApi';
 import { HomeThreePrdLoader } from '@/components/loader';
 
 const ProductArea = () => {
-  const { data: products, isError, isLoading } =
-    useGetProductTypeQuery({ type: 'beauty', query: `topSellers=true` });
+  const { data, isError, isLoading } = useGetProductsByTypeQuery({ type: 'beauty', query: 'topSellers=true' });
   // decide what to render
   let content = null;
 
@@ -22,11 +21,11 @@ const ProductArea = () => {
   if (!isLoading && isError) {
     content = <ErrorMsg msg="There was an error" />;
   }
-  if (!isLoading && !isError && products?.data?.length === 0) {
+  if (!isLoading && !isError && data?.length === 0) {
     content = <ErrorMsg msg="No Products found!" />;
   }
-  if (!isLoading && !isError && products?.data?.length > 0) {
-    const product_items = products.data.slice(0, 8);
+  if (!isLoading && !isError && data?.length > 0) {
+    const product_items = data.slice(0, 8);
     content = product_items.map((prd) => (
       <div key={prd._id} className="col-lg-3 col-md-4 col-sm-6">
         <ProductItem product={prd} />

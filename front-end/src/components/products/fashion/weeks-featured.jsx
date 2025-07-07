@@ -5,7 +5,7 @@ import { Navigation } from 'swiper/modules';
 import { Rating } from 'react-simple-star-rating';
 import Link from 'next/link';
 // internal
-import { useGetTopRatedNewProductsQuery } from '@/redux/features/newProductApi';
+import { useGetTopRatedQuery } from '@/redux/features/newProductApi';
 import { ArrowRightLong, NextLongArr, PrevLongArr, TextShapeLine } from '@/svg';
 import ErrorMsg from '@/components/common/error-msg';
 import { HomeTwoFeaturedPrdLoader } from '@/components/loader';
@@ -45,7 +45,7 @@ const getImageUrl = (item) => {
 };
 
 const WeeksFeatured = () => {
-  const { data: products, isError, isLoading } = useGetTopRatedNewProductsQuery();
+  const { data: products, isError, isLoading } = useGetTopRatedQuery();
   // decide what to render
   let content = null;
 

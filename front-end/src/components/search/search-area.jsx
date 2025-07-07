@@ -6,12 +6,12 @@ import ErrorMsg from "@/components/common/error-msg";
 import SearchPrdLoader from "@/components/loader/search-prd-loader";
 import ProductItem from "@/components/products/fashion/product-item";
 import {
-  useSearchNewProductsQuery,
-  useGetProductsByGsmValueQuery,
-  useGetProductsByOzValueQuery,
-  useGetProductsByPriceValueQuery,
-  useGetProductsByQuantityValueQuery,
-  useGetProductsByPurchasePriceValueQuery,
+  useSearchNewProductQuery,
+  useGetGsmUptoQuery,
+  useGetOzUptoQuery,
+  useGetPriceUptoQuery,
+  useGetQuantityUptoQuery,
+  useGetPurchasePriceUptoQuery,
   useGetAllNewProductsQuery
 } from "@/redux/features/newProductApi";
 
@@ -25,12 +25,12 @@ export default function SearchArea() {
   const [next, setNext] = useState(perView);
 
   // API hooks for all value-based APIs
-  const { data: gsmData, isLoading: gsmLoading, isError: gsmError } = useGetProductsByGsmValueQuery(searchText, { skip: !isNumeric });
-  const { data: ozData, isLoading: ozLoading, isError: ozError } = useGetProductsByOzValueQuery(searchText, { skip: !isNumeric });
-  const { data: priceData, isLoading: priceLoading, isError: priceError } = useGetProductsByPriceValueQuery(searchText, { skip: !isNumeric });
-  const { data: quantityData, isLoading: quantityLoading, isError: quantityError } = useGetProductsByQuantityValueQuery(searchText, { skip: !isNumeric });
-  const { data: purchasePriceData, isLoading: purchasePriceLoading, isError: purchasePriceError } = useGetProductsByPurchasePriceValueQuery(searchText, { skip: !isNumeric });
-  const { data: searchResults, isLoading: searchLoading, isError: searchError } = useSearchNewProductsQuery(searchText, { skip: !searchText || isNumeric });
+  const { data: gsmData, isLoading: gsmLoading, isError: gsmError } = useGetGsmUptoQuery(searchText, { skip: !isNumeric });
+  const { data: ozData, isLoading: ozLoading, isError: ozError } = useGetOzUptoQuery(searchText, { skip: !isNumeric });
+  const { data: priceData, isLoading: priceLoading, isError: priceError } = useGetPriceUptoQuery(searchText, { skip: !isNumeric });
+  const { data: quantityData, isLoading: quantityLoading, isError: quantityError } = useGetQuantityUptoQuery(searchText, { skip: !isNumeric });
+  const { data: purchasePriceData, isLoading: purchasePriceLoading, isError: purchasePriceError } = useGetPurchasePriceUptoQuery(searchText, { skip: !isNumeric });
+  const { data: searchResults, isLoading: searchLoading, isError: searchError } = useSearchNewProductQuery(searchText, { skip: !searchText || isNumeric });
   const { data: allProducts, isLoading: allLoading, isError: allError } = useGetAllNewProductsQuery();
 
   // Decide which data to use (priority order)

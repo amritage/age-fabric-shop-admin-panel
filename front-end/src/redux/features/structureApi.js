@@ -4,11 +4,11 @@ export const structureApi = apiSlice.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({
     getAllStructures: builder.query({
-      query: () => `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/structure/view`,
+      query: () => `${process.env.NEXT_PUBLIC_API_BASE_URL}/structure/view`,
       providesTags: ['Structure']
     }),
     getStructure: builder.query({
-      query: (id) => `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/structure/view/${id}`,
+      query: (id) => `${process.env.NEXT_PUBLIC_API_BASE_URL}/structure/view/${id}`,
       providesTags: (result, error, id) => [{ type: "Structure", id }],
     }),
   }),

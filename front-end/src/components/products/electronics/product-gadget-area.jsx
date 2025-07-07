@@ -11,12 +11,12 @@ import PrdCategoryList from './prd-category-list';
 import ErrorMsg from '@/components/common/error-msg';
 import b_bg_1 from '@assets/img/product/gadget/gadget-banner-1.jpg';
 import b_bg_2 from '@assets/img/product/gadget/gadget-banner-2.jpg';
-import { useGetProductTypeQuery } from '@/redux/features/productApi';
+import { useGetProductsByTypeQuery } from '@/redux/features/productApi';
 import gadget_girl from '@assets/img/product/gadget/gadget-girl.png';
 import HomeGadgetPrdLoader from '@/components/loader/home/home-gadget-prd-loader';
 
 const ProductGadgetArea = () => {
-  const { data: products, isError, isLoading } = useGetProductTypeQuery({type:'electronics'});
+  const { data: products, isError, isLoading } = useGetProductsByTypeQuery({type:'electronics', query: ''});
 
   // decide what to render
   let content = null;
