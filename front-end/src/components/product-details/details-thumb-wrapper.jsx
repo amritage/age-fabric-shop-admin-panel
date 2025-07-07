@@ -68,7 +68,7 @@ const DetailsThumbWrapper = ({
                   type="button"
                 >
                   <Image
-                    src={item.img.startsWith('http') ? item.img : `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/${item.img}`}
+                    src={item.img}
                     alt="image"
                     width={80}
                     height={80}
