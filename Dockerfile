@@ -1,28 +1,35 @@
-# Install dependencies only when needed
+# 1. Install dependencies
 FROM node:18-alpine AS deps
 WORKDIR /app
+
 COPY package.json package-lock.json ./
 RUN npm ci
 
-# Rebuild the source code only when needed
+# 2. Build the app
 FROM node:18-alpine AS builder
 WORKDIR /app
+
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+
+# Build with standalone output
 RUN npm run build
 
-# Production image, copy all the files and run next
+# 3. Production image
 FROM node:18-alpine AS runner
 WORKDIR /app
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
+ENV PORT=3000
 
-# Copy built assets and node_modules
-COPY --from=builder /app/.next ./.next
+# Copy only the minimal production output
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/node_modules ./node_modules
+
+# Optional: include env file if using local env file instead of Coolify dashboard
+COPY --from=builder /app/.env ./.env
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["node", "server.js"]

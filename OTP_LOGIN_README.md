@@ -27,7 +27,7 @@ The OTP functionality uses the following external API endpoints:
 
 ## File Structure
 
-```
+```plaintext
 src/
 ├── app/
 │   └── otplogin/
@@ -44,7 +44,8 @@ src/
 ### Accessing OTP Login
 
 Users can access the OTP login page at:
-```
+
+```plaintext
 https://age-fabric-shop-admin-panel-production-ab86.up.railway.app/otplogin
 ```
 
@@ -82,6 +83,7 @@ The OTP functionality uses a separate Redux API slice (`otpApi`) with its own ba
 ## Styling
 
 The OTP login uses the existing design system:
+
 - **Theme Colors**: Uses `theme` (#0989FF) and `themeDark` (#056ECE)
 - **Button Styles**: `tp-btn` and `tp-btn-outline` classes
 - **Responsive**: Mobile-first responsive design
@@ -89,6 +91,7 @@ The OTP login uses the existing design system:
 ## Error Messages
 
 Common error scenarios and their user-friendly messages:
+
 - Invalid email format
 - OTP request failure
 - Invalid OTP
@@ -98,7 +101,8 @@ Common error scenarios and their user-friendly messages:
 ## Future Enhancements
 
 Potential improvements for the OTP system:
+
 - SMS OTP support
 - Biometric authentication
 - Remember device functionality
-- Advanced security features 
+- Advanced security features

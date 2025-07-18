@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'standalone', // ✅ Required for Docker production deployment
+
   redirects: async () => {
     return [
       {
@@ -9,6 +11,7 @@ const nextConfig = {
       },
     ];
   },
+
   images: {
     domains: [
       "i.ibb.co",
@@ -19,11 +22,9 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        // hostname: 'newshopy-production.up.railway.app',
         hostname: process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/^https?:\/\//, ''),
         pathname: '/uploadimage/**',
       },
-      // You can add more remotePatterns here if needed
     ],
   },
 };
