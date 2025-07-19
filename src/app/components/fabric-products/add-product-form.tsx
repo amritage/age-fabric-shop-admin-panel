@@ -24,6 +24,9 @@ import { useGetAllMotifQuery } from '@/redux/motif/motifApi';
 import { useGetAllSuitableForQuery } from '@/redux/suitablefor/suitableforApi';
 import { useGetAllVendorsQuery } from '@/redux/vendor/vendorApi';
 import { useGetAllGroupCodesQuery } from '@/redux/group-code/group-code-api';
+import { useGetAllSubstructuresQuery } from '@/redux/substructure/substructureApi';
+import { useGetAllSubFinishQuery } from '@/redux/subfinish/subfinishApi';
+import { useGetAllSubSuitableForQuery } from '@/redux/subsuitablefor/subsuitableApi';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -122,6 +125,9 @@ export default function AddProductForm({ productId }: { productId?: string }) {
   const [substructureOptions, setSubstructureOptions] = useState<{ _id: string; name: string }[]>([]);
   const [subfinishOptions, setSubfinishOptions] = useState<{ _id: string; name: string }[]>([]);
   const [subsuitableforOptions, setSubsuitableforOptions] = useState<{ _id: string; name: string }[]>([]);
+  const [filteredSubstructures, setFilteredSubstructures] = useState<{ _id: string; name: string }[]>([]);
+  const [filteredSubfinishes, setFilteredSubfinishes] = useState<{ _id: string; name: string }[]>([]);
+  const [filteredSubSuitableFors, setFilteredSubSuitableFors] = useState<{ _id: string; name: string }[]>([]);
 
   // Load saved form data from localStorage on component mount
   useEffect(() => {
@@ -177,6 +183,9 @@ export default function AddProductForm({ productId }: { productId?: string }) {
   const { data: suitableFors, isLoading: isLoadingSuitableFors } = useGetAllSuitableForQuery();
   const { data: vendors, isLoading: isLoadingVendors } = useGetAllVendorsQuery();
   const { data: groupCodes, isLoading: isLoadingGroupCodes } = useGetAllGroupCodesQuery();
+  const { data: allSubstructures } = useGetAllSubstructuresQuery();
+  const { data: allSubfinishes } = useGetAllSubFinishQuery();
+  const { data: allSubsuitablefors } = useGetAllSubSuitableForQuery();
 
   // 2) hydrate formData ONLY after filters & productDetail are both ready
   useEffect(() => {
@@ -210,92 +219,86 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     });
   }, [isLoadingFilters, productDetail]);
 
-  // Sub Structure
+  // Filter substructures when structureId changes
   useEffect(() => {
-    const parentId = formData.structureId;
-    if (!parentId) {
-      setSubstructureOptions([]);
-      return;
-    }
-    // Extract token as before
-    const adminCookie = typeof window !== "undefined" ? Cookies.get("admin") : null;
-    let token = "";
-    if (adminCookie) {
-      try {
-        const adminObj = JSON.parse(adminCookie);
-        token = adminObj.accessToken;
-      } catch (e) {
-        token = "";
+    console.log('Selected structureId:', formData.structureId);
+    console.log('All substructures:', allSubstructures?.data);
+    if (formData.structureId && allSubstructures?.data) {
+      const filtered = allSubstructures.data.filter(
+        (sub: any) =>
+          sub.structureId &&
+          typeof sub.structureId === 'object' &&
+          sub.structureId._id &&
+          String(sub.structureId._id) === String(formData.structureId)
+      );
+      setFilteredSubstructures(filtered);
+      console.log('Filtered substructures:', filtered);
+      // Clear substructureId if it doesn't match the new structure
+      if (
+        formData.substructureId &&
+        !filtered.some(
+          (sub: any) => String(sub._id) === String(formData.substructureId)
+        )
+      ) {
+        setFormData((prev) => ({ ...prev, substructureId: "" }));
+      }
+    } else {
+      setFilteredSubstructures([]);
+      if (formData.substructureId) {
+        setFormData((prev) => ({ ...prev, substructureId: "" }));
       }
     }
-    fetch(BASE_URL + "/api/substructure/view", { headers: { Authorization: `Bearer ${token}` } })
-      .then(r => r.json())
-      .then(j => {
-        const opts = (j.data || []).filter((item: any) => item.structureId === parentId);
-        setSubstructureOptions(opts);
-      })
-      .catch(() => {
-        setFilterErrors(e => ({ ...e, ["subStructureId"]: `Failed to load subStructureId` }));
-      });
-  }, [formData.structureId]);
+  }, [formData.structureId, allSubstructures]);
 
-  // Sub Finish
+  // Filter subfinishes when finishId changes
   useEffect(() => {
-    const parentId = formData.finishId;
-    if (!parentId) {
-      setSubfinishOptions([]);
-      return;
-    }
-    // Extract token as before
-    const adminCookie = typeof window !== "undefined" ? Cookies.get("admin") : null;
-    let token = "";
-    if (adminCookie) {
-      try {
-        const adminObj = JSON.parse(adminCookie);
-        token = adminObj.accessToken;
-      } catch (e) {
-        token = "";
+    if (formData.finishId && allSubfinishes?.data) {
+      const filtered = allSubfinishes.data.filter(
+        (sub: any) =>
+          sub.finishId &&
+          typeof sub.finishId === 'object' &&
+          sub.finishId._id &&
+          String(sub.finishId._id) === String(formData.finishId)
+      );
+      setFilteredSubfinishes(filtered);
+      if (
+        formData.subfinishId &&
+        !filtered.some((sub: any) => String(sub._id) === String(formData.subfinishId))
+      ) {
+        setFormData((prev) => ({ ...prev, subfinishId: "" }));
+      }
+    } else {
+      setFilteredSubfinishes([]);
+      if (formData.subfinishId) {
+        setFormData((prev) => ({ ...prev, subfinishId: "" }));
       }
     }
-    fetch(BASE_URL + "/api/subfinish/view", { headers: { Authorization: `Bearer ${token}` } })
-      .then(r => r.json())
-      .then(j => {
-        const opts = (j.data || []).filter((item: any) => item.finishId === parentId);
-        setSubfinishOptions(opts);
-      })
-      .catch(() => {
-        setFilterErrors(e => ({ ...e, ["subFinishId"]: `Failed to load subFinishId` }));
-      });
-  }, [formData.finishId]);
+  }, [formData.finishId, allSubfinishes]);
 
-  // Sub Suitable
+  // Filter subsuitablefors when suitableforId changes
   useEffect(() => {
-    const parentId = formData.suitableforId;
-    if (!parentId) {
-      setSubsuitableforOptions([]);
-      return;
-    }
-    // Extract token as before
-    const adminCookie = typeof window !== "undefined" ? Cookies.get("admin") : null;
-    let token = "";
-    if (adminCookie) {
-      try {
-        const adminObj = JSON.parse(adminCookie);
-        token = adminObj.accessToken;
-      } catch (e) {
-        token = "";
+    if (formData.suitableforId && allSubsuitablefors?.data) {
+      const filtered = allSubsuitablefors.data.filter(
+        (sub: any) =>
+          sub.suitableforId &&
+          typeof sub.suitableforId === 'object' &&
+          sub.suitableforId._id &&
+          String(sub.suitableforId._id) === String(formData.suitableforId)
+      );
+      setFilteredSubSuitableFors(filtered);
+      if (
+        formData.subsuitableforId &&
+        !filtered.some((sub: any) => String(sub._id) === String(formData.subsuitableforId))
+      ) {
+        setFormData((prev) => ({ ...prev, subsuitableforId: "" }));
+      }
+    } else {
+      setFilteredSubSuitableFors([]);
+      if (formData.subsuitableforId) {
+        setFormData((prev) => ({ ...prev, subsuitableforId: "" }));
       }
     }
-    fetch(BASE_URL + "/api/subsuitable/view", { headers: { Authorization: `Bearer ${token}` } })
-      .then(r => r.json())
-      .then(j => {
-        const opts = (j.data || []).filter((item: any) => item.suitableforId === parentId);
-        setSubsuitableforOptions(opts);
-      })
-      .catch(() => {
-        setFilterErrors(e => ({ ...e, ["subSuitableId"]: `Failed to load subSuitableId` }));
-      });
-  }, [formData.suitableforId]);
+  }, [formData.suitableforId, allSubsuitablefors]);
 
   // generic handlers
  const handleInputChange = (
@@ -304,8 +307,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
   >,
 ) => {
   const { name, value } = e.target;
-  setFormData({ ...formData, [name]: value });
-  // Save to localStorage for both add and edit modes
+  setFormData({ ...formData, [name]: value }); // <-- This is required for state update
   localStorage.setItem("ADD_PRODUCT_FORM_DATA", JSON.stringify({ ...formData, [name]: value }));
 };
 
@@ -486,7 +488,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
         </h1>
 
         {/* Loading and Error Indicators */}
-        {isLoadingFilters && (
+        {/* {isLoadingFilters && (
           <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mb-6">
             <div className="flex items-center">
               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
@@ -495,7 +497,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
               </span>
             </div>
           </div>
-        )}
+        )} */}
 
         {/* Data Restored Notification */}
         {hasRestoredData && !isEdit && (
@@ -1025,10 +1027,8 @@ export default function AddProductForm({ productId }: { productId?: string }) {
               className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm"
             >
               <option value="">Select Sub Structure</option>
-              {substructureOptions.map(option => (
-                <option key={option._id} value={option._id}>
-                  {option.name}
-                </option>
+              {filteredSubstructures.map(option => (
+                <option key={option._id} value={option._id}>{option.name}</option>
               ))}
             </select>
           </div>
@@ -1044,10 +1044,8 @@ export default function AddProductForm({ productId }: { productId?: string }) {
               className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm"
             >
               <option value="">Select Sub Finish</option>
-              {subfinishOptions.map(option => (
-                <option key={option._id} value={option._id}>
-                  {option.name}
-                </option>
+              {filteredSubfinishes.map(option => (
+                <option key={option._id} value={option._id}>{option.name}</option>
               ))}
             </select>
           </div>
@@ -1063,10 +1061,8 @@ export default function AddProductForm({ productId }: { productId?: string }) {
               className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm"
             >
               <option value="">Select Sub Suitable For</option>
-              {subsuitableforOptions.map(option => (
-                <option key={option._id} value={option._id}>
-                  {option.name}
-                </option>
+              {filteredSubSuitableFors.map(option => (
+                <option key={option._id} value={option._id}>{option.name}</option>
               ))}
             </select>
           </div>

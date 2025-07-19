@@ -37,30 +37,45 @@ export default function EditGroupCode({ id }: EditGroupCodeProps) {
   } = useForm<IGroupCode>({ mode: "onSubmit" });
   const [img, setImg] = useState("");
   const [video, setVideo] = useState("");
+  const [newImgFile, setNewImgFile] = useState<File | null>(null);
+  const [newVideoFile, setNewVideoFile] = useState<File | null>(null);
   const videoRef = useRef<HTMLInputElement>(null);
 
   // 4) Prefill on data arrival
   useEffect(() => {
     if (data?.data) {
       setValue("name", data.data.name);
-      setImg(data.data.img || "");
+      setImg(data.data.image || "");
       setVideo(data.data.video || "");
     }
   }, [data, setValue]);
 
+  // Handle image file change
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setNewImgFile(file);
+      setImg(URL.createObjectURL(file)); // Preview new image
+    }
+  };
+
+  // Handle video file change
+  const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setNewVideoFile(file);
+      setVideo(URL.createObjectURL(file)); // Preview new video
+    }
+  };
+
   // 5) Submit handler
   const onSubmit = async (vals: IGroupCode) => {
     try {
-      // Build a plain object for update (not FormData)
-      const changes: Partial<IGroupCode> = {
-        name: vals.name,
-        img: img || undefined,
-        video: video || undefined,
-      };
-      await updateGroupCode({
-        id: id!,
-        changes,
-      }).unwrap();
+      const formData = new FormData();
+      formData.append("name", vals.name);
+      if (newImgFile) formData.append("image", newImgFile);
+      if (newVideoFile) formData.append("video", newVideoFile);
+      await updateGroupCode({ id: id!, changes: formData }).unwrap();
       router.push("/group-code");
     } catch {
       // handle error if you want
@@ -82,6 +97,7 @@ export default function EditGroupCode({ id }: EditGroupCodeProps) {
         {img && (
           <Image src={img} alt="Current" width={100} height={91} className="mb-2 object-cover rounded" />
         )}
+        <input type="file" accept="image/*" onChange={handleImageChange} />
       </div>
       <div>
         <label className="block mb-1 text-sm font-medium text-gray-700">
@@ -90,7 +106,7 @@ export default function EditGroupCode({ id }: EditGroupCodeProps) {
         {video && (
           <video width={160} height={90} controls src={video} className="mb-2" />
         )}
-        <input type="file" accept="video/*" ref={videoRef} />
+        <input type="file" accept="video/*" onChange={handleVideoChange} />
       </div>
       <div>
         <label className="block mb-1 text-sm font-medium text-gray-700">

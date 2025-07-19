@@ -3,4 +3,5 @@ export interface IGroupCode {
   name: string;
   img?: string;
   video?: string;
+  image?: string;
 }

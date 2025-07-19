@@ -41,9 +41,18 @@ export default function EditCategory() {
   useEffect(() => {
     if (data?.data) {
       setValue("name", data.data.name);
-      // No need to set image here; default_img will handle preview
+      setImageUrl(data.data.image || "");
     }
   }, [data, setValue]);
+
+  // Handle image file change
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      setImageUrl(URL.createObjectURL(file)); // Preview new image
+    }
+  };
 
   // Handle form submit
   const onSubmit = async (vals: any) => {
@@ -67,15 +76,13 @@ export default function EditCategory() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       {/* Image Upload */}
-      <GlobalImgUpload
-        setImageFile={setImageFile}
-        setImageUrl={setImageUrl}
-        isSubmitted={submitAttempted}
-        default_img={data?.data?.image || ""}
-        imageFile={imageFile}
-        imageUrl={imageUrl}
-        setIsSubmitted={setSubmitAttempted}
-      />
+      <div>
+        <label className="block mb-1 text-sm font-medium text-gray-700">Current Image</label>
+        {imageUrl && (
+          <img src={imageUrl} alt="Current" width={100} height={91} className="mb-2 object-cover rounded" />
+        )}
+        <input type="file" accept="image/*" onChange={handleImageChange} />
+      </div>
 
       {/* Name Field */}
       <div>

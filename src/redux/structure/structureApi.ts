@@ -33,7 +33,7 @@ export const structureApi = apiSlice.injectEndpoints({
     }),
 
     updateStructure: builder.mutation<
-      { data: IStructureItem },
+      IStructureItem,
       { id: string; changes: Partial<IStructureItem> }
     >({
       query: ({ id, changes }) => ({
@@ -41,6 +41,12 @@ export const structureApi = apiSlice.injectEndpoints({
         method: "PUT",
         body: changes,
       }),
+      transformResponse: (response: any) => {
+        if (response.status === 1 && response.data) {
+          return response.data;
+        }
+        throw new Error(response.message || "Failed to update structure.");
+      },
       invalidatesTags: (res, err, { id }) => [
         { type: "Structure" as const, id },
         { type: "Structure" as const, id: "LIST" },

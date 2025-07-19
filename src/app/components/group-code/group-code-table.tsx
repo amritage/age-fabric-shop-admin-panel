@@ -71,14 +71,20 @@ export default function GroupCodeTable() {
             data?.data?.map((u: IGroupCode) => (
               <tr key={u._id}>
                 <td className="py-2">
-                  {u.img && (
-                    <Image
-                      src={u.img}
-                      alt={u.name}
-                      width={60}
-                      height={60}
-                      className="object-cover rounded"
-                    />
+                  {u.image ? (
+                    <div className="w-16 h-16 flex items-center justify-center bg-gray-100 rounded overflow-hidden">
+                      <Image
+                        src={u.image}
+                        alt={u.name}
+                        width={64}
+                        height={64}
+                        className="object-cover w-full h-full"
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-16 h-16 bg-gray-100 flex items-center justify-center rounded text-sm text-gray-400">
+                      No Image
+                    </div>
                   )}
                 </td>
                 <td className="py-2">

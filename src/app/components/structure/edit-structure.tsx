@@ -47,6 +47,7 @@ export default function EditStructure({ id, onDone }: EditStructureProps) {
     if (data?.data) {
       setValue("name", data.data.name || "");
       setImage(data.data.img || "");
+      setErrorMessage(""); // Clear error when new data is loaded
     }
   }, [data, setValue]);
 
@@ -59,9 +60,14 @@ export default function EditStructure({ id, onDone }: EditStructureProps) {
         id: id!,
         changes: { name: values.name, img: image },
       }).unwrap();
+      setErrorMessage(""); // Clear error on success
       onDone();
     } catch (err: any) {
-      setErrorMessage(err?.data?.message || "Failed to update structure.");
+      setErrorMessage(
+        err?.data?.message ||
+        err?.error ||
+        "Failed to update structure."
+      );
     }
   };
 
