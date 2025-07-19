@@ -16,7 +16,7 @@ import DeleteTooltip from "../tooltip/delete-tooltip";
 import { Edit, Delete } from "@/svg";
 
 export default function FinishTable() {
-  const { data, isLoading, isError } = useGetAllFinishQuery();
+  const { data, isLoading, isError } = useGetAllFinishQuery(undefined, { pollingInterval: 5000 });
   const [deleteFinish] = useDeleteFinishMutation();
   const [showEdit, setShowEdit] = React.useState<string | null>(null);
   const [showDelete, setShowDelete] = React.useState<string | null>(null);

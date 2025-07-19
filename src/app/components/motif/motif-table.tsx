@@ -16,7 +16,7 @@ import DeleteTooltip from "../tooltip/delete-tooltip";
 import { Edit, Delete } from "@/svg";
 
 export default function MotifTable() {
-  const { data, isLoading, isError } = useGetAllMotifQuery();
+  const { data, isLoading, isError } = useGetAllMotifQuery(undefined, { pollingInterval: 5000 });
   const [deleteMotif] = useDeleteMotifMutation();
   const [showEdit, setShowEdit] = React.useState<string | null>(null);
   const [showDelete, setShowDelete] = React.useState<string | null>(null);

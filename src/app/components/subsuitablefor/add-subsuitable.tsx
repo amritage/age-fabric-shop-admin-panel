@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { ISubSuitableFor } from "@/types/subsuitable-type";
-import { useAddSubSuitableForMutation } from "@/redux/subsuitablefor/subsuitableApi";
+import { useAddSubSuitableForMutation, useGetAllSubSuitableForQuery } from "@/redux/subsuitablefor/subsuitableApi";
 // ← correct import for parent dropdown:
 import { useGetAllSuitableForQuery } from "@/redux/suitablefor/suitableforApi";
 import ErrorMsg from "@/app/components/common/error-msg";
@@ -19,6 +19,7 @@ export default function AddSubSuitableFor() {
   } = useForm<FormVals>({ mode: "onSubmit" });
 
   const [addSSF] = useAddSubSuitableForMutation();
+  const { refetch } = useGetAllSubSuitableForQuery();
   const { data: parents, isLoading, isError } = useGetAllSuitableForQuery();
   const [apiError, setApiError] = useState<string | null>(null);
 
@@ -26,6 +27,7 @@ export default function AddSubSuitableFor() {
     setApiError(null);
     try {
       await addSSF(vals).unwrap();
+      await refetch();
       reset();
     } catch (err: any) {
       setApiError(err?.data?.message || "Server error");

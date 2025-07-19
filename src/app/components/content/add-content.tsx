@@ -3,8 +3,9 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { IContent } from "@/types/content-type";
-import { useAddContentMutation } from "@/redux/content/contentApi";
+import { useAddContentMutation, useGetAllContentQuery } from "@/redux/content/contentApi";
 import GlobalImgUpload from "@/app/components/structure/global-img-upload";
+import { notifySuccess, notifyError } from "@/utils/toast";
 
 export default function AddContent() {
   const {
@@ -14,12 +15,19 @@ export default function AddContent() {
     formState: { errors, isSubmitting },
   } = useForm<IContent>({ mode: "onSubmit" });
   const [addContent] = useAddContentMutation();
+  const { refetch } = useGetAllContentQuery();
   const [img, setImg] = useState<string>("");
 
   const onSubmit = async (vals: IContent) => {
-    await addContent({ name: vals.name, img }).unwrap();
-    reset();
-    setImg("");
+    try {
+      await addContent({ name: vals.name, img }).unwrap();
+      notifySuccess("Content added successfully!");
+      await refetch();
+      reset();
+      setImg("");
+    } catch (error: any) {
+      notifyError(error?.data?.message || "Failed to add content.");
+    }
   };
 
   return (

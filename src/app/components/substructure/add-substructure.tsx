@@ -2,7 +2,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { ISubstructure } from "@/types/substructure-type";
-import { useAddSubstructureMutation } from "@/redux/substructure/substructureApi";
+import { useAddSubstructureMutation, useGetAllSubstructuresQuery } from "@/redux/substructure/substructureApi";
 import { useGetAllStructuresQuery } from "@/redux/structure/structureApi";
 import ErrorMsg from "@/app/components/common/error-msg";
 import { IStructureItem } from "@/types/structure-type";
@@ -21,10 +21,12 @@ export default function AddSubstructure() {
   } = useForm<FormValues>({ mode: "onSubmit" });
 
   const [addSub] = useAddSubstructureMutation();
+  const { refetch } = useGetAllSubstructuresQuery();
   const { data: structures, isLoading, isError } = useGetAllStructuresQuery();
 
   const onSubmit = async (vals: FormValues) => {
     await addSub({ name: vals.name, structureId: vals.structureId }).unwrap();
+    await refetch();
     reset();
   };
 

@@ -5,6 +5,7 @@ import { ISubFinish } from "@/types/subfinish-type";
 import { useAddSubFinishMutation } from "@/redux/subfinish/subfinishApi";
 // ← Pull in your Finish list, not Structure:
 import { useGetAllFinishQuery } from "@/redux/finish/finishApi";
+import { useGetAllSubFinishQuery } from "@/redux/subfinish/subfinishApi";
 import ErrorMsg from "@/app/components/common/error-msg";
 
 type FormVals = { name: string; finishId: string };
@@ -18,6 +19,7 @@ export default function AddSubFinish() {
   } = useForm<FormVals>({ mode: "onSubmit" });
 
   const [addSF] = useAddSubFinishMutation();
+  const { refetch } = useGetAllSubFinishQuery();
   const { data: finishes, isLoading, isError } = useGetAllFinishQuery();
   const [apiError, setApiError] = useState<string | null>(null);
 
@@ -25,6 +27,7 @@ export default function AddSubFinish() {
     setApiError(null);
     try {
       await addSF({ name: vals.name, finishId: vals.finishId }).unwrap();
+      await refetch();
       reset();
     } catch (err: any) {
       setApiError(err?.data?.message || "Server error – please try again");

@@ -78,6 +78,18 @@ export default function ViewProductTable() {
     })();
   }, []);
 
+  React.useEffect(() => {
+    fetch('https://adorable-gentleness-production.up.railway.app/api/substructure/view')
+      .then(res => res.json())
+      .then(data => setSubstructureOptions(data.data || []));
+  }, []);
+
+  React.useEffect(() => {
+    fetch('https://adorable-gentleness-production.up.railway.app/api/subfinish/view')
+      .then(res => res.json())
+      .then(data => setSubfinishOptions(data.data || []));
+  }, []);
+
   // Filtered products
   const filtered = useMemo(() => {
     const products = resp?.data || [];
@@ -313,6 +325,11 @@ export default function ViewProductTable() {
     [filterText, filtered, exportPDF],
   );
 
+  // Debug logs for substructure/subfinish mapping
+  console.log('substructureOptions:', substructureOptions);
+  console.log('subfinishOptions:', subfinishOptions);
+  console.log('selectedProduct:', selectedProduct);
+
   return (
     <div className="p-6">
       <h2 className="text-3xl font-bold text-center mb-4">
@@ -384,20 +401,37 @@ export default function ViewProductTable() {
               <div className="grid grid-cols-1 gap-3">
                 {Object.entries(selectedProduct)
                   .filter(([key]) => !['image', 'image1', 'image2', 'video', '__v', '_id'].includes(key))
-                  .map(([key, value]) => (
+                  .map(([key, value]: [string, any]) => (
                     <div key={key} className="flex flex-col md:flex-row md:items-center gap-1 md:gap-3 border-b pb-2 last:border-b-0">
                       <span className="font-semibold text-gray-700 md:w-40 capitalize text-base">
                         {key.replace(/([A-Z])/g, ' $1')}
                       </span>
                       <span className="text-gray-900 break-all text-base font-mono">
-                        {/* Show filter label if field is a filter */}
+                        {/* Enhanced logic to show human-readable value for all ID fields, handling both string and object values */}
                         {filters.some(f => f.name === key)
-                          ? getFilterLabel(key, value as string)
-                          : ['substructureId', 'subfinishId', 'subsuitableforId', 'subsuitableId'].includes(key)
-                            ? getSubFilterLabel(key, value as string)
-                            : typeof value === 'string' || typeof value === 'number'
-                              ? value
-                              : JSON.stringify(value)}
+                          ? getFilterLabel(key, typeof value === 'object' && value !== null && '_id' in value ? value._id : value as string)
+                          : ['subStructureId', 'subFinishId', 'subSuitableId', 'substructureId', 'subfinishId', 'subsuitableId'].includes(key)
+                            ? getSubFilterLabel(key, typeof value === 'object' && value !== null && '_id' in value ? value._id : value as string)
+                            : (() => {
+                                // Try to map common ID fields like structureId, finishId, vendorId, etc.
+                                if (key.endsWith('Id')) {
+                                  // Try both with and without 'Id' suffix
+                                  const baseKey = key.replace(/Id$/, '');
+                                  let filter = filters.find(f => f.name === baseKey);
+                                  if (!filter) {
+                                    // Try plural (e.g., vendorIds)
+                                    filter = filters.find(f => f.name === baseKey + 's');
+                                  }
+                                  if (filter) {
+                                    const idValue = typeof value === 'object' && value !== null && '_id' in value ? value._id : value;
+                                    const option = filter.options.find((o: any) => o._id === idValue);
+                                    return option ? option.name : idValue;
+                                  }
+                                }
+                                return typeof value === 'string' || typeof value === 'number'
+                                  ? value
+                                  : JSON.stringify(value);
+                              })()}
                       </span>
                     </div>
                   ))}

@@ -3,8 +3,9 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { IColor } from "@/types/color-type";
-import { useAddColorMutation } from "@/redux/color/colorApi";
+import { useAddColorMutation, useGetAllColorQuery } from "@/redux/color/colorApi";
 import GlobalImgUpload from "@/app/components/structure/global-img-upload";
+import { notifySuccess, notifyError } from "@/utils/toast";
 
 export default function AddColor() {
   const {
@@ -14,12 +15,19 @@ export default function AddColor() {
     formState: { errors, isSubmitting },
   } = useForm<IColor>();
   const [addColor] = useAddColorMutation();
+  const { refetch } = useGetAllColorQuery();
   const [img, setImg] = useState<string>("");
 
   const onSubmit = async (vals: IColor) => {
-    await addColor({ name: vals.name, css: vals.css, img }).unwrap();
-    reset();
-    setImg("");
+    try {
+      await addColor({ name: vals.name, css: vals.css, img }).unwrap();
+      notifySuccess("Color added successfully!");
+      await refetch();
+      reset();
+      setImg("");
+    } catch (error: any) {
+      notifyError(error?.data?.message || "Failed to add color.");
+    }
   };
 
   return (

@@ -2,8 +2,9 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { ISuitableFor } from "@/types/suitable-for-type";
-import { useAddSuitableForMutation } from "@/redux/suitablefor/suitableforApi";
+import { useAddSuitableForMutation, useGetAllSuitableForQuery } from "@/redux/suitablefor/suitableforApi";
 import GlobalImgUpload from "@/app/components/structure/global-img-upload";
+import { notifySuccess, notifyError } from "@/utils/toast";
 
 export default function AddSuitableFor() {
   const {
@@ -13,12 +14,19 @@ export default function AddSuitableFor() {
     formState: { errors, isSubmitting },
   } = useForm<ISuitableFor>({ mode: "onSubmit" });
   const [addSuitableFor] = useAddSuitableForMutation();
+  const { refetch } = useGetAllSuitableForQuery();
   const [img, setImg] = useState<string>("");
 
   const onSubmit = async (vals: ISuitableFor) => {
-    await addSuitableFor({ name: vals.name, img }).unwrap();
-    reset();
-    setImg("");
+    try {
+      await addSuitableFor({ name: vals.name, img }).unwrap();
+      notifySuccess("Suitable For added successfully!");
+      await refetch();
+      reset();
+      setImg("");
+    } catch (error: any) {
+      notifyError(error?.data?.message || "Failed to add Suitable For.");
+    }
   };
 
   return (

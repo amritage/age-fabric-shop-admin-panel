@@ -13,7 +13,7 @@ import { Edit, Delete } from "@/svg";
 import Link from "next/link";
 
 export default function SubFinishTable() {
-  const { data, isLoading, isError } = useGetAllSubFinishQuery();
+  const { data, isLoading, isError } = useGetAllSubFinishQuery(undefined, { pollingInterval: 5000 });
   const [deleteSF] = useDeleteSubFinishMutation();
   const [showEdit, setShowEdit] = React.useState<string | null>(null);
   const [showDelete, setShowDelete] = React.useState<string | null>(null);

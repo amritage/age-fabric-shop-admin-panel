@@ -2,8 +2,9 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { IUniqueCode } from "@/types/uniquecode-type";
-import { useAddUniqueCodeMutation } from "@/redux/uniquecode/uniquecodeApi";
+import { useAddUniqueCodeMutation, useGetAllUniqueCodesQuery } from "@/redux/uniquecode/uniquecodeApi";
 import GlobalImgUpload from "@/app/components/structure/global-img-upload";
+import { notifySuccess, notifyError } from "@/utils/toast";
 
 export default function AddUniqueCode() {
   const {
@@ -13,12 +14,19 @@ export default function AddUniqueCode() {
     formState: { errors, isSubmitting },
   } = useForm<IUniqueCode>({ mode: "onSubmit" });
   const [addUniqueCode] = useAddUniqueCodeMutation();
+  const { refetch } = useGetAllUniqueCodesQuery();
   const [img, setImg] = useState<string>("");
 
   const onSubmit = async (vals: IUniqueCode) => {
-    await addUniqueCode({ name: vals.name, img }).unwrap();
-    reset();
-    setImg("");
+    try {
+      await addUniqueCode({ name: vals.name, img }).unwrap();
+      notifySuccess("Unique Code added successfully!");
+      await refetch();
+      reset();
+      setImg("");
+    } catch (error: any) {
+      notifyError(error?.data?.message || "Failed to add Unique Code.");
+    }
   };
 
   return (

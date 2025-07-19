@@ -2,7 +2,8 @@
 "use client";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useAddNewCategoryMutation } from "@/redux/newcategory/newcategoryApi";
+import { useAddNewCategoryMutation, useGetAllNewCategoriesQuery } from "@/redux/newcategory/newcategoryApi";
+import { notifySuccess, notifyError } from "@/utils/toast";
 
 export default function AddNewCategory() {
   const {
@@ -13,16 +14,23 @@ export default function AddNewCategory() {
   } = useForm();
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [addNewCategory] = useAddNewCategoryMutation();
+  const { refetch } = useGetAllNewCategoriesQuery();
 
   const onSubmit = async (data: any) => {
-    const fd = new FormData();
-    fd.append("name", data.name);
-    if (imageFile) {
-      fd.append("image", imageFile);
+    try {
+      const fd = new FormData();
+      fd.append("name", data.name);
+      if (imageFile) {
+        fd.append("image", imageFile);
+      }
+      await addNewCategory(fd);
+      notifySuccess("Category added successfully!");
+      await refetch();
+      reset();
+      setImageFile(null);
+    } catch (error: any) {
+      notifyError(error?.data?.message || "Failed to add category.");
     }
-    await addNewCategory(fd);
-    reset();
-    setImageFile(null);
   };
 
   return (

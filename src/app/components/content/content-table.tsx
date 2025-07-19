@@ -15,7 +15,7 @@ import DeleteTooltip from "../tooltip/delete-tooltip";
 import { Edit, Delete } from "@/svg";
 
 export default function ContentTable() {
-  const { data, isLoading, isError } = useGetAllContentQuery();
+  const { data, isLoading, isError } = useGetAllContentQuery(undefined, { pollingInterval: 5000 });
   const [deleteContent] = useDeleteContentMutation();
   const [showEdit, setShowEdit] = React.useState<string | null>(null);
   const [showDelete, setShowDelete] = React.useState<string | null>(null);

@@ -2,8 +2,9 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { IDesign } from "@/types/design-type";
-import { useAddDesignMutation } from "@/redux/design/designApi";
+import { useAddDesignMutation, useGetAllDesignQuery } from "@/redux/design/designApi";
 import GlobalImgUpload from "@/app/components/structure/global-img-upload";
+import { notifySuccess, notifyError } from "@/utils/toast";
 
 export default function AddDesign() {
   const {
@@ -13,12 +14,19 @@ export default function AddDesign() {
     formState: { errors, isSubmitting },
   } = useForm<IDesign>({ mode: "onSubmit" });
   const [addDesign] = useAddDesignMutation();
+  const { refetch } = useGetAllDesignQuery();
   const [img, setImg] = useState<string>("");
 
   const onSubmit = async (vals: IDesign) => {
-    await addDesign({ name: vals.name, img }).unwrap();
-    reset();
-    setImg("");
+    try {
+      await addDesign({ name: vals.name, img }).unwrap();
+      notifySuccess("Design added successfully!");
+      await refetch();
+      reset();
+      setImg("");
+    } catch (error: any) {
+      notifyError(error?.data?.message || "Failed to add design.");
+    }
   };
 
   return (

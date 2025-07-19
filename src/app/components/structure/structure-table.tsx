@@ -21,7 +21,7 @@ interface StructureTableProps {
 }
 
 const StructureTable: React.FC<StructureTableProps> = ({ onEditClick }) => {
-  const { data, isLoading, isError } = useGetAllStructuresQuery();
+  const { data, isLoading, isError } = useGetAllStructuresQuery(undefined, { pollingInterval: 5000 });
   const [deleteStructure] = useDeleteStructureMutation();
   const [showEdit, setShowEdit] = useState<string | null>(null);
   const [showDelete, setShowDelete] = useState<string | null>(null);

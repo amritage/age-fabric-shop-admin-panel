@@ -14,6 +14,16 @@ import { IProduct } from "@/types/fabricproduct-type";
 import { notifyError } from "@/utils/toast";
 import Image from "next/image";
 import Cookies from "js-cookie";
+import { useGetAllNewCategoriesQuery } from '@/redux/newcategory/newcategoryApi';
+import { useGetAllStructuresQuery } from '@/redux/structure/structureApi';
+import { useGetAllContentQuery } from '@/redux/content/contentApi';
+import { useGetAllFinishQuery } from '@/redux/finish/finishApi';
+import { useGetAllDesignQuery } from '@/redux/design/designApi';
+import { useGetAllColorQuery } from '@/redux/color/colorApi';
+import { useGetAllMotifQuery } from '@/redux/motif/motifApi';
+import { useGetAllSuitableForQuery } from '@/redux/suitablefor/suitableforApi';
+import { useGetAllVendorsQuery } from '@/redux/vendor/vendorApi';
+import { useGetAllGroupCodesQuery } from '@/redux/group-code/group-code-api';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -102,9 +112,6 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     topratedproduct: "no",
     productoffer: "no",
   });
-  const [filters, setFilters] = useState<
-    { name: string; label: string; options: any[] }[]
-  >([]);
   const [previews, setPreviews] = useState<Record<string, string>>({});
   const [isLoadingFilters, setIsLoadingFilters] = useState(true);
   const [filterErrors, setFilterErrors] = useState<Record<string, string>>({});
@@ -159,60 +166,17 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     }
   }, []);
 
-  // 1) only fetch TOP-LEVELs on mount
-  useEffect(() => {
-    (async () => {
-      setIsLoadingFilters(true);
-      // Extract token as before
-      const adminCookie = typeof window !== "undefined" ? Cookies.get("admin") : null;
-      let token = "";
-      if (adminCookie) {
-        try {
-          const adminObj = JSON.parse(adminCookie);
-          token = adminObj.accessToken;
-        } catch (e) {
-          token = "";
-        }
-      }
-      try {
-        const results = await Promise.all(
-          filterConfig.map(f =>
-            fetch(BASE_URL + f.api, { headers: { Authorization: `Bearer ${token}` } })
-              .then(r => r.json())
-              .then(j => j.data || [])
-          )
-        );
-        setFilters(
-          filterConfig.map((f, i) => ({
-            name:    f.name,
-            label:   f.label,
-            options: results[i],
-          }))
-        );
-      } catch {
-        // handle errors into filterErrors as before
-      } finally {
-        setIsLoadingFilters(false);
-      }
-    })();
-  }, []);
-
-  // Fetch sub-filter options on mount
-  useEffect(() => {
-    fetch('https://adorable-gentleness-production.up.railway.app/api/substructure/view')
-      .then(res => res.json())
-      .then(data => setSubstructureOptions(data.data || []));
-  }, []);
-  useEffect(() => {
-    fetch('https://adorable-gentleness-production.up.railway.app/api/subfinish/view')
-      .then(res => res.json())
-      .then(data => setSubfinishOptions(data.data || []));
-  }, []);
-  useEffect(() => {
-    fetch('https://adorable-gentleness-production.up.railway.app/api/subsuitable/view')
-      .then(res => res.json())
-      .then(data => setSubsuitableforOptions(data.data || []));
-  }, []);
+  // Use RTK Query hooks for dropdowns
+  const { data: categories, isLoading: isLoadingCategories } = useGetAllNewCategoriesQuery();
+  const { data: structures, isLoading: isLoadingStructures } = useGetAllStructuresQuery();
+  const { data: contents, isLoading: isLoadingContents } = useGetAllContentQuery();
+  const { data: finishes, isLoading: isLoadingFinishes } = useGetAllFinishQuery();
+  const { data: designs, isLoading: isLoadingDesigns } = useGetAllDesignQuery();
+  const { data: colors, isLoading: isLoadingColors } = useGetAllColorQuery();
+  const { data: motifs, isLoading: isLoadingMotifs } = useGetAllMotifQuery();
+  const { data: suitableFors, isLoading: isLoadingSuitableFors } = useGetAllSuitableForQuery();
+  const { data: vendors, isLoading: isLoadingVendors } = useGetAllVendorsQuery();
+  const { data: groupCodes, isLoading: isLoadingGroupCodes } = useGetAllGroupCodesQuery();
 
   // 2) hydrate formData ONLY after filters & productDetail are both ready
   useEffect(() => {
@@ -250,9 +214,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
   useEffect(() => {
     const parentId = formData.structureId;
     if (!parentId) {
-      setFilters(fs =>
-        fs.map(f => f.name === "subStructureId" ? { ...f, options: [] } : f)
-      );
+      setSubstructureOptions([]);
       return;
     }
     // Extract token as before
@@ -270,9 +232,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
       .then(r => r.json())
       .then(j => {
         const opts = (j.data || []).filter((item: any) => item.structureId === parentId);
-        setFilters(fs =>
-          fs.map(f => f.name === "subStructureId" ? { ...f, options: opts } : f)
-        );
+        setSubstructureOptions(opts);
       })
       .catch(() => {
         setFilterErrors(e => ({ ...e, ["subStructureId"]: `Failed to load subStructureId` }));
@@ -283,9 +243,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
   useEffect(() => {
     const parentId = formData.finishId;
     if (!parentId) {
-      setFilters(fs =>
-        fs.map(f => f.name === "subFinishId" ? { ...f, options: [] } : f)
-      );
+      setSubfinishOptions([]);
       return;
     }
     // Extract token as before
@@ -303,9 +261,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
       .then(r => r.json())
       .then(j => {
         const opts = (j.data || []).filter((item: any) => item.finishId === parentId);
-        setFilters(fs =>
-          fs.map(f => f.name === "subFinishId" ? { ...f, options: opts } : f)
-        );
+        setSubfinishOptions(opts);
       })
       .catch(() => {
         setFilterErrors(e => ({ ...e, ["subFinishId"]: `Failed to load subFinishId` }));
@@ -316,9 +272,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
   useEffect(() => {
     const parentId = formData.suitableforId;
     if (!parentId) {
-      setFilters(fs =>
-        fs.map(f => f.name === "subSuitableId" ? { ...f, options: [] } : f)
-      );
+      setSubsuitableforOptions([]);
       return;
     }
     // Extract token as before
@@ -336,9 +290,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
       .then(r => r.json())
       .then(j => {
         const opts = (j.data || []).filter((item: any) => item.suitableforId === parentId);
-        setFilters(fs =>
-          fs.map(f => f.name === "subSuitableId" ? { ...f, options: opts } : f)
-        );
+        setSubsuitableforOptions(opts);
       })
       .catch(() => {
         setFilterErrors(e => ({ ...e, ["subSuitableId"]: `Failed to load subSuitableId` }));
@@ -414,17 +366,12 @@ export default function AddProductForm({ productId }: { productId?: string }) {
       { name: "oz", label: "OZ" },
       { name: "cm", label: "Width (CM)" },
       { name: "inch", label: "Width (Inch)" },
-      { name: "quantity", label: "Quantity" },
       { name: "um", label: "Unit (UM)" },
       { name: "currency", label: "Currency" },
       { name: "finishId", label: "Finish" },
       { name: "designId", label: "Design" },
       { name: "colorId", label: "Color" },
-      { name: "css", label: "CSS" },
       { name: "motifsizeId", label: "Motif Size" },
-      { name: "suitableforId", label: "Suitable For" },
-      { name: "vendorId", label: "Vendor" },
-      { name: "groupcodeId", label: "Group Code" },
       { name: "purchasePrice", label: "Purchase Price" },
       { name: "salesPrice", label: "Sales Price" },
       { name: "locationCode", label: "Location Code" },
@@ -488,6 +435,25 @@ export default function AddProductForm({ productId }: { productId?: string }) {
     ["popularproduct", "topratedproduct", "productoffer"].forEach(field => {
       if (cleanedFormData[field] !== "yes" && cleanedFormData[field] !== "no") {
         cleanedFormData[field] = "no"; // Default to "no" if invalid
+      }
+    });
+
+    // Safely set specific fields to null if empty or undefined
+    const nullableFields = [
+      "css",
+      "locationCode",
+      "quantity",
+      "groupcodeId",
+      "suitableforId",
+      "subsuitableforId",
+      "vendorId",
+      "uniqueCode",
+    ];
+    nullableFields.forEach(field => {
+      if (Object.prototype.hasOwnProperty.call(cleanedFormData, field)) {
+        if (cleanedFormData[field] === "" || cleanedFormData[field] === undefined) {
+          cleanedFormData[field] = null;
+        }
       }
     });
     
@@ -666,12 +632,11 @@ export default function AddProductForm({ productId }: { productId?: string }) {
               htmlFor="css"
               className="block font-bold text-gray-800 text-lg mb-2"
             >
-              CSS <span className="text-red-500">*</span>
+              CSS
             </label>
             <input
               id="css"
               name="css"
-              required
               value={formData.css || ""}
               onChange={handleInputChange}
               className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
@@ -684,13 +649,12 @@ export default function AddProductForm({ productId }: { productId?: string }) {
               htmlFor="quantity"
               className="block font-bold text-gray-800 text-lg mb-2"
             >
-              Quantity <span className="text-red-500">*</span>
+              Quantity
             </label>
             <input
               id="quantity"
               name="quantity"
               type="number"
-              required
               value={formData.quantity || ""}
               onChange={handleInputChange}
               className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
@@ -866,44 +830,188 @@ export default function AddProductForm({ productId }: { productId?: string }) {
           </div>
 
           {/* Dynamic filters */}
-          {filters.map((f) => (
-            <div key={f.name} className="mb-6">
-              <label
-                htmlFor={f.name}
-                className="block font-bold text-gray-800 text-lg mb-2"
-              >
-                {f.label} <span className="text-red-500">*</span>
-              </label>
-              <select
-                id={f.name}
-                name={f.name}
-                required
-                value={formData[f.name] || ""}
-                onChange={handleInputChange}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
-              >
-                <option value="">Select {f.label}</option>
-                {f.options.map((o: any) => (
-                  <option key={o._id} value={o._id}>
-                    {o.name}
-                  </option>
-                ))}
-              </select>
+          <div className="mb-6">
+            <label htmlFor="newCategoryId" className="block font-bold text-gray-800 text-lg mb-2">
+              Category <span className="text-red-500">*</span>
+            </label>
+            <select
+              id="newCategoryId"
+              name="newCategoryId"
+              value={formData.newCategoryId || ""}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+            >
+              <option value="">Select Category</option>
+              {categories?.data?.map((cat) => (
+                <option key={cat._id} value={cat._id}>{cat.name}</option>
+              ))}
+            </select>
+          </div>
 
-              {/* Show related products for Group Code */}
-              {f.name === "groupcodeId" && (
-                <>
-                  <div className="text-md text-blue-600 mt-1 mb-2">
-                    💡 Group Code helps organize related products. When selected,
-                    you&apos;ll see other products with the same group code below.
-                  </div>
-                  {formData[f.name] && (
-                    <RelatedProducts groupcodeId={formData[f.name]} />
-                  )}
-                </>
-              )}
-            </div>
-          ))}
+          <div className="mb-6">
+            <label htmlFor="structureId" className="block font-bold text-gray-800 text-lg mb-2">
+              Structure <span className="text-red-500">*</span>
+            </label>
+            <select
+              id="structureId"
+              name="structureId"
+              value={formData.structureId || ""}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+            >
+              <option value="">Select Structure</option>
+              {structures?.data?.map((s) => (
+                <option key={s._id} value={s._id}>{s.name}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="mb-6">
+            <label htmlFor="contentId" className="block font-bold text-gray-800 text-lg mb-2">
+              Content <span className="text-red-500">*</span>
+            </label>
+            <select
+              id="contentId"
+              name="contentId"
+              value={formData.contentId || ""}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+            >
+              <option value="">Select Content</option>
+              {contents?.data?.map((c) => (
+                <option key={c._id} value={c._id}>{c.name}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="mb-6">
+            <label htmlFor="finishId" className="block font-bold text-gray-800 text-lg mb-2">
+              Finish <span className="text-red-500">*</span>
+            </label>
+            <select
+              id="finishId"
+              name="finishId"
+              value={formData.finishId || ""}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+            >
+              <option value="">Select Finish</option>
+              {finishes?.data?.map((f) => (
+                <option key={f._id} value={f._id}>{f.name}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="mb-6">
+            <label htmlFor="designId" className="block font-bold text-gray-800 text-lg mb-2">
+              Design <span className="text-red-500">*</span>
+            </label>
+            <select
+              id="designId"
+              name="designId"
+              value={formData.designId || ""}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+            >
+              <option value="">Select Design</option>
+              {designs?.data?.map((d) => (
+                <option key={d._id} value={d._id}>{d.name}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="mb-6">
+            <label htmlFor="colorId" className="block font-bold text-gray-800 text-lg mb-2">
+              Color <span className="text-red-500">*</span>
+            </label>
+            <select
+              id="colorId"
+              name="colorId"
+              value={formData.colorId || ""}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+            >
+              <option value="">Select Color</option>
+              {colors?.data?.map((c) => (
+                <option key={c._id} value={c._id}>{c.name}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="mb-6">
+            <label htmlFor="motifsizeId" className="block font-bold text-gray-800 text-lg mb-2">
+              Motif Size <span className="text-red-500">*</span>
+            </label>
+            <select
+              id="motifsizeId"
+              name="motifsizeId"
+              value={formData.motifsizeId || ""}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+            >
+              <option value="">Select Motif Size</option>
+              {motifs?.data?.map((m) => (
+                <option key={m._id} value={m._id}>{m.name}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="mb-6">
+            <label htmlFor="suitableforId" className="block font-bold text-gray-800 text-lg mb-2">
+              Suitable For <span className="text-red-500">*</span>
+            </label>
+            <select
+              id="suitableforId"
+              name="suitableforId"
+              value={formData.suitableforId || ""}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+            >
+              <option value="">Select Suitable For</option>
+              {suitableFors?.data?.map((s) => (
+                <option key={s._id} value={s._id}>{s.name}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="mb-6">
+            <label htmlFor="vendorId" className="block font-bold text-gray-800 text-lg mb-2">
+              Vendor
+            </label>
+            <select
+              id="vendorId"
+              name="vendorId"
+              value={formData.vendorId || ""}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+            >
+              <option value="">Select Vendor</option>
+              {vendors?.data?.map((v) => (
+                <option key={v._id} value={v._id}>{v.name}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="mb-6">
+            <label htmlFor="groupcodeId" className="block font-bold text-gray-800 text-lg mb-2">
+              Group Code
+            </label>
+            <select
+              id="groupcodeId"
+              name="groupcodeId"
+              value={formData.groupcodeId || ""}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base bg-white"
+            >
+              <option value="">Select Group Code</option>
+              {groupCodes?.data?.map((g) => (
+                <option key={g._id} value={g._id}>{g.name}</option>
+              ))}
+            </select>
+            {formData.groupcodeId && (
+              <RelatedProducts groupcodeId={formData.groupcodeId} />
+            )}
+          </div>
 
           {/* Sub Structure */}
           <div className="mb-6">

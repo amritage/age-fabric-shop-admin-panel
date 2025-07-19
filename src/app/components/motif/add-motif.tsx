@@ -2,8 +2,9 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { IMotif } from "@/types/motif-type";
-import { useAddMotifMutation } from "@/redux/motif/motifApi";
+import { useAddMotifMutation, useGetAllMotifQuery } from "@/redux/motif/motifApi";
 import GlobalImgUpload from "@/app/components/structure/global-img-upload";
+import { notifySuccess, notifyError } from "@/utils/toast";
 
 export default function AddMotif() {
   const {
@@ -13,12 +14,19 @@ export default function AddMotif() {
     formState: { errors, isSubmitting },
   } = useForm<IMotif>({ mode: "onSubmit" });
   const [addMotif] = useAddMotifMutation();
+  const { refetch } = useGetAllMotifQuery();
   const [img, setImg] = useState<string>("");
 
   const onSubmit = async (vals: IMotif) => {
-    await addMotif({ name: vals.name, img }).unwrap();
-    reset();
-    setImg("");
+    try {
+      await addMotif({ name: vals.name, img }).unwrap();
+      notifySuccess("Motif added successfully!");
+      await refetch();
+      reset();
+      setImg("");
+    } catch (error: any) {
+      notifyError(error?.data?.message || "Failed to add motif.");
+    }
   };
 
   return (

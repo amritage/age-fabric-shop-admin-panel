@@ -14,7 +14,7 @@ import DeleteTooltip from "../tooltip/delete-tooltip";
 import { Edit, Delete } from "@/svg";
 
 export default function SuitableForTable() {
-  const { data, isLoading, isError } = useGetAllSuitableForQuery();
+  const { data, isLoading, isError } = useGetAllSuitableForQuery(undefined, { pollingInterval: 5000 });
   const [deleteSuitableFor] = useDeleteSuitableForMutation();
   const [showEdit, setShowEdit] = React.useState<string | null>(null);
   const [showDelete, setShowDelete] = React.useState<string | null>(null);

@@ -1,27 +1,35 @@
 "use client";
 import React, { useRef } from "react";
 import { useForm } from "react-hook-form";
-import { useAddGroupCodeMutation } from "../../../redux/group-code/group-code-api";
+import { useAddGroupCodeMutation, useGetAllGroupCodesQuery } from "../../../redux/group-code/group-code-api";
+import { notifySuccess, notifyError } from "@/utils/toast";
 
 export default function AddGroupCode() {
   const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm();
   const [addGroupCode] = useAddGroupCodeMutation();
+  const { refetch } = useGetAllGroupCodesQuery();
   const imageRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLInputElement>(null);
 
   const onSubmit = async (vals: any) => {
-    const formData = new FormData();
-    formData.append("name", vals.name);
-    if (imageRef.current?.files?.[0]) {
-      formData.append("image", imageRef.current.files[0]);
+    try {
+      const formData = new FormData();
+      formData.append("name", vals.name);
+      if (imageRef.current?.files?.[0]) {
+        formData.append("image", imageRef.current.files[0]);
+      }
+      if (videoRef.current?.files?.[0]) {
+        formData.append("video", videoRef.current.files[0]);
+      }
+      await addGroupCode(formData).unwrap();
+      notifySuccess("Group Code added successfully!");
+      await refetch();
+      reset();
+      if (imageRef.current) imageRef.current.value = "";
+      if (videoRef.current) videoRef.current.value = "";
+    } catch (error: any) {
+      notifyError(error?.data?.message || "Failed to add group code.");
     }
-    if (videoRef.current?.files?.[0]) {
-      formData.append("video", videoRef.current.files[0]);
-    }
-    await addGroupCode(formData).unwrap();
-    reset();
-    if (imageRef.current) imageRef.current.value = "";
-    if (videoRef.current) videoRef.current.value = "";
   };
 
   return (

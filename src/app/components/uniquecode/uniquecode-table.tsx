@@ -16,7 +16,7 @@ import { Edit, Delete } from "@/svg";
 
 export default function UniqueCodeTable() {
   // 🔑 Note the plural hook name here:
-  const { data, isLoading, isError } = useGetAllUniqueCodesQuery();
+  const { data, isLoading, isError } = useGetAllUniqueCodesQuery(undefined, { pollingInterval: 5000 });
   const [deleteUniqueCode] = useDeleteUniqueCodeMutation();
   const [showEdit, setShowEdit] = React.useState<string | null>(null);
   const [showDelete, setShowDelete] = React.useState<string | null>(null);

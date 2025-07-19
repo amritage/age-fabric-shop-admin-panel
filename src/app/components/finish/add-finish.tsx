@@ -2,8 +2,9 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { IFinish } from "@/types/finish-type";
-import { useAddFinishMutation } from "@/redux/finish/finishApi";
+import { useAddFinishMutation, useGetAllFinishQuery } from "@/redux/finish/finishApi";
 import GlobalImgUpload from "@/app/components/structure/global-img-upload";
+import { notifySuccess, notifyError } from "@/utils/toast";
 
 export default function AddFinish() {
   const {
@@ -13,12 +14,19 @@ export default function AddFinish() {
     formState: { errors, isSubmitting },
   } = useForm<IFinish>({ mode: "onSubmit" });
   const [addFinish] = useAddFinishMutation();
+  const { refetch } = useGetAllFinishQuery();
   const [img, setImg] = useState<string>("");
 
   const onSubmit = async (vals: IFinish) => {
-    await addFinish({ name: vals.name, img }).unwrap();
-    reset();
-    setImg("");
+    try {
+      await addFinish({ name: vals.name, img }).unwrap();
+      notifySuccess("Finish added successfully!");
+      await refetch();
+      reset();
+      setImg("");
+    } catch (error: any) {
+      notifyError(error?.data?.message || "Failed to add finish.");
+    }
   };
 
   return (

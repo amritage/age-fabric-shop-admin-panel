@@ -16,7 +16,7 @@ import DeleteTooltip from "../tooltip/delete-tooltip";
 import { Edit, Delete } from "@/svg";
 
 export default function ColorTable() {
-  const { data, isLoading, isError } = useGetAllColorQuery();
+  const { data, isLoading, isError } = useGetAllColorQuery(undefined, { pollingInterval: 5000 });
   const [deleteColor] = useDeleteColorMutation();
   const [showEdit, setShowEdit] = React.useState<string | null>(null);
   const [showDelete, setShowDelete] = React.useState<string | null>(null);

@@ -8,7 +8,7 @@ import {
 import SubstructureEditDelete from "./edit-delete-substructure";
 
 export default function SubstructureTable() {
-  const { data, isLoading, isError } = useGetAllSubstructuresQuery();
+  const { data, isLoading, isError } = useGetAllSubstructuresQuery(undefined, { pollingInterval: 5000 });
   const [deleteSub] = useDeleteSubstructureMutation();
 
   if (isLoading) return <div>Loading...</div>;

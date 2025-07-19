@@ -17,7 +17,7 @@ interface NewCategoryTableProps {
 }
 
 const NewCategoryTable: React.FC<NewCategoryTableProps> = ({ onEditClick }) => {
-  const { data, isLoading, isError } = useGetAllNewCategoriesQuery();
+  const { data, isLoading, isError } = useGetAllNewCategoriesQuery(undefined, { pollingInterval: 5000 });
   const [deleteNewCategory] = useDeleteNewCategoryMutation();
   const [showEdit, setShowEdit] = React.useState<string | null>(null);
   const [showDelete, setShowDelete] = React.useState<string | null>(null);

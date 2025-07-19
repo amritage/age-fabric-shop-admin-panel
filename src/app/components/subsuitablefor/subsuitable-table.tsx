@@ -14,7 +14,7 @@ import { Edit, Delete } from "@/svg";
 import Link from "next/link";
 
 export default function SubSuitableForTable() {
-  const { data, isLoading, isError } = useGetAllSubSuitableForQuery();
+  const { data, isLoading, isError } = useGetAllSubSuitableForQuery(undefined, { pollingInterval: 5000 });
   const [deleteSSF] = useDeleteSubSuitableForMutation();
   const [showEdit, setShowEdit] = React.useState<string | null>(null);
   const [showDelete, setShowDelete] = React.useState<string | null>(null);

@@ -137,27 +137,19 @@ export default function MetadataForm({
       "oz",
       "cm",
       "inch",
-      "quantity",
       "um",
       "currency",
       "finishId",
       "designId",
       "colorId",
-      "css",
       "motifsizeId",
-      "suitableforId",
-      "vendorId",
-      "groupcodeId",
       "purchasePrice",
       "salesPrice",
       "locationCode",
       "productIdentifier",
       "title",
       "description",
-      "keywords",
       "ogTitle",
-      "ogDescription",
-      "ogUrl",
     ];
 
     const missingFields = requiredFields.filter((field) => !meta[field]);
@@ -189,7 +181,23 @@ export default function MetadataForm({
       meta[field] = Number(meta[field]);
     });
 
-    // Call the parent onSubmit function
+    // Ensure these fields are always present and set to null if empty
+    [
+      "css",
+      "vendorId",
+      "groupcodeId",
+      "keywords",
+      "ogDescription",
+      "ogUrl",
+      "quantity",
+      "suitableforId",
+      "subsuitableforId",
+      "uniqueCode"
+    ].forEach(field => {
+      if (meta[field] === "" || meta[field] === undefined) {
+        meta[field] = null;
+      }
+    });
     await onSubmit(meta);
   };
 

@@ -15,7 +15,7 @@ import DeleteTooltip from "../tooltip/delete-tooltip";
 import { Edit, Delete } from "@/svg";
 
 export default function DesignTable() {
-  const { data, isLoading, isError } = useGetAllDesignQuery();
+  const { data, isLoading, isError } = useGetAllDesignQuery(undefined, { pollingInterval: 5000 });
   const [deleteDesign] = useDeleteDesignMutation();
   const [showEdit, setShowEdit] = React.useState<string | null>(null);
   const [showDelete, setShowDelete] = React.useState<string | null>(null);
