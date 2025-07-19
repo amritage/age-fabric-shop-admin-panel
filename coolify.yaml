@@ -1,0 +1,8 @@
+services:
+  - name: e-bazar-admin
+    type: docker
+    dockerfile: Dockerfile       # Path to your Dockerfile
+    port: 3000                   # Next.js default port
+    env:
+      NEXT_PUBLIC_API_BASE_URL: https://adorable-gentleness-production.up.railway.app
+    
