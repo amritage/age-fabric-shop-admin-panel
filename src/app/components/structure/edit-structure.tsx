@@ -8,6 +8,7 @@ import {
 } from "@/redux/structure/structureApi";
 import ErrorMsg from "@/app/components/common/error-msg";
 import GlobalImgUpload from "@/app/components/structure/global-img-upload";
+import { notifySuccess } from "@/utils/toast";
 
 interface FormValues {
   name: string;
@@ -38,15 +39,14 @@ export default function EditStructure({ id, onDone }: EditStructureProps) {
     formState: { errors },
   } = useForm<FormValues>();
 
-  const [image, setImage] = useState<string>("");
+  // Removed image state and logic
   const [submitAttempted, setSubmitAttempted] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
-  // When data arrives, prefill name and image
+  // When data arrives, prefill name
   useEffect(() => {
     if (data?.data) {
       setValue("name", data.data.name || "");
-      setImage(data.data.img || "");
       setErrorMessage(""); // Clear error when new data is loaded
     }
   }, [data, setValue]);
@@ -58,9 +58,10 @@ export default function EditStructure({ id, onDone }: EditStructureProps) {
     try {
       await updateStructure({
         id: id!,
-        changes: { name: values.name, img: image },
+        changes: { name: values.name }, // Removed img from update
       }).unwrap();
       setErrorMessage(""); // Clear error on success
+      notifySuccess("Structure updated successfully!");
       onDone();
     } catch (err: any) {
       setErrorMessage(
@@ -76,15 +77,7 @@ export default function EditStructure({ id, onDone }: EditStructureProps) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      {/* Image Upload */}
-      <GlobalImgUpload
-        setImage={setImage}
-        isSubmitted={submitAttempted}
-        default_img={data.data.img}
-        image={image}
-        setIsSubmitted={setSubmitAttempted}
-      />
-
+      {/* Removed GlobalImgUpload */}
       {/* Name Field */}
       <div>
         <label className="block mb-1 text-sm font-medium text-gray-700">
@@ -110,7 +103,7 @@ export default function EditStructure({ id, onDone }: EditStructureProps) {
         disabled={isUpdating}
         className="w-full px-4 py-2 font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:opacity-50"
       >
-        {isUpdating ? "Updating…" : "Save Changes"}
+        Update Structure
       </button>
     </form>
   );

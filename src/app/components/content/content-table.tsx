@@ -53,7 +53,7 @@ export default function ContentTable() {
       <table className="w-full text-left">
         <thead>
           <tr>
-            <th className="py-2">Image</th>
+            {/* Removed Image column */}
             <th className="py-2">Name</th>
             <th className="py-2">Actions</th>
           </tr>
@@ -61,27 +61,14 @@ export default function ContentTable() {
         <tbody>
           {!data || !data.data || data.data.length === 0 ? (
             <tr>
-              <td colSpan={3} className="text-center text-gray-500 py-4">
+              <td colSpan={2} className="text-center text-gray-500 py-4">
                 No content found.
               </td>
             </tr>
           ) : (
             data.data.map((c: IContent) => (
               <tr key={c._id}>
-                <td className="py-2">
-                  {c.img && (
-                    <Image
-                      src={c.img}
-                      alt={c.name}
-                      width={48}
-                      height={48}
-                      className="object-cover rounded"
-                      // Optional: use a placeholder blur if you have a blurDataURL
-                      // placeholder="blur"
-                      // blurDataURL={c.blurDataURL}
-                    />
-                  )}
-                </td>
+                {/* Removed image cell */}
                 <td className="py-2">{c.name}</td>
                 <td className="py-2 flex space-x-2">
                   <div className="flex space-x-2">

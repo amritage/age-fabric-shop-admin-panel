@@ -16,15 +16,14 @@ export default function AddColor() {
   } = useForm<IColor>();
   const [addColor] = useAddColorMutation();
   const { refetch } = useGetAllColorQuery();
-  const [img, setImg] = useState<string>("");
+  // Removed image state and logic
 
   const onSubmit = async (vals: IColor) => {
     try {
-      await addColor({ name: vals.name, css: vals.css, img }).unwrap();
+      await addColor({ name: vals.name, css: vals.css }).unwrap();
       notifySuccess("Color added successfully!");
       await refetch();
       reset();
-      setImg("");
     } catch (error: any) {
       notifyError(error?.data?.message || "Failed to add color.");
     }
@@ -35,12 +34,7 @@ export default function AddColor() {
       onSubmit={handleSubmit(onSubmit)}
       className="bg-white px-8 py-8 rounded-md"
     >
-      <GlobalImgUpload
-        image={img}
-        setImage={setImg}
-        isSubmitted={isSubmitting}
-      />
-
+      {/* Removed GlobalImgUpload */}
       {/* Name */}
       <div className="mb-6">
         <p className="mb-0 text-base text-black">Name</p>

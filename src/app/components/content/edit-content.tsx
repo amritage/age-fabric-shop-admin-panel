@@ -5,9 +5,9 @@ import {
   useGetContentQuery,
   useUpdateContentMutation,
 } from "@/redux/content/contentApi";
-import GlobalImgUpload from "@/app/components/structure/global-img-upload";
 import ErrorMsg from "@/app/components/common/error-msg";
 import { IContent } from "@/types/content-type";
+import { notifySuccess } from "@/utils/toast";
 
 interface EditContentProps {
   id: string;
@@ -33,14 +33,13 @@ export default function EditContent({ id, onDone }: EditContentProps) {
     formState: { errors },
   } = useForm<IContent>({ mode: "onSubmit" });
 
-  const [img, setImg] = useState<string>("");
+  // Removed image state and logic
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   // Prefill form when data arrives
   useEffect(() => {
     if (data?.data) {
       setValue("name", data.data.name);
-      setImg(data.data.img || "");
     }
   }, [data, setValue]);
 
@@ -50,8 +49,9 @@ export default function EditContent({ id, onDone }: EditContentProps) {
     try {
       await updateContent({
         id: id!,
-        changes: { name: vals.name, img },
+        changes: { name: vals.name },
       }).unwrap();
+      notifySuccess("Content updated successfully!");
       onDone();
     } catch (err: any) {
       setErrorMessage(err?.data?.message || "Failed to update content.");
@@ -63,9 +63,7 @@ export default function EditContent({ id, onDone }: EditContentProps) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      {/* Image Upload */}
-      <GlobalImgUpload image={img} setImage={setImg} isSubmitted={isUpdating} />
-
+      {/* Removed GlobalImgUpload */}
       {/* Name Field */}
       <div>
         <label className="block mb-1 text-sm font-medium text-gray-700">

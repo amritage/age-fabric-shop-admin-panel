@@ -191,8 +191,7 @@ export default function MetadataForm({
       "ogUrl",
       "quantity",
       "suitableforId",
-      "subsuitableforId",
-      "uniqueCode"
+      "subsuitableforId"
     ].forEach(field => {
       if (meta[field] === "" || meta[field] === undefined) {
         meta[field] = null;

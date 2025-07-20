@@ -1,13 +1,14 @@
 "use client";
 
 import React from "react";
-import { useParams } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import Wrapper from "@/layout/wrapper";
 import Breadcrumb from "@/app/components/breadcrumb/breadcrumb";
 import EditStructure from "@/app/components/structure/edit-structure";
 
 export default function EditStructurePage() {
   const { id } = useParams();
+  const router = useRouter();
   const idStr = Array.isArray(id) ? id[0] : id;
 
   if (!idStr) {
@@ -28,9 +29,7 @@ export default function EditStructurePage() {
         {/* Center the form in a card */}
         <div className="mt-6 flex justify-center">
           <div className="w-full max-w-md bg-white rounded-md shadow p-8">
-            <EditStructure id={idStr} onDone={function (): void {
-              throw new Error("Function not implemented.");
-            } } />
+            <EditStructure id={idStr} onDone={() => router.push("/structure")} />
           </div>
         </div>
       </div>

@@ -52,7 +52,6 @@ export default function VendorTable() {
       <table className="w-full text-left">
         <thead>
           <tr>
-            <th className="py-2">Image</th>
             <th className="py-2">Name</th>
             <th className="py-2">Actions</th>
           </tr>
@@ -60,24 +59,13 @@ export default function VendorTable() {
         <tbody>
           {!data || !data.data || data.data.length === 0 ? (
             <tr>
-              <td colSpan={3} className="text-center text-gray-500 py-4">
+              <td colSpan={2} className="text-center text-gray-500 py-4">
                 No vendors found.
               </td>
             </tr>
           ) : (
             data?.data?.map((v: IVendor) => (
               <tr key={v._id}>
-                <td className="py-2">
-                  {v.img && (
-                    <Image
-                      src={v.img}
-                      alt={v.name}
-                      width={48}
-                      height={48}
-                      className="w-12 h-12 object-cover rounded"
-                    />
-                  )}
-                </td>
                 <td className="py-2">{v.name}</td>
                 <td className="py-2 flex space-x-2">
                   <div className="flex space-x-2">

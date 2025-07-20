@@ -5,7 +5,6 @@ import {
   useGetAllSubSuitableForQuery,
   useDeleteSubSuitableForMutation,
 } from "@/redux/subsuitablefor/subsuitableApi";
-import { useGetAllSuitableForQuery } from "@/redux/suitablefor/suitableforApi";
 import Swal from "sweetalert2";
 import { notifyError } from "@/utils/toast";
 import EditTooltip from "../tooltip/edit-tooltip";
@@ -18,13 +17,6 @@ export default function SubSuitableForTable() {
   const [deleteSSF] = useDeleteSubSuitableForMutation();
   const [showEdit, setShowEdit] = React.useState<string | null>(null);
   const [showDelete, setShowDelete] = React.useState<string | null>(null);
-  const { data: suitableForOptions } = useGetAllSuitableForQuery();
-
-  const getParentName = (id: string) => {
-    if (!suitableForOptions?.data) return "—";
-    const parent = suitableForOptions.data.find((p) => p._id === id);
-    return parent ? parent.name : "—";
-  };
 
   const handleDelete = async (id: string) => {
     const result = await Swal.fire({
@@ -75,9 +67,7 @@ export default function SubSuitableForTable() {
             data.data.map((ssf: ISubSuitableFor) => (
               <tr key={ssf._id}>
                 <td className="py-2">{ssf.name}</td>
-                <td className="py-2">
-                  {getParentName(ssf.suitableforId)}
-                </td>
+                <td className="py-2">{ssf.suitableforId?.name || "—"}</td>
                 <td className="py-2">
                   <div className="flex space-x-2">
                     <div className="relative">

@@ -9,6 +9,7 @@ import {
 import ErrorMsg from "@/app/components/common/error-msg";
 import { IGroupCode } from "@/types/group-code-type";
 import Image from "next/image";
+import { notifySuccess } from "@/utils/toast";
 
 interface EditGroupCodeProps {
   id: string;
@@ -76,6 +77,7 @@ export default function EditGroupCode({ id }: EditGroupCodeProps) {
       if (newImgFile) formData.append("image", newImgFile);
       if (newVideoFile) formData.append("video", newVideoFile);
       await updateGroupCode({ id: id!, changes: formData }).unwrap();
+      notifySuccess("Group Code updated successfully!");
       router.push("/group-code");
     } catch {
       // handle error if you want

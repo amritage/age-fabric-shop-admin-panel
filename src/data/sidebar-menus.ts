@@ -47,7 +47,6 @@ const sidebar_menu: Array<ISidebarMenus> = [
       { title: "Suitable For", link: "/suitable-for" },
       { title: "Sub Suitable For", link: "/subsuitablefor" },
       { title: "Vendor", link: "/vendor" },
-      { title: "Unique code", link: "/unique-code" },
       { title: "Group Code", link: "/group-code" },
     ],
   },

@@ -7,9 +7,9 @@ import {
   useGetColorQuery,
   useUpdateColorMutation,
 } from "@/redux/color/colorApi";
-import GlobalImgUpload from "@/app/components/structure/global-img-upload";
 import ErrorMsg from "@/app/components/common/error-msg";
 import { useParams, useRouter } from "next/navigation";
+import { notifySuccess } from "@/utils/toast";
 
 export default function EditColor() {
   const { id } = useParams();
@@ -26,14 +26,13 @@ export default function EditColor() {
     setValue,
     formState: { errors },
   } = useForm<IColor>();
-  const [img, setImg] = useState<string>("");
+  // Removed image state and logic
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   useEffect(() => {
     if (data?.data) {
       setValue("name", data.data.name);
       setValue("css", data.data.css);
-      setImg(data.data.img || "");
     }
   }, [data, setValue]);
 
@@ -42,8 +41,9 @@ export default function EditColor() {
     try {
       await updateColor({
         id: Array.isArray(id) ? id[0] : id || "",
-        changes: { name: vals.name, css: vals.css, img },
+        changes: { name: vals.name, css: vals.css },
       }).unwrap();
+      notifySuccess("Color updated successfully!");
       router.push("/colors");
     } catch (err: any) {
       setErrorMessage(err?.data?.message || "Failed to update color.");
@@ -58,8 +58,7 @@ export default function EditColor() {
       onSubmit={handleSubmit(onSubmit)}
       className="bg-white px-8 py-8 rounded-md space-y-6"
     >
-      <GlobalImgUpload image={img} setImage={setImg} isSubmitted={isUpdating} />
-
+      {/* Removed GlobalImgUpload */}
       <div>
         <p className="mb-0 text-base text-black">Name</p>
         <input

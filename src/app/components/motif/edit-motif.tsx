@@ -9,6 +9,7 @@ import {
 import GlobalImgUpload from "@/app/components/structure/global-img-upload";
 import ErrorMsg from "@/app/components/common/error-msg";
 import { IMotif } from "@/types/motif-type";
+import { notifySuccess } from "@/utils/toast";
 
 export default function EditMotif({ id }: { id: string }) {
   const { data, isLoading, isError } = useGetMotifQuery(id);
@@ -21,17 +22,17 @@ export default function EditMotif({ id }: { id: string }) {
     setValue,
     formState: { errors },
   } = useForm<IMotif>({ mode: "onSubmit" });
-  const [img, setImg] = useState<string>("");
+  // Removed image state and logic
 
   useEffect(() => {
     if (data) {
       setValue("name", data.data.name);
-      setImg(data.data.img || "");
     }
   }, [data, setValue]);
 
   const onSubmit = async (vals: IMotif) => {
-    await updateMotif({ id, changes: { name: vals.name, img } }).unwrap();
+    await updateMotif({ id, changes: { name: vals.name } }).unwrap();
+    notifySuccess("Motif updated successfully!");
     router.push("/motif");
   };
 
@@ -43,8 +44,7 @@ export default function EditMotif({ id }: { id: string }) {
       onSubmit={handleSubmit(onSubmit)}
       className="bg-white px-8 py-8 rounded-md"
     >
-      <GlobalImgUpload image={img} setImage={setImg} isSubmitted={isUpdating} />
-
+      {/* Removed GlobalImgUpload */}
       <div className="mb-6">
         <p className="mb-0 text-base text-black">Name</p>
         <input
@@ -56,7 +56,6 @@ export default function EditMotif({ id }: { id: string }) {
           <span className="text-red-500 text-sm">{errors.name.message}</span>
         )}
       </div>
-
       <button type="submit" disabled={isUpdating} className="tp-btn px-7 py-2">
         {isUpdating ? "Updating…" : "Edit Motif"}
       </button>

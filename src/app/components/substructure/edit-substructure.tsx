@@ -10,6 +10,7 @@ import { useGetAllStructuresQuery } from "@/redux/structure/structureApi";
 import ErrorMsg from "@/app/components/common/error-msg";
 import { ISubstructure } from "@/types/substructure-type";
 import { IStructureItem } from "@/types/structure-type";
+import { notifySuccess } from "@/utils/toast";
 
 type FormValues = {
   name: string;
@@ -52,6 +53,7 @@ export default function EditSubstructure({ id }: { id: string }) {
       id,
       changes: { name: vals.name, structureId: vals.structureId },
     }).unwrap();
+    notifySuccess("Substructure updated successfully!");
     router.back();
   };
 

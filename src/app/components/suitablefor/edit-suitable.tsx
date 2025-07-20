@@ -9,6 +9,7 @@ import {
 import GlobalImgUpload from "@/app/components/structure/global-img-upload";
 import ErrorMsg from "@/app/components/common/error-msg";
 import { ISuitableFor } from "@/types/suitable-for-type";
+import { notifySuccess } from "@/utils/toast";
 
 export default function EditSuitableFor({ id }: { id: string }) {
   const { data, isLoading, isError } = useGetSuitableForQuery(id);
@@ -22,17 +23,17 @@ export default function EditSuitableFor({ id }: { id: string }) {
     setValue,
     formState: { errors },
   } = useForm<ISuitableFor>({ mode: "onSubmit" });
-  const [img, setImg] = useState<string>("");
+  // Removed image state and logic
 
   useEffect(() => {
     if (data) {
       setValue("name", data.data.name);
-      setImg(data.data.img || "");
     }
   }, [data, setValue]);
 
   const onSubmit = async (vals: ISuitableFor) => {
-    await updateSuitableFor({ id, changes: { name: vals.name, img } }).unwrap();
+    await updateSuitableFor({ id, changes: { name: vals.name } }).unwrap();
+    notifySuccess("Suitable For updated successfully!");
     router.push("/suitable-for");
   };
 
@@ -44,8 +45,7 @@ export default function EditSuitableFor({ id }: { id: string }) {
       onSubmit={handleSubmit(onSubmit)}
       className="bg-white px-8 py-8 rounded-md"
     >
-      <GlobalImgUpload image={img} setImage={setImg} isSubmitted={isUpdating} />
-
+      {/* Removed GlobalImgUpload */}
       <div className="mb-6">
         <p className="mb-0 text-base text-black">Name</p>
         <input
@@ -57,7 +57,6 @@ export default function EditSuitableFor({ id }: { id: string }) {
           <span className="text-red-500 text-sm">{errors.name.message}</span>
         )}
       </div>
-
       <button type="submit" disabled={isUpdating} className="tp-btn px-7 py-2">
         {isUpdating ? "Updating…" : "Edit SuitableFor"}
       </button>

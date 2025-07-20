@@ -15,15 +15,14 @@ export default function AddDesign() {
   } = useForm<IDesign>({ mode: "onSubmit" });
   const [addDesign] = useAddDesignMutation();
   const { refetch } = useGetAllDesignQuery();
-  const [img, setImg] = useState<string>("");
+  // Removed image state and logic
 
   const onSubmit = async (vals: IDesign) => {
     try {
-      await addDesign({ name: vals.name, img }).unwrap();
+      await addDesign({ name: vals.name }).unwrap();
       notifySuccess("Design added successfully!");
       await refetch();
       reset();
-      setImg("");
     } catch (error: any) {
       notifyError(error?.data?.message || "Failed to add design.");
     }
@@ -34,12 +33,7 @@ export default function AddDesign() {
       onSubmit={handleSubmit(onSubmit)}
       className="bg-white px-8 py-8 rounded-md"
     >
-      <GlobalImgUpload
-        image={img}
-        setImage={setImg}
-        isSubmitted={isSubmitting}
-      />
-
+      {/* Removed GlobalImgUpload */}
       <div className="mb-6">
         <p className="mb-0 text-base text-black">Name</p>
         <input
@@ -51,7 +45,6 @@ export default function AddDesign() {
           <span className="text-red-500 text-sm">{errors.name.message}</span>
         )}
       </div>
-
       <button
         type="submit"
         disabled={isSubmitting}

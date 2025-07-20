@@ -15,15 +15,14 @@ export default function AddFinish() {
   } = useForm<IFinish>({ mode: "onSubmit" });
   const [addFinish] = useAddFinishMutation();
   const { refetch } = useGetAllFinishQuery();
-  const [img, setImg] = useState<string>("");
+  // Removed image state and logic
 
   const onSubmit = async (vals: IFinish) => {
     try {
-      await addFinish({ name: vals.name, img }).unwrap();
+      await addFinish({ name: vals.name }).unwrap();
       notifySuccess("Finish added successfully!");
       await refetch();
       reset();
-      setImg("");
     } catch (error: any) {
       notifyError(error?.data?.message || "Failed to add finish.");
     }
@@ -34,12 +33,7 @@ export default function AddFinish() {
       onSubmit={handleSubmit(onSubmit)}
       className="bg-white px-8 py-8 rounded-md"
     >
-      <GlobalImgUpload
-        image={img}
-        setImage={setImg}
-        isSubmitted={isSubmitting}
-      />
-
+      {/* Removed GlobalImgUpload */}
       <div className="mb-6">
         <p className="mb-0 text-base text-black">Name</p>
         <input
@@ -51,7 +45,6 @@ export default function AddFinish() {
           <span className="text-red-500 text-sm">{errors.name.message}</span>
         )}
       </div>
-
       <button
         type="submit"
         disabled={isSubmitting}

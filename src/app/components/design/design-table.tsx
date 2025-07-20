@@ -53,7 +53,7 @@ export default function DesignTable() {
       <table className="w-full text-left">
         <thead>
           <tr>
-            <th className="py-2">Image</th>
+            {/* Removed Image column */}
             <th className="py-2">Name</th>
             <th className="py-2">Actions</th>
           </tr>
@@ -61,27 +61,14 @@ export default function DesignTable() {
         <tbody>
           {!data || !data.data || data.data.length === 0 ? (
             <tr>
-              <td colSpan={3} className="text-center text-gray-500 py-4">
+              <td colSpan={2} className="text-center text-gray-500 py-4">
                 No designs found.
               </td>
             </tr>
           ) : (
             data.data.map((d: IDesign) => (
               <tr key={d._id}>
-                <td className="py-2">
-                  {d.img && (
-                    <Image
-                      src={d.img}
-                      alt={d.name}
-                      width={48}
-                      height={48}
-                      className="object-cover rounded"
-                      // Optional blur placeholder:
-                      // placeholder="blur"
-                      // blurDataURL={d.blurDataURL}
-                    />
-                  )}
-                </td>
+                {/* Removed image cell */}
                 <td className="py-2">{d.name}</td>
                 <td className="py-2 flex space-x-2">
                   <div className="flex space-x-2">

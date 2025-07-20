@@ -10,6 +10,7 @@ import {
 // ← RIGHT hook for parent dropdown:
 import { useGetAllSuitableForQuery } from "@/redux/suitablefor/suitableforApi";
 import ErrorMsg from "@/app/components/common/error-msg";
+import { notifySuccess } from "@/utils/toast";
 
 type FormVals = { name: string; suitableforId: string };
 
@@ -45,6 +46,7 @@ export default function EditSubSuitableFor({ id }: { id: string }) {
 
   const onSubmit = async (vals: FormVals) => {
     await updateSSF({ id, changes: vals }).unwrap();
+    notifySuccess("Sub-Suitable For updated successfully!");
     router.back();
   };
 

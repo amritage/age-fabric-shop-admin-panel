@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { IStructureItem } from "@/types/structure-type";
 import { useAddStructureMutation, useGetAllStructuresQuery } from "@/redux/structure/structureApi";
-import GlobalImgUpload from "../category/global-img-upload"; // Reuse if possible
 
 const AddStructure: React.FC = () => {
   const {
@@ -12,15 +11,15 @@ const AddStructure: React.FC = () => {
     reset,
     formState: { errors },
   } = useForm<IStructureItem>();
-  const [img, setImg] = useState<string>("");
+  // Removed image state and logic
   const [addStructure] = useAddStructureMutation();
   const { refetch } = useGetAllStructuresQuery();
 
   const onSubmit = async (data: IStructureItem) => {
-    await addStructure({ ...data, img });
+    // Removed img from submission
+    await addStructure({ ...data });
     await refetch();
     reset();
-    setImg("");
   };
 
   return (
@@ -28,7 +27,7 @@ const AddStructure: React.FC = () => {
       onSubmit={handleSubmit(onSubmit)}
       className="bg-white px-8 py-8 rounded-md"
     >
-      <GlobalImgUpload image={img} setImage={setImg} isSubmitted={false} />
+      {/* Removed GlobalImgUpload */}
       <div className="mb-6">
         <p className="mb-0 text-base text-black">Name</p>
         <input

@@ -55,7 +55,7 @@ export default function FinishTable() {
       <table className="w-full text-left">
         <thead>
           <tr>
-            <th className="py-2">Image</th>
+            {/* Removed Image column */}
             <th className="py-2">Name</th>
             <th className="py-2">Actions</th>
           </tr>
@@ -63,27 +63,14 @@ export default function FinishTable() {
         <tbody>
           {!data || !data.data || data.data.length === 0 ? (
             <tr>
-              <td colSpan={3} className="text-center text-gray-500 py-4">
+              <td colSpan={2} className="text-center text-gray-500 py-4">
                 No finish items found.
               </td>
             </tr>
           ) : (
             data.data.map((f: IFinish) => (
               <tr key={f._id}>
-                <td className="py-2">
-                  {f.img && (
-                    <Image
-                      src={f.img}
-                      alt={f.name}
-                      width={48}
-                      height={48}
-                      className="object-cover rounded"
-                      // optional placeholder blur:
-                      // placeholder="blur"
-                      // blurDataURL={f.blurDataURL}
-                    />
-                  )}
-                </td>
+                {/* Removed image cell */}
                 <td className="py-2">{f.name}</td>
                 <td className="py-2 flex space-x-2">
                   <div className="flex space-x-2">

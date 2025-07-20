@@ -9,6 +9,7 @@ import {
 import GlobalImgUpload from "@/app/components/structure/global-img-upload";
 import ErrorMsg from "@/app/components/common/error-msg";
 import { IVendor } from "@/types/vendor-type";
+import { notifySuccess } from "@/utils/toast";
 
 interface EditVendorProps {
   id: string;
@@ -34,13 +35,12 @@ export default function EditVendor({ id }: EditVendorProps) {
     setValue,
     formState: { errors },
   } = useForm<IVendor>({ mode: "onSubmit" });
-  const [img, setImg] = useState("");
+  // Removed image state and logic
 
   // 4) Prefill when data arrives
   useEffect(() => {
     if (data?.data) {
       setValue("name", data.data.name);
-      setImg(data.data.img || "");
     }
   }, [data, setValue]);
 
@@ -48,8 +48,9 @@ export default function EditVendor({ id }: EditVendorProps) {
     try {
       await updateVendor({
         id: id!,
-        changes: { name: vals.name, img },
+        changes: { name: vals.name },
       }).unwrap();
+      notifySuccess("Vendor updated successfully!");
       router.push("/vendor");
     } catch (e: any) {
       // you could set an error state here
@@ -64,8 +65,7 @@ export default function EditVendor({ id }: EditVendorProps) {
       onSubmit={handleSubmit(onSubmit)}
       className="bg-white px-8 py-8 rounded-md space-y-6"
     >
-      <GlobalImgUpload image={img} setImage={setImg} isSubmitted={isUpdating} />
-
+      {/* Removed GlobalImgUpload */}
       <div>
         <label className="block mb-1 text-sm font-medium text-gray-700">
           Name

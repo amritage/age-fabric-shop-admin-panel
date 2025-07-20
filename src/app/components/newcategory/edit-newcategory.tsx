@@ -11,6 +11,7 @@ import {
 import { useForm } from "react-hook-form";
 import { ICategory } from "@/types/newcategory-type";
 import GlobalImgUpload from "./global-img-upload";
+import { notifySuccess } from "@/utils/toast";
 
 export default function EditCategory() {
   const { id } = useParams();
@@ -63,6 +64,7 @@ export default function EditCategory() {
       fd.append("name", vals.name);
       if (imageFile) fd.append("image", imageFile);
       await updateCategory({ id: categoryId, changes: fd }).unwrap();
+      notifySuccess("Category updated successfully!");
       router.push("/newcategory");
       // Optionally navigate back or show a toast here
     } catch (err: any) {

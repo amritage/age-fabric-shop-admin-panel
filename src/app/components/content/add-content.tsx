@@ -16,15 +16,14 @@ export default function AddContent() {
   } = useForm<IContent>({ mode: "onSubmit" });
   const [addContent] = useAddContentMutation();
   const { refetch } = useGetAllContentQuery();
-  const [img, setImg] = useState<string>("");
+  // Removed image state and logic
 
   const onSubmit = async (vals: IContent) => {
     try {
-      await addContent({ name: vals.name, img }).unwrap();
+      await addContent({ name: vals.name }).unwrap();
       notifySuccess("Content added successfully!");
       await refetch();
       reset();
-      setImg("");
     } catch (error: any) {
       notifyError(error?.data?.message || "Failed to add content.");
     }
@@ -35,11 +34,7 @@ export default function AddContent() {
       onSubmit={handleSubmit(onSubmit)}
       className="bg-white px-8 py-8 rounded-md"
     >
-      <GlobalImgUpload
-        image={img}
-        setImage={setImg}
-        isSubmitted={isSubmitting}
-      />
+      {/* Removed GlobalImgUpload */}
       <div className="mb-6">
         <p className="mb-0 text-base text-black">Name</p>
         <input

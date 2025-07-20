@@ -15,15 +15,14 @@ export default function AddMotif() {
   } = useForm<IMotif>({ mode: "onSubmit" });
   const [addMotif] = useAddMotifMutation();
   const { refetch } = useGetAllMotifQuery();
-  const [img, setImg] = useState<string>("");
+  // Removed image state and logic
 
   const onSubmit = async (vals: IMotif) => {
     try {
-      await addMotif({ name: vals.name, img }).unwrap();
+      await addMotif({ name: vals.name }).unwrap();
       notifySuccess("Motif added successfully!");
       await refetch();
       reset();
-      setImg("");
     } catch (error: any) {
       notifyError(error?.data?.message || "Failed to add motif.");
     }
@@ -34,12 +33,7 @@ export default function AddMotif() {
       onSubmit={handleSubmit(onSubmit)}
       className="bg-white px-8 py-8 rounded-md"
     >
-      <GlobalImgUpload
-        image={img}
-        setImage={setImg}
-        isSubmitted={isSubmitting}
-      />
-
+      {/* Removed GlobalImgUpload */}
       <div className="mb-6">
         <p className="mb-0 text-base text-black">Name</p>
         <input
@@ -51,7 +45,6 @@ export default function AddMotif() {
           <span className="text-red-500 text-sm">{errors.name.message}</span>
         )}
       </div>
-
       <button
         type="submit"
         disabled={isSubmitting}

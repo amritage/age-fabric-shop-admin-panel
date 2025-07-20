@@ -13,12 +13,11 @@ export default function AddVendor() {
     formState: { errors, isSubmitting },
   } = useForm<IVendor>({ mode: "onSubmit" });
   const [addVendor] = useAddVendorMutation();
-  const [img, setImg] = useState<string>("");
+  // Removed image state and logic
 
   const onSubmit = async (vals: IVendor) => {
-    await addVendor({ name: vals.name, img }).unwrap();
+    await addVendor({ name: vals.name }).unwrap();
     reset();
-    setImg("");
   };
 
   return (
@@ -26,11 +25,7 @@ export default function AddVendor() {
       onSubmit={handleSubmit(onSubmit)}
       className="bg-white px-8 py-8 rounded-md"
     >
-      <GlobalImgUpload
-        image={img}
-        setImage={setImg}
-        isSubmitted={isSubmitting}
-      />
+      {/* Removed GlobalImgUpload */}
       <div className="mb-6">
         <p className="mb-0 text-base text-black">Name</p>
         <input

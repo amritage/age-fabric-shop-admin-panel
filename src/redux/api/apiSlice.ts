@@ -50,7 +50,6 @@ export const apiSlice = createApi({
     "SubFinish",
     "Substructure",
     "SubSuitableFor",
-    "UniqueCode",
     "Vendor",
     "Structure",
   ],

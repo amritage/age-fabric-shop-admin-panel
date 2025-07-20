@@ -54,7 +54,7 @@ export default function MotifTable() {
       <table className="w-full text-left">
         <thead>
           <tr>
-            <th className="py-2">Image</th>
+            {/* Removed Image column */}
             <th className="py-2">Name</th>
             <th className="py-2">Actions</th>
           </tr>
@@ -62,26 +62,14 @@ export default function MotifTable() {
         <tbody>
           {!data || !data.data || data.data.length === 0 ? (
             <tr>
-              <td colSpan={3} className="text-center text-gray-500 py-4">
+              <td colSpan={2} className="text-center text-gray-500 py-4">
                 No motifs found.
               </td>
             </tr>
           ) : (
             data.data.map((m: IMotif) => (
               <tr key={m._id}>
-                <td className="py-2">
-                  {m.img && (
-                    <Image
-                      src={m.img}
-                      alt={m.name}
-                      width={48}
-                      height={48}
-                      className="object-cover rounded"
-                      // placeholder="blur"
-                      // blurDataURL={m.blurDataURL}
-                    />
-                  )}
-                </td>
+                {/* Removed image cell */}
                 <td className="py-2">{m.name}</td>
                 <td className="py-2 flex space-x-2">
                   <div className="flex space-x-2">

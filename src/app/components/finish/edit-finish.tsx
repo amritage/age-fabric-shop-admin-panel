@@ -6,9 +6,9 @@ import {
   useGetFinishQuery,
   useUpdateFinishMutation,
 } from "@/redux/finish/finishApi";
-import GlobalImgUpload from "@/app/components/structure/global-img-upload";
 import ErrorMsg from "@/app/components/common/error-msg";
 import { IFinish } from "@/types/finish-type";
+import { notifySuccess } from "@/utils/toast";
 
 interface EditFinishProps {
   id: string;
@@ -35,14 +35,13 @@ export default function EditFinish({ id }: EditFinishProps) {
     formState: { errors },
   } = useForm<IFinish>({ mode: "onSubmit" });
 
-  const [img, setImg] = useState<string>("");
+  // Removed image state and logic
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   // Prefill form when data arrives
   useEffect(() => {
     if (data?.data) {
       setValue("name", data.data.name);
-      setImg(data.data.img || "");
     }
   }, [data, setValue]);
 
@@ -52,8 +51,9 @@ export default function EditFinish({ id }: EditFinishProps) {
     try {
       await updateFinish({
         id: id!,
-        changes: { name: vals.name, img },
+        changes: { name: vals.name },
       }).unwrap();
+      notifySuccess("Finish updated successfully!");
       router.push("/finish");
     } catch (err: any) {
       setErrorMessage(err?.data?.message || "Failed to update finish.");
@@ -68,9 +68,7 @@ export default function EditFinish({ id }: EditFinishProps) {
       onSubmit={handleSubmit(onSubmit)}
       className="bg-white px-8 py-8 rounded-md space-y-6"
     >
-      {/* Image Upload */}
-      <GlobalImgUpload image={img} setImage={setImg} isSubmitted={isUpdating} />
-
+      {/* Removed GlobalImgUpload */}
       {/* Name Field */}
       <div>
         <label className="block mb-1 text-sm font-medium text-gray-700">

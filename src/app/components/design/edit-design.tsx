@@ -6,9 +6,9 @@ import {
   useGetDesignQuery,
   useUpdateDesignMutation,
 } from "@/redux/design/designApi";
-import GlobalImgUpload from "@/app/components/structure/global-img-upload";
 import ErrorMsg from "@/app/components/common/error-msg";
 import { IDesign } from "@/types/design-type";
+import { notifySuccess } from "@/utils/toast";
 
 interface EditDesignProps {
   id: string;
@@ -35,14 +35,13 @@ export default function EditDesign({ id }: EditDesignProps) {
     formState: { errors },
   } = useForm<IDesign>({ mode: "onSubmit" });
 
-  const [img, setImg] = useState<string>("");
+  // Removed image state and logic
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   // Prefill form when data arrives
   useEffect(() => {
     if (data?.data) {
       setValue("name", data.data.name);
-      setImg(data.data.img || "");
     }
   }, [data, setValue]);
 
@@ -52,8 +51,9 @@ export default function EditDesign({ id }: EditDesignProps) {
     try {
       await updateDesign({
         id: id!,
-        changes: { name: vals.name, img },
+        changes: { name: vals.name },
       }).unwrap();
+      notifySuccess("Design updated successfully!");
       router.push("/design");
     } catch (err: any) {
       setErrorMessage(err?.data?.message || "Failed to update design.");
@@ -68,9 +68,7 @@ export default function EditDesign({ id }: EditDesignProps) {
       onSubmit={handleSubmit(onSubmit)}
       className="bg-white px-8 py-8 rounded-md space-y-6"
     >
-      {/* Image Upload */}
-      <GlobalImgUpload image={img} setImage={setImg} isSubmitted={isUpdating} />
-
+      {/* Removed GlobalImgUpload */}
       {/* Name Field */}
       <div>
         <label className="block mb-1 text-sm font-medium text-gray-700">

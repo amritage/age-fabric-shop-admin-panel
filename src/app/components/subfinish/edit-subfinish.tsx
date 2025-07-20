@@ -10,6 +10,7 @@ import {
 import { useGetAllFinishQuery } from "@/redux/finish/finishApi";
 import ErrorMsg from "@/app/components/common/error-msg";
 import { ISubFinish } from "@/types/subfinish-type";
+import { notifySuccess } from "@/utils/toast";
 
 type FormVals = {
   name: string;
@@ -52,6 +53,7 @@ export default function EditSubFinish({ id }: { id: string }) {
       id,
       changes: { name: vals.name, finishId: vals.finishId },
     }).unwrap();
+    notifySuccess("Sub-Finish updated successfully!");
     router.back();
   };
 
