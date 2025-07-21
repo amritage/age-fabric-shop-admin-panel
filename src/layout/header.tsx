@@ -61,7 +61,7 @@ const Header = ({ setSideMenu }: IProps) => {
 
   return (
     <>
-      <header className="relative z-10 bg-white border-b border-gray border-solid py-5 px-8 pr-8">
+      <header className="relative z-10 bg-gradient-to-b from-blue-50 via-white to-pink-50 py-5 px-8 pr-8 shadow-sm">
         <div className="flex justify-between">
           <div className="flex items-center space-x-6 lg:space-x-0">
             <button

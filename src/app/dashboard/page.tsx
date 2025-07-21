@@ -1,7 +1,8 @@
 import Wrapper from "@/layout/wrapper";
-import CardItems from "../components/dashboard/card-items";
-import SalesReport from "../components/dashboard/sales-report";
-import RecentOrders from "../components/dashboard/recent-orders";
+// import CardItems from "../components/dashboard/card-items";
+// import SalesReport from "../components/dashboard/sales-report";
+// import RecentOrders from "../components/dashboard/recent-orders";
+import ProductAndFilterCards from "../components/dashboard/product-and-filter-cards";
 
 export default function DashboardPage() {
   return (
@@ -14,17 +15,15 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* card item start  */}
+        {/* Product and Filter Cards start  */}
+        <ProductAndFilterCards />
+        {/* Product and Filter Cards end  */}
+
+        {/*
         <CardItems />
-        {/* card item end  */}
-
-        {/* chart start */}
         <SalesReport />
-        {/* chart end */}
-
-        {/* recent orders start */}
         <RecentOrders />
-        {/* recent orders end */}
+        */}
       </div>
     </Wrapper>
   );

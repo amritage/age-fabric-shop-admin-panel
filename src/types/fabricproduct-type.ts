@@ -8,6 +8,7 @@ export interface IProduct {
   image1?: string;
   image2?: string;
   video?: string;
+  videoThumbnail?: string;
   structureId: string;
   contentId: string;
   gsm: number;
@@ -69,7 +70,7 @@ export interface IProduct {
   topratedproduct?: string;
   substructureId?: string;
   subfinishId?: string;
-  subsuitableforId?: string;
+  subsuitableId?: string;
   subsuitableId?: string;
 }
 

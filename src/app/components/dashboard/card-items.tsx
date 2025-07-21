@@ -22,12 +22,16 @@ type IPropType = {
 
 function CardItem({ title, amount, cash, card, icon, clr, clr2 }: IPropType) {
   return (
-    <div className="widget-item bg-white p-6 flex justify-between rounded-md">
-      <div>
-        <h4 className="text-xl font-semibold text-slate-700 mb-1 leading-none">
-          {amount && amount.toFixed(2)}
+    <div
+      className={
+        `widget-item relative bg-gradient-to-br from-white via-slate-50 to-slate-200 p-7 flex justify-between rounded-2xl shadow-xl border-l-4 border-blue-400 hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.03] transition-all duration-300 ease-in-out group`
+      }
+    >
+      <div className="flex flex-col justify-between h-full">
+        <h4 className="text-3xl font-extrabold text-blue-900 mb-2 leading-none tracking-tight drop-shadow-sm group-hover:text-blue-700 transition-colors">
+          {amount !== undefined ? amount.toLocaleString() : "-"}
         </h4>
-        <p className="text-tiny leading-4">{title}</p>
+        <p className="text-base font-medium text-slate-600 mb-2 group-hover:text-blue-600 transition-colors">{title}</p>
         {(title === "Today Orders" || title === "Yesterday Orders") && (
           <div className={`badge space-x-1 ${clr}`}>
             <div className="flex text-center font-normal text-gray-50">
@@ -41,13 +45,15 @@ function CardItem({ title, amount, cash, card, icon, clr, clr2 }: IPropType) {
           </div>
         )}
       </div>
-      <div>
+      <div className="flex items-center justify-center">
         <span
-          className={`text-lg text-white rounded-full flex items-center justify-center h-12 w-12 shrink-0 ${clr2}`}
+          className={`text-3xl rounded-full flex items-center justify-center h-16 w-16 shrink-0 bg-gradient-to-tr from-blue-400 via-blue-600 to-blue-800 shadow-lg ring-4 ring-blue-200 group-hover:ring-blue-400 transition-all duration-300 ${clr2}`}
         >
           {icon}
         </span>
       </div>
+      {/* Decorative accent */}
+      <span className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-blue-400 to-blue-200 rounded-l-2xl opacity-70 pointer-events-none" />
     </div>
   );
 }
@@ -109,7 +115,7 @@ const CardItems = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-8 mb-10">
       {content}
     </div>
   );

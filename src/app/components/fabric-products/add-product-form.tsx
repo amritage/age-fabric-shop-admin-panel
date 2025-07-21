@@ -187,118 +187,166 @@ export default function AddProductForm({ productId }: { productId?: string }) {
   const { data: allSubfinishes } = useGetAllSubFinishQuery();
   const { data: allSubsuitablefors } = useGetAllSubSuitableForQuery();
 
-  // 2) hydrate formData ONLY after filters & productDetail are both ready
+  // REMOVE the two useEffect hooks that hydrate formData from productDetail
+  // REPLACE with this single useEffect:
   useEffect(() => {
-    if (isLoadingFilters || !productDetail) return;
+    if (!productDetail) return;
     const processed = { ...productDetail };
     function extractId(val: any) {
       return val && typeof val === "object" && "_id" in val ? val._id : val || "";
     }
     processed.substructureId = extractId(processed.substructureId);
     processed.subfinishId = extractId(processed.subfinishId);
-    processed.subsuitableforId = extractId(processed.subsuitableforId);
-    // Ensure flag fields are set to 'yes' or 'no' only
+    processed.subsuitableId = extractId(processed.subsuitableId);
     processed.popularproduct = processed.popularproduct === "yes" ? "yes" : "no";
     processed.topratedproduct = processed.topratedproduct === "yes" ? "yes" : "no";
     processed.productoffer = processed.productoffer === "yes" ? "yes" : "no";
-    
-    // Debug: Log the flag values from API response
-    console.log("Debug - Flag values from API response:", {
-      popularproduct: processed.popularproduct,
-      topratedproduct: processed.topratedproduct,
-      productoffer: processed.productoffer
-    });
-    
     setFormData(processed);
-    
+
+    // Filter sub-options
+    if (processed.structureId && allSubstructures?.data) {
+      const filtered = allSubstructures.data.filter((sub: any) => {
+        if (!sub) return false;
+        let parentId = "";
+        if (sub.structureId && typeof sub.structureId === 'object' && sub.structureId !== null && '_id' in sub.structureId) {
+          parentId = sub.structureId._id;
+        } else if (sub.structureId) {
+          parentId = sub.structureId;
+        }
+        return String(parentId) === String(processed.structureId);
+      });
+      setFilteredSubstructures(filtered);
+    }
+    if (processed.finishId && allSubfinishes?.data) {
+      const filtered = allSubfinishes.data.filter((sub: any) => {
+        if (!sub) return false;
+        let parentId = "";
+        if (sub.finishId && typeof sub.finishId === 'object' && sub.finishId !== null && '_id' in sub.finishId) {
+          parentId = sub.finishId._id;
+        } else if (sub.finishId) {
+          parentId = sub.finishId;
+        }
+        return String(parentId) === String(processed.finishId);
+      });
+      setFilteredSubfinishes(filtered);
+    }
+    if (processed.suitableforId && allSubsuitablefors?.data) {
+      const filtered = allSubsuitablefors.data.filter((sub: any) => {
+        if (!sub) return false;
+        let parentId = "";
+        if (sub.suitableforId && typeof sub.suitableforId === 'object' && sub.suitableforId !== null && '_id' in sub.suitableforId) {
+          parentId = sub.suitableforId._id;
+        } else if (sub.suitableforId) {
+          parentId = sub.suitableforId;
+        }
+        return String(parentId) === String(processed.suitableforId);
+      });
+      setFilteredSubSuitableFors(filtered);
+    }
     ["image", "image1", "image2", "video"].forEach((key) => {
       const url = (processed as any)[key];
       if (url) {
         setPreviews((p) => ({ ...p, [key]: url }));
       }
     });
-  }, [isLoadingFilters, productDetail]);
+  }, [
+    productDetail,
+    allSubstructures,
+    allSubfinishes,
+    allSubsuitablefors,
+  ]);
 
   // Filter substructures when structureId changes
   useEffect(() => {
-    console.log('Selected structureId:', formData.structureId);
-    console.log('All substructures:', allSubstructures?.data);
-    if (formData.structureId && allSubstructures?.data) {
-      const filtered = allSubstructures.data.filter(
-        (sub: any) =>
-          sub.structureId &&
-          typeof sub.structureId === 'object' &&
-          sub.structureId._id &&
-          String(sub.structureId._id) === String(formData.structureId)
-      );
-      setFilteredSubstructures(filtered);
-      console.log('Filtered substructures:', filtered);
-      // Clear substructureId if it doesn't match the new structure
-      if (
-        formData.substructureId &&
-        !filtered.some(
-          (sub: any) => String(sub._id) === String(formData.substructureId)
-        )
-      ) {
-        setFormData((prev) => ({ ...prev, substructureId: "" }));
-      }
-    } else {
+    if (!allSubstructures?.data || !formData.structureId) {
       setFilteredSubstructures([]);
-      if (formData.substructureId) {
-        setFormData((prev) => ({ ...prev, substructureId: "" }));
-      }
+      return;
     }
-  }, [formData.structureId, allSubstructures]);
+    // Debug log
+    console.log("[DEBUG] Filtering substructures", { allSubstructures: allSubstructures.data, structureId: formData.structureId, substructureId: formData.substructureId });
+    // Accept both object and string for structureId
+    let filtered = allSubstructures.data.filter((sub: any) => {
+      if (!sub || !sub.structureId) return false;
+      const parentId = typeof sub.structureId === 'object' && sub.structureId !== null && '_id' in sub.structureId ? sub.structureId._id : sub.structureId;
+      return String(parentId) === String(formData.structureId);
+    });
+    // Ensure the current value is included
+    if (
+      formData.substructureId &&
+      !filtered.some((sub: any) => String(sub._id) === String(formData.substructureId))
+    ) {
+      const current = allSubstructures.data.find((sub: any) => String(sub._id) === String(formData.substructureId));
+      if (current) filtered = [...filtered, current];
+    }
+    setFilteredSubstructures(filtered);
+    // Only reset if the current value is not in the filtered list and not empty
+    if (
+      formData.substructureId &&
+      !filtered.some((sub: any) => String(sub._id) === String(formData.substructureId))
+    ) {
+      setFormData((prev) => ({ ...prev, substructureId: "" }));
+    }
+  }, [formData.structureId, formData.substructureId, allSubstructures]);
 
   // Filter subfinishes when finishId changes
   useEffect(() => {
-    if (formData.finishId && allSubfinishes?.data) {
-      const filtered = allSubfinishes.data.filter(
-        (sub: any) =>
-          sub.finishId &&
-          typeof sub.finishId === 'object' &&
-          sub.finishId._id &&
-          String(sub.finishId._id) === String(formData.finishId)
-      );
-      setFilteredSubfinishes(filtered);
-      if (
-        formData.subfinishId &&
-        !filtered.some((sub: any) => String(sub._id) === String(formData.subfinishId))
-      ) {
-        setFormData((prev) => ({ ...prev, subfinishId: "" }));
-      }
-    } else {
+    if (!allSubfinishes?.data || !formData.finishId) {
       setFilteredSubfinishes([]);
-      if (formData.subfinishId) {
-        setFormData((prev) => ({ ...prev, subfinishId: "" }));
-      }
+      return;
     }
-  }, [formData.finishId, allSubfinishes]);
+    // Debug log
+    console.log("[DEBUG] Filtering subfinishes", { allSubfinishes: allSubfinishes.data, finishId: formData.finishId, subfinishId: formData.subfinishId });
+    let filtered = allSubfinishes.data.filter((sub: any) => {
+      if (!sub || !sub.finishId) return false;
+      const parentId = typeof sub.finishId === 'object' && sub.finishId !== null && '_id' in sub.finishId ? sub.finishId._id : sub.finishId;
+      return String(parentId) === String(formData.finishId);
+    });
+    // Ensure the current value is included
+    if (
+      formData.subfinishId &&
+      !filtered.some((sub: any) => String(sub._id) === String(formData.subfinishId))
+    ) {
+      const current = allSubfinishes.data.find((sub: any) => String(sub._id) === String(formData.subfinishId));
+      if (current) filtered = [...filtered, current];
+    }
+    setFilteredSubfinishes(filtered);
+    if (
+      formData.subfinishId &&
+      !filtered.some((sub: any) => String(sub._id) === String(formData.subfinishId))
+    ) {
+      setFormData((prev) => ({ ...prev, subfinishId: "" }));
+    }
+  }, [formData.finishId, formData.subfinishId, allSubfinishes]);
 
   // Filter subsuitablefors when suitableforId changes
   useEffect(() => {
-    if (formData.suitableforId && allSubsuitablefors?.data) {
-      const filtered = allSubsuitablefors.data.filter(
-        (sub: any) =>
-          sub.suitableforId &&
-          typeof sub.suitableforId === 'object' &&
-          sub.suitableforId._id &&
-          String(sub.suitableforId._id) === String(formData.suitableforId)
-      );
-      setFilteredSubSuitableFors(filtered);
-      if (
-        formData.subsuitableforId &&
-        !filtered.some((sub: any) => String(sub._id) === String(formData.subsuitableforId))
-      ) {
-        setFormData((prev) => ({ ...prev, subsuitableforId: "" }));
-      }
-    } else {
+    if (!allSubsuitablefors?.data || !formData.suitableforId) {
       setFilteredSubSuitableFors([]);
-      if (formData.subsuitableforId) {
-        setFormData((prev) => ({ ...prev, subsuitableforId: "" }));
-      }
+      return;
     }
-  }, [formData.suitableforId, allSubsuitablefors]);
+    // Debug log
+    console.log("[DEBUG] Filtering subsuitablefors", { allSubsuitablefors: allSubsuitablefors.data, suitableforId: formData.suitableforId, subsuitableId: formData.subsuitableId });
+    let filtered = allSubsuitablefors.data.filter((sub: any) => {
+      if (!sub || !sub.suitableforId) return false;
+      const parentId = typeof sub.suitableforId === 'object' && sub.suitableforId !== null && '_id' in sub.suitableforId ? sub.suitableforId._id : sub.suitableforId;
+      return String(parentId) === String(formData.suitableforId);
+    });
+    // Ensure the current value is included
+    if (
+      formData.subsuitableId &&
+      !filtered.some((sub: any) => String(sub._id) === String(formData.subsuitableId))
+    ) {
+      const current = allSubsuitablefors.data.find((sub: any) => String(sub._id) === String(formData.subsuitableId));
+      if (current) filtered = [...filtered, current];
+    }
+    setFilteredSubSuitableFors(filtered);
+    if (
+      formData.subsuitableId &&
+      !filtered.some((sub: any) => String(sub._id) === String(formData.subsuitableId))
+    ) {
+      setFormData((prev) => ({ ...prev, subsuitableId: "" }));
+    }
+  }, [formData.suitableforId, formData.subsuitableId, allSubsuitablefors]);
 
   // generic handlers
  const handleInputChange = (
@@ -424,7 +472,8 @@ export default function AddProductForm({ productId }: { productId?: string }) {
       "newCategoryId", "structureId", "contentId", "um", "currency", "finishId", "designId",
       "colorId", "css", "motifsizeId", "suitableforId", "vendorId", "groupcodeId", "charset",
       "title", "description", "keywords", "ogTitle", "ogDescription", "ogUrl", "sku", "slug",
-      "locationCode", "productIdentifier"
+      "locationCode", "productIdentifier",
+      "subsuitableId"
     ];
     stringFields.forEach(field => {
       cleanedFormData[field] = String(cleanedFormData[field] ?? "");
@@ -447,7 +496,7 @@ export default function AddProductForm({ productId }: { productId?: string }) {
       "quantity",
       "groupcodeId",
       "suitableforId",
-      "subsuitableforId",
+      "subsuitableId",
       "vendorId",
       "uniqueCode",
     ];
@@ -477,6 +526,16 @@ export default function AddProductForm({ productId }: { productId?: string }) {
         : `/fabric-products/metadata`,
     );
   };
+  // Remove all <console.log(...)> and commented-out <console.log(...)> from inside JSX
+  // Place debug logs here, before return
+  console.log('formData.substructureId:', formData.substructureId);
+  console.log('filteredSubstructures:', filteredSubstructures.map(s => s._id));
+  console.log('formData.subfinishId:', formData.subfinishId);
+  console.log('filteredSubfinishes:', filteredSubfinishes.map(s => s._id));
+  console.log('formData.subsuitableId:', formData.subsuitableId);
+  console.log('filteredSubSuitableFors:', filteredSubSuitableFors.map(s => s._id));
+  console.log('Debug: productDetail for edit', productDetail);
+  console.log('Debug: formData', formData);
   return (
     <div className="w-full min-h-screen flex justify-center items-start py-8">
       <form
@@ -1031,6 +1090,9 @@ export default function AddProductForm({ productId }: { productId?: string }) {
                 <option key={option._id} value={option._id}>{option.name}</option>
               ))}
             </select>
+            {/* Debug logs before substructure dropdown */}
+            {/* <console.log('formData.substructureId:', formData.substructureId); */}
+            {/* <console.log('filteredSubstructures:', filteredSubstructures.map(s => s._id)); */}
           </div>
           {/* Sub Finish */}
           <div className="mb-6">
@@ -1048,6 +1110,9 @@ export default function AddProductForm({ productId }: { productId?: string }) {
                 <option key={option._id} value={option._id}>{option.name}</option>
               ))}
             </select>
+            {/* Debug logs before subfinish dropdown */}
+            {/* <console.log('formData.subfinishId:', formData.subfinishId); */}
+            {/* <console.log('filteredSubfinishes:', filteredSubfinishes.map(s => s._id)); */}
           </div>
           {/* Sub Suitable For */}
           <div className="mb-6">
@@ -1055,8 +1120,8 @@ export default function AddProductForm({ productId }: { productId?: string }) {
               Sub Suitable For
             </label>
             <select
-              name="subsuitableforId"
-              value={formData.subsuitableforId || ""}
+              name="subsuitableId"
+              value={formData.subsuitableId || ""}
               onChange={handleInputChange}
               className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm"
             >
@@ -1065,6 +1130,9 @@ export default function AddProductForm({ productId }: { productId?: string }) {
                 <option key={option._id} value={option._id}>{option.name}</option>
               ))}
             </select>
+            {/* Debug logs before subsuitablefor dropdown */}
+            {/* <console.log('formData.subsuitableId:', formData.subsuitableId); */}
+            {/* <console.log('filteredSubSuitableFors:', filteredSubSuitableFors.map(s => s._id)); */}
           </div>
         </div>
 
