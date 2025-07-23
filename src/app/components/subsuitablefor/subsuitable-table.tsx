@@ -13,7 +13,9 @@ import { Edit, Delete } from "@/svg";
 import Link from "next/link";
 
 export default function SubSuitableForTable() {
-  const { data, isLoading, isError } = useGetAllSubSuitableForQuery(undefined, { pollingInterval: 5000 });
+  const { data, isLoading, isError } = useGetAllSubSuitableForQuery(undefined, {
+    pollingInterval: 5000,
+  });
   const [deleteSSF] = useDeleteSubSuitableForMutation();
   const [showEdit, setShowEdit] = React.useState<string | null>(null);
   const [showDelete, setShowDelete] = React.useState<string | null>(null);
@@ -32,7 +34,11 @@ export default function SubSuitableForTable() {
     if (result.isConfirmed) {
       try {
         await deleteSSF(id).unwrap();
-        Swal.fire("Deleted!", "Your sub-suitable for has been deleted.", "success");
+        Swal.fire(
+          "Deleted!",
+          "Your sub-suitable for has been deleted.",
+          "success"
+        );
       } catch (err: any) {
         notifyError(
           err?.data?.message ||
@@ -40,6 +46,15 @@ export default function SubSuitableForTable() {
         );
       }
     }
+  };
+
+  const getParentName = (
+    val: string | { name: string | { en?: string; hi?: string } }
+  ) => {
+    if (typeof val === "string") return val;
+    const name = val.name;
+    if (typeof name === "string") return name;
+    return name?.en || name?.hi || "—";
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -66,8 +81,13 @@ export default function SubSuitableForTable() {
           ) : (
             data.data.map((ssf: ISubSuitableFor) => (
               <tr key={ssf._id}>
+                {/* ✅ Name column */}
                 <td className="py-2">{ssf.name}</td>
-                <td className="py-2">{ssf.suitableforId || "—"}</td>
+
+                {/* ✅ Parent column */}
+                <td className="py-2">{getParentName(ssf.suitableforId)}</td>
+
+                {/* ✅ Actions column */}
                 <td className="py-2">
                   <div className="flex space-x-2">
                     <div className="relative">

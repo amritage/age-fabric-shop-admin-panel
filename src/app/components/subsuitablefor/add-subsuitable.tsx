@@ -51,11 +51,14 @@ export default function AddSubSuitableFor() {
           className="input w-full h-[44px] rounded-md border border-gray6 px-6 text-base"
         >
           <option value="">Select…</option>
-          {parents!.data.map((p) => (
-            <option key={p._id} value={p._id}>
-              {p.name}
-            </option>
-          ))}
+         {parents?.data?.map((p: { _id: string; name: any }) => (
+  <option key={p._id} value={p._id}>
+    {typeof p.name === "string"
+      ? p.name
+      : p.name?.en || p.name?.hi || "Unnamed"}
+  </option>
+))}
+
         </select>
         {errors.suitableforId && (
           <p className="text-red-500 text-sm mt-1">
