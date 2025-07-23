@@ -67,7 +67,7 @@ export default function SubSuitableForTable() {
             data.data.map((ssf: ISubSuitableFor) => (
               <tr key={ssf._id}>
                 <td className="py-2">{ssf.name}</td>
-                <td className="py-2">{ssf.suitableforId?.name || "—"}</td>
+                <td className="py-2">{ssf.suitableforId || "—"}</td>
                 <td className="py-2">
                   <div className="flex space-x-2">
                     <div className="relative">

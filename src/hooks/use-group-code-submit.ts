@@ -14,7 +14,9 @@ export default function useGroupCodeSubmit() {
 
   const handleEdit = async (data: { name: string }, id: string) => {
     try {
-      await updateGroupCode({ id, changes: data }).unwrap();
+      const fd = new FormData();
+      fd.append("name", data.name);
+      await updateGroupCode({ id, changes: fd }).unwrap();
       toast.success("Group Code updated successfully");
       reset();
     } catch (err) {

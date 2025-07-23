@@ -28,7 +28,7 @@ export const groupCodeApi = apiSlice.injectEndpoints({
     }),
     updateGroupCode: builder.mutation<
       { data: IGroupCode },
-      { id: string; changes: Partial<IGroupCode> }
+      { id: string; changes: FormData }
     >({
       query: ({ id, changes }) => ({
         url: `/api/groupcode/update/${id}`,
@@ -36,8 +36,8 @@ export const groupCodeApi = apiSlice.injectEndpoints({
         body: changes,
       }),
       invalidatesTags: (res, err, { id }) => [
-        { type: "GroupCode", id },
-        { type: "GroupCode", id: "LIST" },
+        { type: "GroupCode" as const, id },
+        { type: "GroupCode" as const, id: "LIST" },
       ],
     }),
     deleteGroupCode: builder.mutation<{ status: number }, string>({

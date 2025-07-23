@@ -16,7 +16,7 @@ import { useGetAllSubstructuresQuery } from "@/redux/substructure/substructureAp
 import { useGetAllSubFinishQuery } from "@/redux/subfinish/subfinishApi";
 import { useGetAllSubSuitableForQuery } from "@/redux/subsuitablefor/subsuitableApi";
 import { FaBoxOpen, FaListAlt, FaCubes, FaLayerGroup, FaPalette, FaShapes, FaSwatchbook, FaUserTie, FaTags, FaUsers, FaSitemap, FaPuzzlePiece, FaRegObjectGroup } from "react-icons/fa";
-import type { IconType } from "react-icons";
+import type { IconType, IconBaseProps } from "react-icons";
 import { useRouter } from "next/navigation";
 
 const filterHooks = [
@@ -111,7 +111,7 @@ if (typeof window !== 'undefined' && !document.getElementById('animated-gradient
   document.head.appendChild(style);
 }
 
-function Card({ label, count, icon: Icon, onClick }: { label: string; count: number | string; icon: IconType; onClick?: () => void }) {
+function Card({ label, count, icon: Icon, onClick }: { label: string; count: number | string; icon?: IconType; onClick?: () => void }) {
   return (
     <div
       className="relative min-h-[160px] min-w-[200px] cursor-pointer overflow-hidden flex flex-col justify-between items-start p-6 rounded-xl border border-gray-200 bg-white hover:border-blue-400 transition-all duration-200"
@@ -122,7 +122,7 @@ function Card({ label, count, icon: Icon, onClick }: { label: string; count: num
     >
       {/* Simple Icon */}
       <span className="text-5xl mb-4 text-blue-500">
-        <Icon />
+        {Icon ? React.createElement(Icon as React.FunctionComponent<IconBaseProps>) : null}
       </span>
       {/* Count and label */}
       <div className="mt-2 flex flex-col items-start">

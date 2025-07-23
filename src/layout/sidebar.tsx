@@ -18,7 +18,7 @@ export default function Sidebar({ sideMenu, setSideMenu }: IProps) {
   const pathname = usePathname();
 
   // Helper: check if any submenu is active
-  const isSubMenuActive = (subMenus: ISubMenu[]) =>
+  const isSubMenuActive = (subMenus: ISubMenu[]): boolean =>
     subMenus.some((sub) =>
       sub.subMenus ? isSubMenuActive(sub.subMenus) : pathname === sub.link
     );

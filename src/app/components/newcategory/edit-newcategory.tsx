@@ -12,6 +12,7 @@ import { useForm } from "react-hook-form";
 import { ICategory } from "@/types/newcategory-type";
 import GlobalImgUpload from "./global-img-upload";
 import { notifySuccess } from "@/utils/toast";
+import Image from "next/image";
 
 export default function EditCategory() {
   const { id } = useParams();
@@ -81,7 +82,7 @@ export default function EditCategory() {
       <div>
         <label className="block mb-1 text-sm font-medium text-gray-700">Current Image</label>
         {imageUrl && (
-          <img src={imageUrl} alt="Current" width={100} height={91} className="mb-2 object-cover rounded" />
+          <Image src={imageUrl} alt="Current" width={100} height={91} className="mb-2 object-cover rounded" />
         )}
         <input type="file" accept="image/*" onChange={handleImageChange} />
       </div>

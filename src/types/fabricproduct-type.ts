@@ -71,7 +71,6 @@ export interface IProduct {
   substructureId?: string;
   subfinishId?: string;
   subsuitableId?: string;
-  subsuitableId?: string;
 }
 
 export interface IProductFormData {
