@@ -7,7 +7,6 @@ import {
   useGetSubSuitableForQuery,
   useUpdateSubSuitableForMutation,
 } from "@/redux/subsuitablefor/subsuitableApi";
-// ← RIGHT hook for parent dropdown:
 import { useGetAllSuitableForQuery } from "@/redux/suitablefor/suitableforApi";
 import ErrorMsg from "@/app/components/common/error-msg";
 import { notifySuccess } from "@/utils/toast";
@@ -35,7 +34,6 @@ export default function EditSubSuitableFor({ id }: { id: string }) {
   useEffect(() => {
     if (data) {
       setValue("name", data.data.name);
-      // If suitableforId is an object, extract the _id
       const suitableforId =
         data.data.suitableforId && typeof data.data.suitableforId === "object"
           ? (data.data.suitableforId as { _id: string })._id
@@ -61,17 +59,20 @@ export default function EditSubSuitableFor({ id }: { id: string }) {
     >
       <div className="mb-6">
         <label className="block mb-1">Parent SuitableFor</label>
-        <select
-          {...register("suitableforId", { required: "Select a parent option" })}
-          className="input w-full h-[44px] rounded-md border border-gray6 px-6 text-base"
-        >
-          <option value="">Select…</option>
-          {parents!.data.map((p) => (
-            <option key={p._id} value={p._id}>
-              {p.name}
-            </option>
-          ))}
-        </select>
+ <select
+  {...register("suitableforId", { required: "Select a parent option" })}
+  className="input w-full h-[44px] rounded-md border border-gray6 px-6 text-base"
+>
+  <option value="">Select…</option>
+  {parents?.data?.map((p: { _id: string; name: any }) => (
+    <option key={p._id} value={p._id}>
+      {typeof p.name === "string"
+        ? p.name
+        : p.name?.en || p.name?.hi || "Unnamed"}
+    </option>
+  ))}
+</select>
+
         {errors.suitableforId && (
           <p className="text-red-500 text-sm mt-1">
             {errors.suitableforId.message}
